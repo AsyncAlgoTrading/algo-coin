@@ -1,0 +1,6 @@
+coinbase=yes
+hitbtc=no
+cryptsy=no
+bitfinex=no
+kraken=no
+btce=no
