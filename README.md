@@ -1,2 +1,3 @@
 # algo-coin
-Algorithmic Trading on Coinbase
+Algorithmic Trading Bitcoin across multiple exchanges
+
