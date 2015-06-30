@@ -20,12 +20,16 @@ class ExchangeType(Enum):
 class Endpoint(object):
     __metaclass__ = ABCMeta
 
-    @abstractmethod
+    def __init__(self, type):
+        if not isinstance(type, ExchangeType):
+            raise TypeError
+        self.type = type
+
     def get_type(self):
-        '''to be implemented'''
+        return self.type
 
     @abstractmethod
-    def APIInit(self):
+    def APIInit(self, api_key):
         '''tp be implemented'''
 
 
@@ -34,10 +38,10 @@ class APIKey(object):
         self.key = key
         self.secret_key = secret_key
 
-    def key(self):
+    def get_key(self):
         return self.key
 
-    def secret_key(self):
+    def get_secret_key(self):
         return self.secret_key
 
     def __str__(self):
@@ -45,3 +49,12 @@ class APIKey(object):
 
     def __repr__(self):
         return self.__str__()
+
+
+class API(object):
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    @abstractmethod
+    def APIInit(self):
+        """to be implemented"""

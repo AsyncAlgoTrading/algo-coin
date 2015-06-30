@@ -1,18 +1,17 @@
 
 from algo_coin.util import *
+from algo_coin.apis.coinbase import *
 
 
 class Wallet(Endpoint):
     def __init__(self, type):
-        if not isinstance(type, ExchangeType):
-            raise TypeError
-        self.type = type
+        super().__init__(type)
 
-    def get_type(self):
-        return self.type
+    def APIInit(self, api_key):
+        if self.type is ExchangeType.coinbase:
+            self.wallet_api = CoinbaseWalletAPI(api_key)
 
-    def APIInit(self, key, secret):
-        pass
+        self.wallet_api.APIInit()
 
     def deposit(self, source):
         pass
