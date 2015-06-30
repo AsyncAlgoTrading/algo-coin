@@ -1,30 +1,82 @@
 
-import algo_coin.dashboard as db
-import algo_coin.exchanges as ex
-import algo_coin.strategies as st
+import time
+from datetime import datetime
+
 from algo_coin.wallet import *
+from algo_coin.exchange import *
+from algo_coin.util import *
 
 
-class APIKey(object):
-    def __init__(self, key, secret_key):
-        self.key = key
-        self.secret_key = secret_key
+class AlgoCoin(object):
+    def __init__(self):
+        self.cfg_d = {}
+        self.active = []
+        self.ex_key_d = {}
+        self.wlt_key_d = {}
+        self.ex_apis = {}
+        self.wlt_apis = {}
+        self.wallets = {}
+        self.exchanges = {}
 
-    def key(self):
-        return self.key
+        self.logfile = open("logs/log-" + str(int(time.time())), "w")
+        self.log("***LOG START***")
+        pass
 
-    def secret_key(self):
-        return self.secret_key
+    def log(self, string):
+        self.logfile.write(str(datetime.now()) + "\t" + string + "\n")
 
+    def load_apis(self, cfg_filename, ex_key_filename, wallet_key_filename):
+        f = open(cfg_filename, "r")
+        for line in f:
+            split_line = line.rstrip('\n').split("=")
+            self.cfg_d[split_line[0]] = (split_line[1] == "yes")
+        f.close()
 
-def test():
-    print("test")
+        self.active = [exchange for exchange in self.cfg_d.keys()
+                       if self.cfg_d[exchange]]
+        print(self.active)
 
+        f = open(ex_key_filename)
+        for line in f:
+            exchange_name = line.split("_")[0]
+            if self.cfg_d[exchange_name]:
+                split_line = line.rstrip('\n').split("=")
+                self.ex_key_d[split_line[0]] = \
+                    line[len(split_line[0])+1:].rstrip('\n')
+        f.close()
 
-def run():
-    print("run")
+        f = open(wallet_key_filename)
+        for line in f:
+            exchange_name = line.split("_")[0]
+            if self.cfg_d[exchange_name]:
+                split_line = line.rstrip('\n').split("=")
+                self.wlt_key_d[split_line[0]] = \
+                    line[len(split_line[0])+1:].rstrip('\n')
+        f.close()
 
+        for exchange in self.active:
+            self.ex_apis[exchange_name] = APIKey(self.ex_key_d[exchange_name + "_key"], self.ex_key_d[exchange_name + "_secret"])
+            self.wlt_apis[exchange_name] = APIKey(self.wlt_key_d[exchange_name + "_wallet_key"], self.wlt_key_d[exchange_name + "_wallet_secret"])
 
-def main():
-    w = Wallet(WalletType.coinbase)
-    print(w.get_type())
+        #deallocate
+        self.ex_key_d = None
+        self.wlt_key_d = None
+
+    def add_wallets(self):
+        for exchange in self.active:
+            self.wallets[exchange] = Wallet(ExchangeType.type(exchange))
+
+    def add_exchanges(self):
+        for exchange in self.active:
+            self.exchanges[exchange] = Exchange(ExchangeType.type(exchange))
+
+    def heartbeat(self):
+        pass
+
+    def main(self, config_file, ex_keys_file, wallet_keys_file):
+        self.load_apis(config_file, ex_keys_file, wallet_keys_file)
+        self.add_wallets()
+        self.add_exchanges()
+        self.heartbeat()
+        self.log("***LOG END***")
+        self.logfile.close()

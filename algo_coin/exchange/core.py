@@ -2,7 +2,7 @@
 from algo_coin.util import *
 
 
-class Wallet(Endpoint):
+class Exchange(Endpoint):
     def __init__(self, type):
         if not isinstance(type, ExchangeType):
             raise TypeError
@@ -14,8 +14,8 @@ class Wallet(Endpoint):
     def APIInit(self, key, secret):
         pass
 
-    def deposit(self, source):
+    def buy(self,):
         pass
 
-    def withdraw(self, destination):
+    def sell(self):
         pass

@@ -56,7 +56,7 @@ docs/_build/
 # PyBuilder
 target/
 
-*.keys
+*_keys
 horizon
 
 *.DS_Store
