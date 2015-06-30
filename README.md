@@ -1,11 +1,10 @@
 #AlgoBTC
+
 Algorithmic Trading Bitcoin across multiple exchanges
 
-##Overview
 This program performs intra-exchange trading and inter-exchange arbitrage.
 
-###Markets
----
+##Markets
 
 - Coinbase
 - HitBTC
@@ -14,15 +13,15 @@ This program performs intra-exchange trading and inter-exchange arbitrage.
 - Kraken
 - BTC-E
 
-####Extensions
+###Extensions
 
 - BTCChina
 - LakeBTC
 - Bitstamp
 
-###Status
----
-####APIs
+##Status
+
+###APIs
 - Coinbase - Wallet is ok, Exchange is unfinished
 - HitBTC - Unfinished
 - Cryptsy - Unfinished
@@ -30,20 +29,18 @@ This program performs intra-exchange trading and inter-exchange arbitrage.
 - Kraken - Unfinished
 - BTC-E - Unfinished
 
-####Tests
+###Tests
 Unfinished
 
-####Trading System
+###Trading System
 Unfinished
 
 
-###Strategies
----
+##Strategies
 
 under construction
 
-###Contact
----
+##Contact
 
 t.paine154@gmail.com
 
