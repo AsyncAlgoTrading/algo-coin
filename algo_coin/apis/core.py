@@ -7,6 +7,7 @@ class WalletAPI(API):
     __metaclass__ = ABCMeta
 
     def __init__(self, api_key):
+        """ """
         super().__init__(api_key)
 
     @abstractmethod
@@ -22,6 +23,7 @@ class ExchangeAPI(API):
     __metaclass__ = ABCMeta
 
     def __init__(Self, api_key):
+        """ """
         super().__init__(api_key)
 
     @abstractmethod

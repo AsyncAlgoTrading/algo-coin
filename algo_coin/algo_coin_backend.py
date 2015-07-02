@@ -1,38 +1,25 @@
 
-import time
-from datetime import datetime
-
 from algo_coin.wallet import *
 from algo_coin.exchange import *
 from algo_coin.util import *
 
 
-class AlgoCoin(object):
-    def __init__(self):
+class AlgoCoinBackend(object):
+    def __init__(self, log):
         """ """
         self.cfg_d = {}
         self.active = []
-        self.ex_key_d = {}
-        self.wlt_key_d = {}
         self.ex_apis = {}
         self.wlt_apis = {}
         self.wallets = {}
         self.exchanges = {}
-
-        self.logfile = open("logs/log-" + str(int(time.time())), "w")
-        self.log("***LOG START***")
+        self.log = log
         pass
-
-    def log(self, string):
-        """ """
-        self.logfile.write(str(datetime.now()) + "\t" + string + "\n")
-
-    def logprint(self, string):
-        print(string)
-        self.log(string)
 
     def load_apis(self, cfg_filename, ex_key_filename, wallet_key_filename):
         """ """
+        ex_key_d = {}
+        wlt_key_d = {}
         #
         #
         #
@@ -50,7 +37,7 @@ class AlgoCoin(object):
         out = ""
         for exchange in self.active:
             out += exchange + "\t"
-            self.log("Active : " + out)
+            self.log.log("Active : " + out)
 
         #
         #
@@ -60,7 +47,7 @@ class AlgoCoin(object):
             exchange_name = line.split("_")[0]
             if self.cfg_d[exchange_name]:
                 split_line = line.rstrip('\n').split("=")
-                self.ex_key_d[split_line[0]] = \
+                ex_key_d[split_line[0]] = \
                     line[len(split_line[0])+1:].rstrip('\n')
         f.close()
 
@@ -72,7 +59,7 @@ class AlgoCoin(object):
             exchange_name = line.split("_")[0]
             if self.cfg_d[exchange_name]:
                 split_line = line.rstrip('\n').split("=")
-                self.wlt_key_d[split_line[0]] = \
+                wlt_key_d[split_line[0]] = \
                     line[len(split_line[0])+1:].rstrip('\n')
         f.close()
 
@@ -81,54 +68,50 @@ class AlgoCoin(object):
         #
         for exchange in self.active:
             self.ex_apis[exchange_name] = \
-                APIKey(self.ex_key_d[exchange_name + "_key"],
-                       self.ex_key_d[exchange_name + "_secret"])
+                APIKey(ex_key_d[exchange_name + "_key"],
+                       ex_key_d[exchange_name + "_secret"])
             self.wlt_apis[exchange_name] = \
-                APIKey(self.wlt_key_d[exchange_name + "_wallet_key"],
-                       self.wlt_key_d[exchange_name + "_wallet_secret"])
+                APIKey(wlt_key_d[exchange_name + "_wallet_key"],
+                       wlt_key_d[exchange_name + "_wallet_secret"])
 
-        self.log("***APIS LOADED***")
-
-        #deallocate
-        self.ex_key_d = None
-        self.wlt_key_d = None
+        self.log.log("***APIS LOADED***")
 
     def add_wallets(self):
         """ """
         for exchange in self.active:
             self.wallets[exchange] = Wallet(ExchangeType.type(exchange))
-        self.log("***WALLETS LOADED***")
+        self.log.log("***WALLETS LOADED***")
 
     def add_exchanges(self):
         """ """
         for exchange in self.active:
             self.exchanges[exchange] = Exchange(ExchangeType.type(exchange))
-        self.log("***EXCHANGES LOADED***")
+        self.log.log("***EXCHANGES LOADED***")
 
     def initialize_apis(self):
         """ """
         for exchange in self.active:
             try:
-                self.log(self.wallets[exchange].APIInit(
+                self.log.log(self.wallets[exchange].APIInit(
                     self.wlt_apis[exchange]))
-                self.log(self.exchanges[exchange].APIInit(
+                self.log.log(self.exchanges[exchange].APIInit(
                     self.ex_apis[exchange]))
             except Exception:
                 print("Initialization failed for: " + exchange)
 
-        self.log("***APIS INITIALIZED***")
+        self.log.log("***APIS INITIALIZED***")
 
     def heartbeat(self):
         """ """
-        self.log("***HEARTBEAT***")
+        self.log.log("***HEARTBEAT***")
         pass
 
-    def main(self, config_file, ex_keys_file, wallet_keys_file):
+    def setup(self, config_file, ex_keys_file, wallet_keys_file):
         """ """
         self.load_apis(config_file, ex_keys_file, wallet_keys_file)
         self.add_wallets()
         self.add_exchanges()
         self.initialize_apis()
         self.heartbeat()
-        self.log("***LOG END***")
-        self.logfile.close()
+        self.log.log("***LOG END***")
+        self.log.close()
