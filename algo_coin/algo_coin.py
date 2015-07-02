@@ -27,6 +27,10 @@ class AlgoCoin(object):
         """ """
         self.logfile.write(str(datetime.now()) + "\t" + string + "\n")
 
+    def logprint(self, string):
+        print(string)
+        self.log(string)
+
     def load_apis(self, cfg_filename, ex_key_filename, wallet_key_filename):
         """ """
         #
@@ -76,8 +80,12 @@ class AlgoCoin(object):
         #
         #
         for exchange in self.active:
-            self.ex_apis[exchange_name] = APIKey(self.ex_key_d[exchange_name + "_key"], self.ex_key_d[exchange_name + "_secret"])
-            self.wlt_apis[exchange_name] = APIKey(self.wlt_key_d[exchange_name + "_wallet_key"], self.wlt_key_d[exchange_name + "_wallet_secret"])
+            self.ex_apis[exchange_name] = \
+                APIKey(self.ex_key_d[exchange_name + "_key"],
+                       self.ex_key_d[exchange_name + "_secret"])
+            self.wlt_apis[exchange_name] = \
+                APIKey(self.wlt_key_d[exchange_name + "_wallet_key"],
+                       self.wlt_key_d[exchange_name + "_wallet_secret"])
 
         self.log("***APIS LOADED***")
 
@@ -100,8 +108,14 @@ class AlgoCoin(object):
     def initialize_apis(self):
         """ """
         for exchange in self.active:
-            self.wallets[exchange].APIInit(self.wlt_apis[exchange])
-            self.exchanges[exchange].APIInit(self.ex_apis[exchange])
+            try:
+                self.log(self.wallets[exchange].APIInit(
+                    self.wlt_apis[exchange]))
+                self.log(self.exchanges[exchange].APIInit(
+                    self.ex_apis[exchange]))
+            except Exception:
+                print("Initialization failed for: " + exchange)
+
         self.log("***APIS INITIALIZED***")
 
     def heartbeat(self):
