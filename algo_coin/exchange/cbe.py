@@ -4,6 +4,7 @@ try:
 except Exception:
     from util import insertPythonTime
 
+
 class CoinbaseExchange(object):
     def __init__(self):
         self.api_url = 'http://api.exchange.coinbase.com/'
