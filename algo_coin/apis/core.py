@@ -3,6 +3,17 @@ from algo_coin.util import *
 from abc import ABCMeta, abstractmethod
 
 
+class API(object):
+    def __init__(self, api_key):
+        """ """
+        self.api_key = api_key
+        self.name = None
+
+    @abstractmethod
+    def APIInit(self):
+        """to be implemented"""
+
+
 class WalletAPI(API):
     __metaclass__ = ABCMeta
 
