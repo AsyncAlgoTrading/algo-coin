@@ -91,13 +91,17 @@ class AlgoCoinBackend(object):
     def initialize_apis(self):
         """ """
         for exchange in self.active:
-            try:
-                self.log.log(self.wallets[exchange].APIInit(
-                    self.wlt_apis[exchange]))
-                self.log.log(self.exchanges[exchange].APIInit(
-                    self.ex_apis[exchange]))
-            except Exception:
-                print("Initialization failed for: " + exchange)
+            # try:
+            #     self.log.log(self.wallets[exchange].APIInit(
+            #         self.wlt_apis[exchange]))
+            #     self.log.log(self.exchanges[exchange].APIInit(
+            #         self.ex_apis[exchange]))
+            # except Exception:
+            #     print("Initialization failed for: " + exchange)
+            self.log.log(self.wallets[exchange].APIInit(
+                self.wlt_apis[exchange]))
+            # self.log.log(self.exchanges[exchange].APIInit(
+                # self.ex_apis[exchange]))
 
         self.log.log("***APIS INITIALIZED***")
 

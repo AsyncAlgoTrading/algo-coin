@@ -19,6 +19,11 @@ if __name__ == "__main__":
         print("Import Error.")
         sys.exit(1)
 
+    # from algo_coin.algo_coin_backend import *
+    # from algo_coin.algo_coin_frontend import *
+    # from algo_coin.algo_coin_strategy import *
+    # from algo_coin.log import *
+
     try:
         log = Log()
     except Exception:

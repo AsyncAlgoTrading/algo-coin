@@ -1,6 +1,7 @@
 
 from enum import Enum, unique
 from abc import ABCMeta, abstractmethod
+from dateutil import parser
 
 
 @unique
@@ -57,3 +58,15 @@ class APIKey(object):
     def __repr__(self):
         """ """
         return self.__str__()
+
+
+def ConvertTime(json_time):
+    return parser.parse(json_time)
+
+
+def insertPythonTime(return_json):
+    for row in return_json:
+        if type(row) is dict:
+            if "time" in row.keys():
+                row['python_time'] = ConvertTime(row['time'])
+    return return_json

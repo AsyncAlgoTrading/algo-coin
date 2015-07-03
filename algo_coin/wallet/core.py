@@ -13,7 +13,7 @@ class Wallet(Endpoint):
         if self.type is ExchangeType.coinbase:
             self.wallet_api = CoinbaseWalletAPI(api_key)
 
-        self.wallet_api.APIInit()
+        return self.wallet_api.APIInit()
 
     def deposit(self, source):
         """ """
