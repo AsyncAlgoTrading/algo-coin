@@ -26,7 +26,7 @@
 #         time.sleep(1)
 #         ws.close()
 #         print("terminating thread")
-#         _thread.start_new_thread(run, ())
+#     _thread.start_new_thread(run, ())
 
 # if __name__ == "__main__":
 #     websocket.enableTrace(True)
@@ -38,7 +38,37 @@
 #     ws.on_open = on_open
 #     ws.run_forever()
 
-from cbe import *
 
-c = CoinbaseExchange()
-print(c.getProducts())
+
+
+# from cbe import *
+
+# c = CoinbaseExchange()
+# print(c.getProducts())
+
+
+
+
+from websocket import create_connection
+
+import json
+
+ws = create_connection('wss://ws-feed.exchange.coinbase.com')
+sub = json.dumps({"type": "subscribe", "product_id": "BTC-USD"})
+ws.send(sub)
+seq = -1
+
+while True:
+    result = json.loads(ws.recv())
+    if seq < 0:
+        seq = result['sequence']
+    elif seq == (result['sequence'] - 1):
+        seq += 1
+    else:
+        print("Sequence error")
+        seq = -1
+
+    # print(result)
+    # print(result['sequence'])
+
+ws.close()
