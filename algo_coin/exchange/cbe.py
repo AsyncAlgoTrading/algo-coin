@@ -1,6 +1,6 @@
 import requests
 try:
-    from algo_coin.util import insertPythonTime
+    from algo_coin.util.util import insertPythonTime
 except Exception:
     from util import insertPythonTime
 

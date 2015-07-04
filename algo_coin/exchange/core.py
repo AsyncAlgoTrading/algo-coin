@@ -1,5 +1,5 @@
 
-from algo_coin.util import *
+from algo_coin.util.util import *
 from algo_coin.apis.coinbase import *
 
 

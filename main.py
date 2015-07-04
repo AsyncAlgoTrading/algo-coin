@@ -6,36 +6,48 @@ if __name__ == "__main__":
             <ex-keys-file> <wallet-keys-file>\n')
         sys.exit(1)
 
+    # config files
+    # specify which exchanges we are trading on
+    # and where we the wallets are when moving
+    # funds across exchanges
     config_file = sys.argv[1]
+
+    # api keys
+    # this is where the exchange api keys are
     ex_keys_file = sys.argv[2]
+
+    # this is where the wallet api keys are
     wlt_keys_file = sys.argv[3]
 
+    # make sure paths are all good by trying to import
     try:
-        from algo_coin.connectivity_engine import *
-        from algo_coin.dashboard.dashboard import *
-        from algo_coin.strategy.strategy import *
-        from algo_coin.log import *
+        from algo_coin.dashboard import dashboard as db
+        from algo_coin.connectivity import connectivity_engine as ce
+        from algo_coin.recrouter import recrouter as rr
+        from algo_coin.sendeng import sendengine as se
+        from algo_coin.orderbook import orderbook as ob
+        from algo_coin.wallet import bank as bk
+        from algo_coin.util.log import *
+
     except Exception:
         print("Import Error.")
         sys.exit(1)
 
-    # from algo_coin.algo_coin_backend import *
-    # from algo_coin.algo_coin_frontend import *
-    # from algo_coin.algo_coin_strategy import *
-    # from algo_coin.log import *
+    # initialize and connect different processes TODO
+    # 1. startup dashboard
+    # 2. startup connectivity engine
+    # 3. startup receiver router
+    # 4. startup send engine
+    # 5. build order book
+    # 6. startup bank
+    # 7. startup strategy manager
 
-    try:
-        log = Log()
-    except Exception:
-        print("Error creating logfile.")
-        sys.exit(1)
+    #connect to wallets and exchanges. this is the most important step
+    DB = db.Dashboard(Log())
+    CE = ce.ConnectivityEngine(Log())
+    RR = rr.ReceiverRouter(Log())
+    SE = se.SendEngine(Log())
+    OB = ob.OrderBook(Log())
+    BK = bk.Bank(Log())
 
-    acb = ConnectivityEngine(log)
-
-    # try:
-    #     acb.setup(config_file, ex_keys_file, wlt_keys_file)
-    # except Exception:
-    #     print("Could not setup backend.")
-    #     sys.exit(1)
-
-    acb.setup(config_file, ex_keys_file, wlt_keys_file)
+    CE.setup(config_file, ex_keys_file, wlt_keys_file)

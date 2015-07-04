@@ -1,5 +1,5 @@
 
-from algo_coin.util import *
+from algo_coin.util.util import *
 from abc import ABCMeta, abstractmethod
 
 
