@@ -11,9 +11,9 @@ if __name__ == "__main__":
     wlt_keys_file = sys.argv[3]
 
     try:
-        from algo_coin.algo_coin_backend import *
-        from algo_coin.algo_coin_frontend import *
-        from algo_coin.algo_coin_strategy import *
+        from algo_coin.connectivity_engine import *
+        from algo_coin.dashboard.dashboard import *
+        from algo_coin.strategy.strategy import *
         from algo_coin.log import *
     except Exception:
         print("Import Error.")
@@ -30,9 +30,7 @@ if __name__ == "__main__":
         print("Error creating logfile.")
         sys.exit(1)
 
-    acb = AlgoCoinBackend(log)
-    acf = AlgoCoinFrontend(log)
-    strat = AlgoCoinStrategy(log)
+    acb = ConnectivityEngine(log)
 
     # try:
     #     acb.setup(config_file, ex_keys_file, wlt_keys_file)

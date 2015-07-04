@@ -4,7 +4,7 @@ from algo_coin.exchange import *
 from algo_coin.util import *
 
 
-class AlgoCoinBackend(object):
+class ConnectivityEngine(object):
     def __init__(self, log):
         """ """
         self.cfg_d = {}

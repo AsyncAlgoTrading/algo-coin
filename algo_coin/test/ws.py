@@ -38,16 +38,10 @@
 #     ws.on_open = on_open
 #     ws.run_forever()
 
-
-
-
 # from cbe import *
 
 # c = CoinbaseExchange()
 # print(c.getProducts())
-
-
-
 
 from websocket import create_connection
 

@@ -4,7 +4,7 @@ from algo_coin.exchange import *
 from algo_coin.util import *
 
 
-class AlgoCoinFrontend(object):
+class Strategy(object):
     def __init__(self, log):
         """ """
         self.log = log
