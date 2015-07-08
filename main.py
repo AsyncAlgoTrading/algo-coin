@@ -68,10 +68,35 @@ if __name__ == "__main__":
     # 5. build order book
     # 6. startup bank
     # 7. startup strategy manager
-    p = Process(target = deploy_db)
-    p.start()
-    
-    p.join()
+    p_db = Process(target=deploy_db)
+    p_db.start()
+
+    p_ce = Process(target=deploy_ce)
+    p_rr = Process(target=deploy_ce)
+    p_se = Process(target=deploy_ce)
+    p_ob = Process(target=deploy_ce)
+    p_bk = Process(target=deploy_ce)
+
+    #TODO wait around and ping subprocesses for life.
+
+    running = True
+    triggered = None
+
+    while(running):
+        if not (p_db.is_alive()):
+            running = False
+            triggered = p_db
+
+    #TODO Cleanup
+    p_db.terminate()
+    p_ce.terminate()
+    p_rr.terminate()
+    p_se.terminate()
+    p_ob.terminate()
+    p_bk.terminate()
+
+
+
 
 
 
