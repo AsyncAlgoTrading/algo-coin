@@ -1,11 +1,16 @@
 
+from flask import Flask
+
 s_name = "DASHBOARD"
+
+app = Flask(__name__)
 
 
 class Dashboard(object):
     def __init__(self, log):
         """Initialize with logfile"""
         self.log = log
+        print(app)
         pass
 
     def c_connectivity_engine(self, ce):
@@ -27,3 +32,6 @@ class Dashboard(object):
     def c_wallets(self, bk):
         """Connect bank to dashboard"""
         self.bk = bk
+
+    def run(self):
+        app.run()

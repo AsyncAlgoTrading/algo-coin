@@ -1,4 +1,31 @@
 import sys
+from multiprocessing import Process
+
+
+def deploy_db():
+    DB = db.Dashboard(Log())
+    DB.run()
+
+
+def deploy_ce():
+    CE = ce.ConnectivityEngine(Log())
+
+
+def deploy_rr():
+    RR = rr.ReceiverRouter(Log())
+
+
+def deploy_se():
+    SE = se.SendEngine(Log())
+
+
+def deploy_ob():
+    OB = ob.OrderBook(Log())
+
+
+def deploy_bk():
+    BK = bk.Bank(Log())
+
 
 if __name__ == "__main__":
     if (len(sys.argv) != 4):
@@ -41,13 +68,11 @@ if __name__ == "__main__":
     # 5. build order book
     # 6. startup bank
     # 7. startup strategy manager
+    p = Process(target = deploy_db)
+    p.start()
+    
+    p.join()
+
+
 
     #connect to wallets and exchanges. this is the most important step
-    DB = db.Dashboard(Log())
-    CE = ce.ConnectivityEngine(Log())
-    RR = rr.ReceiverRouter(Log())
-    SE = se.SendEngine(Log())
-    OB = ob.OrderBook(Log())
-    BK = bk.Bank(Log())
-
-    CE.setup(config_file, ex_keys_file, wlt_keys_file)
