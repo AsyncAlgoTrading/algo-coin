@@ -1,4 +1,5 @@
 import sys
+import time
 from multiprocessing import Process
 
 
@@ -7,8 +8,9 @@ def deploy_db():
     DB.run()
 
 
-def deploy_ce():
+def deploy_ce(config_file, ex_keys_file, wlt_keys_file):
     CE = ce.ConnectivityEngine(Log())
+    CE.setup(config_file, ex_keys_file, wlt_keys_file)
 
 
 def deploy_rr():
@@ -25,6 +27,14 @@ def deploy_ob():
 
 def deploy_bk():
     BK = bk.Bank(Log())
+
+
+def cleanup(thread_pool):
+    print("\nTaking all threads down now...")
+    for thread in thread_pool:
+        if thread.is_alive():
+            thread.terminate()
+        thread.join()
 
 
 if __name__ == "__main__":
@@ -68,36 +78,73 @@ if __name__ == "__main__":
     # 5. build order book
     # 6. startup bank
     # 7. startup strategy manager
-    p_db = Process(target=deploy_db)
-    p_db.start()
+    thread_pool = []
 
-    p_ce = Process(target=deploy_ce)
-    p_rr = Process(target=deploy_ce)
-    p_se = Process(target=deploy_ce)
-    p_ob = Process(target=deploy_ce)
-    p_bk = Process(target=deploy_ce)
+    try:
+        p_db_args = ()
+        p_db = Process(target=deploy_db, args=p_db_args)
+        p_db.start()
+        thread_pool.append(p_db)
+    except Exception:
+        print("Error deploying Dashboard, terminating all processes")
+        cleanup(thread_pool)
+        sys.exit(1)
 
-    #TODO wait around and ping subprocesses for life.
+    try:
+        p_ce_args = (config_file, ex_keys_file, wlt_keys_file)
+        p_ce = Process(target=deploy_ce, args=p_ce_args)
+        p_ce.start()
+        thread_pool.append(p_ce)
+    except Exception:
+        print("Error deploying ConnectivityEngine, terminating all processes")
+        cleanup(thread_pool)
+        sys.exit(1)
 
-    running = True
-    triggered = None
+    try:
+        p_rr_args = ()
+        p_rr = Process(target=deploy_rr, args=p_rr_args)
+        p_rr.start()
+        thread_pool.append(p_rr)
+    except Exception:
+        print("Error deploying ReceiverRouter, terminating all processes")
+        cleanup(thread_pool)
+        sys.exit(1)
 
-    while(running):
-        if not (p_db.is_alive()):
-            running = False
-            triggered = p_db
+    try:
+        p_se_args = ()
+        p_se = Process(target=deploy_se, args=p_se_args)
+        p_se.start()
+        thread_pool.append(p_se)
+    except Exception:
+        print("Error deploying Send Engine, terminating all processes")
+        sys.exit(1)
 
-    #TODO Cleanup
-    p_db.terminate()
-    p_ce.terminate()
-    p_rr.terminate()
-    p_se.terminate()
-    p_ob.terminate()
-    p_bk.terminate()
+    try:
+        p_ob_args = ()
+        p_ob = Process(target=deploy_ob, args=p_ob_args)
+        p_ob.start()
+        thread_pool.append(p_ob)
+    except Exception:
+        print("Error deploying OrderBook, terminating all processes")
+        cleanup(thread_pool)
+        sys.exit(1)
 
+    try:
+        p_bk_args = ()
+        p_bk = Process(target=deploy_bk, args=p_bk_args)
+        p_bk.start()
+        thread_pool.append(p_bk)
+    except Exception:
+        print("Error deploying Bank, terminating all processes")
+        cleanup(thread_pool)
+        sys.exit(1)
 
-
-
-
-
-    #connect to wallets and exchanges. this is the most important step
+    for thread in thread_pool:
+        if not thread.is_alive():
+            cleanup(thread_pool)
+            sys.exit(1)
+        try:
+            time.sleep(50)
+        except KeyboardInterrupt:
+            cleanup(thread_pool)
+            sys.exit(1)
