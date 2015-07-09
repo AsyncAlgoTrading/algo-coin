@@ -1,0 +1,262 @@
+html {
+	margin: 0;
+}
+body {
+    position:absolute;
+    left:0px;
+    right:0px;
+    top:0px;
+    bottom:0px;
+    background: url('../img/nyc.jpg') no-repeat center center       fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lato', sans-serif !important;
+    padding:0 0 0 60;
+    margin: 0 0 0 0;
+}
+@media (max-width: 979px) {
+	body { padding-top: 0 !important; }
+}
+a:hover {
+	text-decoration: none;
+}
+input[type="text"], 
+input[type="password"], 
+input[type="submit"],
+textarea {
+	font-family: 'Lato', Helvetica;
+}
+
+/* Navbar
+-------------------------------------------------- */
+body.pull_top {
+    padding-top: 0px !important;
+}
+header {
+    background: rgba(0,0,0,.6) !important;
+}
+
+/* Footer
+-------------------------------------------------- */
+#footer {
+	color: white;
+    position: absolute;
+    bottom:0;
+    min-width:100%;
+    height:50px;   /* Height of the footer */
+    background: rgba(0,0,0,.7);
+	margin-bottom: 2px;
+	padding-bottom: 4px;
+}
+#footer .footer_header {
+	font-style: italic;
+	font-weight: 300;
+	font-size: 15px;
+	margin-bottom: 2px;
+	margin-left: 15px; 
+}
+
+#footer .credits {
+	padding: 2px 0px 2px 0px;
+}
+#footer .credits .social {
+	text-align: center;
+}
+#footer .credits .social a {
+}
+#footer .credits .copyright {
+	color: white;
+    font-size:10px;
+	font-style: italic;
+	text-align: center;
+}
+#footer .credits .social a {
+	margin: 10px;
+}
+#footer .credits .social a span{
+	display: inline-block;
+	width: 33px;
+	height: 33px;
+}
+#footer .credits .social span.ico1,
+#footer .credits .social span.ico1h{
+	background-position: 0px 0px;
+}
+#footer .credits .social span.ico2,
+#footer .credits .social span.ico2h{
+	background-position: -37px 0px;
+}
+#footer .credits .social span.ico3,
+#footer .credits .social span.ico3h{
+	background-position: -75px 0px;
+}
+#footer .credits .social span.ico4,
+#footer .credits .social span.ico4h{
+	background-position: -112px -1px;
+}
+#footer .credits .social span.ico5,
+#footer .credits .social span.ico5h{
+	background-position: -151px 0px;
+}
+#footer .credits .social span.ico6,
+#footer .credits .social span.ico6h{
+	background-position: -188px -1px;
+}
+#footer .credits .social span.ico7,
+#footer .credits .social span.ico7h{
+	background-position: -226px 0px;
+}
+#footer .credits .social span.ico8,
+#footer .credits .social span.ico8h{
+	background-position: -226px 0px;
+}
+#footer .credits .social a:hover span.socialicons{
+	display: none;
+}
+#footer .credits .social a:hover span.socialicons_h{
+	display: inline-block !important;
+}
+#footer .credits .social span.socialicons_h{
+	display: none;
+}
+.socialicons{
+	background: url('../img/socialicons.png') no-repeat;
+	width: 265px;
+	height: 36px;
+}
+.socialicons_h{
+	background: url('../img/socialicons_h.png') no-repeat;
+	width: 265px;
+	height: 36px;
+}
+
+/*Inner Footer*/
+#footer .info{
+	margin-bottom: 10px;
+	margin-left: 0;
+}
+#footer .info .residence{
+	margin-left: 0;
+}
+#footer .info ul{
+	margin: 0;
+	padding: 0;
+}
+#footer .info ul li{
+	list-style: none;
+	font-size: 16px;
+	color: white;
+	line-height: 23px;
+}
+#footer .info ul a{
+	color: white;
+	-webkit-transition: color .2s;
+	-moz-transition: color .2s;
+	-ms-transition: color .2s;
+	transition: color .2s;
+}
+#footer .info ul a:hover{
+	color: #f0f5ff;
+}
+#footer .info .touch{
+	float: right;
+}
+#footer .info .touch ul li{
+	display: inline-block;
+	margin-left: 30px;
+}
+
+/* Global
+-------------------------------------------------- */
+.page_header {
+	background-color: #000;
+	color: #fff;
+	font-size: 23px;
+	display: inline-block;
+	padding: 0px 18px;
+}
+.social_icon{
+	background: url("../img/social_icons.png") no-repeat;
+	width: 110px;
+	height: 18px;
+}
+.contact_social{
+	background: url("../img/contact_social.png") no-repeat;
+	width: 180px;
+	height: 34px;
+}
+
+/* Responsive
+-------------------------------------------------- */
+
+/* Large desktop */
+@media (min-width: 1200px) {
+	#footer .sections .contact > *{
+		/*margin-left: 80px;*/
+	}
+}
+@media (min-width: 980px) {
+	
+}
+@media (max-width: 979px) {
+	.navbar.transparent.navbar-fixed-top, 
+	.navbar.home.navbar-fixed-top{
+		margin-bottom: 0px;
+	}
+	.navbar.transparent.navbar-inverse .navbar-inner {
+		background: #0d1a28;
+	}
+	.navbar-inverse .nav-collapse .nav > li > a, 
+	.navbar-inverse .nav-collapse .dropdown-menu a {
+		color: #fff;
+		opacity: 0.7;
+	}
+}
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+	.navbar.transparent.navbar-fixed-top, 
+	.navbar.home.navbar-fixed-top{
+		margin-bottom: -70px;
+		position: relative;
+		top: 999;
+	}
+}
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+	footer {
+		margin-right: -20px;
+		margin-left: -20px;
+	}
+	#footer{
+		margin-right: -20px;
+		margin-left: -20px;
+	}
+	#footer .container{
+		padding: 0px 20px;
+	}
+	/*Index Footer*/
+	#footer .footer_header {
+		margin-left: 0;
+	}
+	#footer .footer_header h3{
+		margin-left: 0;
+	}
+	/*Inner Footer*/
+	#footer .info .touch ul li{
+		margin: 0 30px 0 0;
+	}
+	#footer .info .touch ul{
+		margin:15px 0 15px;
+	}
+}
+/* Landscape phones and down */
+@media (max-width: 480px) {
+
+}
+
+/* Icons
+-------------------------------------------------- */
+
