@@ -67,6 +67,7 @@ if __name__ == "__main__":
         from algo_coin.util.log import *
 
     except Exception:
+        print()
         print("Import Error.")
         sys.exit(1)
 
