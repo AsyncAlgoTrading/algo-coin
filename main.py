@@ -57,6 +57,7 @@ if __name__ == "__main__":
     wlt_keys_file = sys.argv[3]
 
     # make sure paths are all good by trying to import
+
     try:
         from algo_coin.dashboard import dashboard as db
         from algo_coin.connectivity import connectivity_engine as ce
