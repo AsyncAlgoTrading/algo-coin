@@ -1,9 +1,7 @@
-from algo_coin.dashboard import dashboard
-from flask import Flask, render_template
+from django.shortcuts import render
 
+# Create your views here.
 
-@dashboard.app.route('/index')
-@dashboard.app.route('/')
-@dashboard.app.route('/home')
-def home():
-    return render_template("index.html")
+def index(request):
+    return render(request, 'dj_dashboard/index.html')
+

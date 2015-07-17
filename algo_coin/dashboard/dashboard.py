@@ -1,9 +1,5 @@
 
-from flask import Flask
-
 s_name = "DASHBOARD"
-
-app = Flask(__name__)
 
 
 class Dashboard(object):
@@ -33,5 +29,3 @@ class Dashboard(object):
         """Connect bank to dashboard"""
         self.bk = bk
 
-    def run(self):
-        app.run()
