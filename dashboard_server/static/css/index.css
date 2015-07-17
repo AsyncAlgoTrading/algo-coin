@@ -1,0 +1,41 @@
+#body{
+    min-height:100%;
+    position:relative;
+    overflow:hidden;
+    padding-left:20px;
+    padding-right:20px;
+    /* for heart background */
+    /*    background: url('../img/heart-clear.png') no-repeat center center       fixed;
+    -webkit-background-size: cover;
+    background-size: cover;
+    -webkit-font-smoothing: antialiased;
+    */
+}
+
+
+#container {
+    width:100%;
+    position:absolute;
+    top:20%;
+    overflow:hidden;
+    padding-bottom:60px;
+}
+
+.png {
+    opacity:0.3;
+    height:100%;
+    width:100%;
+}
+
+/*.png:hover {
+    opacity:1;
+}*/
+
+
+
+div.anchor {
+    float:none;
+    clear:both;
+    line-height:0;
+    font-size:0;
+}
