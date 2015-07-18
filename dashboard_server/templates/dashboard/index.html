@@ -1,41 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <title>AlgoCoin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-<!-- styles -->
-  <link href="/static/dashboard/css/style.css" rel="stylesheet">
-<script src="/static/dashboard/js/jquery.min.js"></script>
-<script src="/static/dashboard/js/new.js"></script>
-  <!--link rel="shortcut icon" href="/static/img/logo_blk.png"-->
-  <style type="text/css"></style>
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="header">
-<h1>AlgoCoin</h1>
-</div>
-
-
-<div class="section" id="first">
+{% block body %}
+<div class="section" id="ticker">
     <h2>Ticker</h2>
     <div class="hide">
+        <p>test</p>
     </div>
 </div>
 <hr width="80%">
 
+<div class="section" id="orderbook">
+    <h2>Order Book</h2>
+    <div class="hide">
+        <p>test</p>
+    </div>
+</div>
+<hr width="80%">
 
+<div class="section" id="strategies">
+    <h2>Strategies</h2>
+    <div class="hide">
+        <p>test</p>
+    </div>
+</div>
+<hr width="80%">
 
-<div class="contact">
-    <h2>Contact</h2>
-    <p>t.paine154@gmail.com</p>
-    <p>© 2015 TP. All rights reserved.</p>
+<div class="section" id="accounts">
+    <h2>Accounts</h2>
+    <div class="hide">
+        <p>test</p>
+    </div>
+</div>
+<hr width="80%">
+
+<div class="section" id="connections">
+    <h2>Connections</h2>
+    <div class="hide">
+        <p>test</p>
+    </div>
 </div>
 
-</body>
-</html>
+
+{% endblock %}
 

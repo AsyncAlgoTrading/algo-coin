@@ -11,14 +11,14 @@ body {
   font-family: Arial, Sans-serif;
   font-size: 14px;
   line-height: 1.6em;
-  color: #white;
-  background-color: #ffffff;
+  color: #34495e;
+  background-color: #ecf0f1;
 }
 
 h1, h2, h3, h4, h5, h6 {
 	font-family: Arial, sans-serif;
 	line-height:1.1em;
-	color: #3a3a3a;
+	color: #34495e;
 	font-weight:300;
 	margin-bottom:10px;
 }
@@ -81,7 +81,7 @@ hr {
 .desc {
     padding: 0 0 0 0;
     margin: 0 0 0 0;
-    color: #888;
+    color: #ecf0f1;
 }
 
 
@@ -91,14 +91,14 @@ hr {
 	padding: 5px 5px 5px 5px;
 	margin: 0 auto;
 	width:100%;
-	background-color: #3a3a3a;
-	color:#ddd;
-	padding-left:20%;
+	background-color: #34495e;
+	color:#ecf0f1;
+	padding-left:15%;
 	padding-bottom: 10px;
 }
 
 .header h1{
-	color:#ddd;
+	color:#ecf0f1;
 }
 
 
@@ -112,14 +112,14 @@ hr {
 	padding: 5px 5px 5px 5px;
 	margin: 0 auto;
 	width:100%;
-	background-color: #3a3a3a;
-	color:#ddd;
-	padding-left:20%;
+	background-color: #34495e;
+	color:#ecf0f1;
+	padding-left:15%;
 	padding-bottom: 20px;
 }
 
 .contact h2{
-	color:#ddd;
+	color:#ecf0f1;
 }
 
 

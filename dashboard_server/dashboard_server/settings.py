@@ -58,7 +58,7 @@ ROOT_URLCONF = 'dashboard_server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates/dashboard')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,7 +103,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"static")
-print(STATIC_ROOT)
 STATIC_DB = os.path.join(BASE_DIR,'static_db')
-print(STATIC_DB)
 STATICFILES_DIRS = (STATIC_DB,)
