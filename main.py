@@ -59,7 +59,6 @@ if __name__ == "__main__":
     # make sure paths are all good by trying to import
     from algo_coin.dashboard import dashboard as db
     from algo_coin.connectivity import connectivity_engine as ce
-    '''
     try:
         #from algo_coin.dashboard import dashboard as db
         #from algo_coin.connectivity import connectivity_engine as ce
@@ -67,13 +66,12 @@ if __name__ == "__main__":
         #from algo_coin.sendeng import sendengine as se
         #from algo_coin.orderbook import orderbook as ob
         #from algo_coin.wallet import bank as bk
-        #from algo_coin.util.log import *
+        from algo_coin.util.log import *
 
     except Exception:
         print()
         print("Import Error.")
         sys.exit(1)
-    '''
     # initialize and connect different processes TODO
     # 1. startup dashboard
     # 2. startup connectivity engine

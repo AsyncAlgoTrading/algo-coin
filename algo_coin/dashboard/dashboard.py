@@ -6,7 +6,6 @@ class Dashboard(object):
     def __init__(self, log):
         """Initialize with logfile"""
         self.log = log
-        print(app)
         pass
 
     def c_connectivity_engine(self, ce):

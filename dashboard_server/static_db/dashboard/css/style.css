@@ -1,0 +1,129 @@
+/* ==== overwrite bootstrap standard ==== */
+@import url('overwrite.css');
+
+/* =======================================
+1. Basic & general
+======================================== */
+
+body {
+  margin: 0;
+  padding:0;
+  font-family: Arial, Sans-serif;
+  font-size: 14px;
+  line-height: 1.6em;
+  color: #white;
+  background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Arial, sans-serif;
+	line-height:1.1em;
+	color: #3a3a3a;
+	font-weight:300;
+	margin-bottom:10px;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  font-weight: inherit;
+}
+
+h1 {
+  font-size: 34px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+h2:hover {
+  opacity: 0.7;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+h4 {
+  font-size: 22px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+h6 {
+  font-size: 16px;
+}
+
+h1 small {
+  font-size: 24.5px;
+}
+
+h2 small {
+  font-size: 17.5px;
+}
+
+h3 small {
+  font-size: 14px;
+}
+
+h4 small {
+  font-size: 14px;
+}
+
+hr {
+	margin:0 auto;
+}
+
+
+
+
+.desc {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    color: #888;
+}
+
+
+
+
+.header{
+	padding: 5px 5px 5px 5px;
+	margin: 0 auto;
+	width:100%;
+	background-color: #3a3a3a;
+	color:#ddd;
+	padding-left:20%;
+	padding-bottom: 10px;
+}
+
+.header h1{
+	color:#ddd;
+}
+
+
+.section{
+	padding: 5px 5px 5px 5px;
+	margin: 0 auto;
+	width:70%;
+}
+
+.contact{
+	padding: 5px 5px 5px 5px;
+	margin: 0 auto;
+	width:100%;
+	background-color: #3a3a3a;
+	color:#ddd;
+	padding-left:20%;
+	padding-bottom: 20px;
+}
+
+.contact h2{
+	color:#ddd;
+}
+
+
+a {
+    color: inherit;    
+    text-decoration: none;
+}
