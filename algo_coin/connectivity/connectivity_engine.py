@@ -25,28 +25,24 @@ class ConnectivityEngine(object):
         """Process configuration and api key files"""
         ex_key_d = {}
         wlt_key_d = {}
-        #
-        #
-        #
+
+        #Open and parse config file to get active
+        #exchanges and wallets
         f = open(cfg_filename, "r")
         for line in f:
             split_line = line.rstrip('\n').split("=")
             self.cfg_d[split_line[0]] = (split_line[1] == "yes")
         f.close()
 
-        #comments
-        #
-        #
+        #Get list of actives and write to log
         self.active = [exchange for exchange in self.cfg_d.keys()
                        if self.cfg_d[exchange]]
         out = ""
         for exchange in self.active:
             out += exchange + "\t"
-            self.log("Active : " + out)
+        self.log("Active : " + out)
 
-        #
-        #
-        #
+        #Parse API keys from each exchange
         f = open(ex_key_filename)
         for line in f:
             exchange_name = line.split("_")[0]
@@ -56,9 +52,7 @@ class ConnectivityEngine(object):
                     line[len(split_line[0])+1:].rstrip('\n')
         f.close()
 
-        #
-        #
-        #
+        #Parse API keys from each wallet
         f = open(wallet_key_filename)
         for line in f:
             exchange_name = line.split("_")[0]
@@ -68,9 +62,7 @@ class ConnectivityEngine(object):
                     line[len(split_line[0])+1:].rstrip('\n')
         f.close()
 
-        #
-        #
-        #
+        #Initialize API key objects for all
         for exchange in self.active:
             self.ex_apis[exchange_name] = \
                 APIKey(ex_key_d[exchange_name + "_key"],
@@ -81,11 +73,13 @@ class ConnectivityEngine(object):
 
         self.log("***APIS LOADED***")
 
+
     def add_wallets(self):
         """Add wallets"""
         for exchange in self.active:
             self.wallets[exchange] = Wallet(ExchangeType.type(exchange))
         self.log("***WALLETS LOADED***")
+
 
     def add_exchanges(self):
         """ Add exchanges"""
@@ -93,8 +87,15 @@ class ConnectivityEngine(object):
             self.exchanges[exchange] = Exchange(ExchangeType.type(exchange))
         self.log("***EXCHANGES LOADED***")
 
-    def initialize_apis(self):
+
+    def initialize_endpoints(self):
+        #TODO
+        pass
+
+
+    def connect(self):
         """Connect to all endpoints"""
+        #TODO
         for exchange in self.active:
             # try:
             #     self.log.log(self.wallets[exchange].APIInit(
@@ -114,7 +115,7 @@ class ConnectivityEngine(object):
         """ """
         #TODO
         self.log("***HEARTBEAT***")
-        pass
+        return False
 
     def log(self, message):
         """Log a message wrapper"""
@@ -129,7 +130,12 @@ class ConnectivityEngine(object):
         self.load_apis(config_file, ex_keys_file, wallet_keys_file)
         self.add_wallets()
         self.add_exchanges()
-        self.initialize_apis()
-        self.heartbeat()
+        self.initialize_endpoints()
+        self.connect()
+
+    def monitor(self):
+        return self.heartbeat()
+
+    def close(self):
         self.log("***LOG END***")
         self.lg.close()

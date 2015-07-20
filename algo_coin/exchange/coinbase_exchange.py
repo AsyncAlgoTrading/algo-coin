@@ -5,6 +5,7 @@ from autobahn.twisted.websocket import WebSocketClientFactory,  \
 from twisted.internet import reactor
 import json
 from . import ExchangeClient
+from algo_coin.util.util import ExchangeType
 
 
 class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
@@ -22,10 +23,12 @@ class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
 
 
 class CoinbaseExchangeClient(ExchangeClient):
-    def __init__(self, exchangeType):
+    def __init__(self, endpoint):
+        self.super(ExchangeType.type("coinbase"), endpoint,
+                   CoinbaseExchangeClientProtocol)
         self.super()
 
-    def connectSocket(self, endpoint):
+    def connectSocket(self):
         #log.startLogging(sys.stdout)
         factory = WebSocketClientFactory("wss://ws-feed.exchange.coinbase.com",
                                          debug=True)

@@ -11,6 +11,11 @@ def deploy_db():
 def deploy_ce(config_file, ex_keys_file, wlt_keys_file):
     CE = ce.ConnectivityEngine(Log())
     CE.setup(config_file, ex_keys_file, wlt_keys_file)
+    while(CE.monitory()):
+        time.sleep(5)
+        continue
+
+    CE.close()
 
 
 def deploy_rr():
@@ -73,7 +78,6 @@ if __name__ == "__main__":
         print("Import Error.")
         sys.exit(1)
 
-
     # initialize and connect different processes TODO
     # 1. startup dashboard
     # 2. startup connectivity engine
@@ -87,34 +91,37 @@ if __name__ == "__main__":
 
     p_db_args = ()
     p_db = Process(target=deploy_db, args=p_db_args,
-                       name="Thread-Dashboard")
+                   name="Thread-Dashboard")
     processes.append(p_db)
 
     p_ce_args = (config_file, ex_keys_file, wlt_keys_file)
     p_ce = Process(target=deploy_ce, args=p_ce_args,
-                       name="Thread-ConnectivityEngine")
+                   name="Thread-ConnectivityEngine")
+
     p_rr_args = ()
     p_rr = Process(target=deploy_rr, args=p_rr_args,
-                       name="Thread-ReceiverRouter")
+                   name="Thread-ReceiverRouter")
+
     p_se_args = ()
     p_se = Process(target=deploy_se, args=p_se_args,
-                       name="Thread-SendEngine")
+                   name="Thread-SendEngine")
+
     p_ob_args = ()
     p_ob = Process(target=deploy_ob, args=p_ob_args,
-                       name="Thread-Orderbook")
+                   name="Thread-Orderbook")
+
     p_bk_args = ()
     p_bk = Process(target=deploy_bk, args=p_bk_args,
-                       name="Thread-Bank")
+                   name="Thread-Bank")
 
     try:
         for process in processes:
             process.start()
             thread_pool.append(process)
     except Exception:
-        print("Error deploying "  + ", terminating all processes")
+        print("Error deploying " + ", terminating all processes")
         cleanup(thread_pool)
         sys.exit(1)
-
 
     for thread in thread_pool:
         if not thread.is_alive():
