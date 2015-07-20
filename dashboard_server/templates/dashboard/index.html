@@ -4,7 +4,8 @@
 <div class="section" id="ticker">
     <h2>Ticker</h2>
     <div class="hide">
-        <p>test</p>
+        {% block ticker %}
+        {% endblock %}
     </div>
 </div>
 <hr width="80%">
@@ -12,7 +13,8 @@
 <div class="section" id="orderbook">
     <h2>Order Book</h2>
     <div class="hide">
-        <p>test</p>
+        {% block orderbook %}
+        {% endblock %}
     </div>
 </div>
 <hr width="80%">
@@ -20,7 +22,8 @@
 <div class="section" id="strategies">
     <h2>Strategies</h2>
     <div class="hide">
-        <p>test</p>
+        {% block strategy %}
+        {% endblock %}
     </div>
 </div>
 <hr width="80%">
@@ -28,15 +31,17 @@
 <div class="section" id="accounts">
     <h2>Accounts</h2>
     <div class="hide">
-        <p>test</p>
+        {% block accounts %}
+        {% endblock %}
     </div>
 </div>
 <hr width="80%">
 
 <div class="section" id="connections">
     <h2>Connections</h2>
+        {% block conenctions %}
+        {% endblock %}
     <div class="hide">
-        <p>test</p>
     </div>
 </div>
 
