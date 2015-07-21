@@ -1,9 +1,6 @@
 /* ==== overwrite bootstrap standard ==== */
 @import url('overwrite.css');
-
-/* =======================================
-1. Basic & general
-======================================== */
+/*======================================== */
 
 body {
   margin: 0;
@@ -84,9 +81,6 @@ hr {
     color: #ecf0f1;
 }
 
-
-
-
 .header{
 	padding: 5px 5px 5px 5px;
 	margin: 0 auto;
@@ -101,11 +95,14 @@ hr {
 	color:#ecf0f1;
 }
 
-
 .section{
 	padding: 5px 5px 5px 5px;
 	margin: 0 auto;
-	width:70%;
+	width:100%;
+}
+
+.section h2{
+    padding-left:15%;
 }
 
 .contact{
@@ -122,8 +119,27 @@ hr {
 	color:#ecf0f1;
 }
 
-
 a {
     color: inherit;    
     text-decoration: none;
 }
+
+
+.graph {
+    width:90%;
+    background-color:cyan;
+    margin: 0 auto;
+}
+
+.subsection {
+
+}
+
+.subsection h4{
+    padding-left:15%;
+}
+
+
+
+
+

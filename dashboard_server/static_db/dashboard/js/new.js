@@ -1,6 +1,10 @@
 $(document).ready(function(){
 
-$("#conncetions div.hide ").hide();
+$("#connections div.hide ").hide();
+$("#ticker div.hide ").hide();
+$("#orderbook div.hide ").hide();
+$("#strategies div.hide ").hide();
+$("#accounts div.hide ").hide();
 
 $(".section#ticker").click(function(){
     $("#ticker div.hide ").toggle();
