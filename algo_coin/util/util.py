@@ -70,3 +70,35 @@ def insertPythonTime(return_json):
             if "time" in row.keys():
                 row['python_time'] = ConvertTime(row['time'])
     return return_json
+
+
+"""This is the reconstructed book for an individual exchange"""
+class ExchangeOrderBook(object):
+    def __init__(self, exchange_type):
+        self.exchange_type = exchange_type
+        pass
+
+    @abstractmethod
+    def buy_order(self):
+        pass
+
+    @abstractmethod
+    def sell_order(self):
+        pass
+
+    @abstractmethod
+    def order_fill(self):
+        pass
+
+    @abstractmethod
+    def order_done(self):
+        pass
+
+    @abstractmethod
+    def order_change(self):
+        pass
+
+"""Class maintains the user's outstanding orders across all exchanges"""
+class UserOrderBook(object):
+    def __init__():
+        pass

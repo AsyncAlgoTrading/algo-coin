@@ -115,6 +115,8 @@ class ConnectivityEngine(object):
         """ """
         #TODO
         self.log("***HEARTBEAT***")
+        #TODO for http requests, use specific request
+        #TODO for websockets, monitor actual connection
         return False
 
     def log(self, message):

@@ -1,6 +1,6 @@
 
 from algo_coin.util.util import *
-from algo_coin.apis.core import *
+from algo_coin.connectivity.core import *
 
 from coinbase.client import Client
 

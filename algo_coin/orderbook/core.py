@@ -1,6 +1,10 @@
 
+"""This is the global orderbook, composed of the books at
+individual exchanges"""
 
-class Orderbook(object):
-    def __inti__(self):
-        """"""
+
+class OrderBook(object):
+    def __init__(self, log):
+        """ """
+        self.log = log
         pass

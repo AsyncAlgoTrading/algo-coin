@@ -10,6 +10,9 @@ from algo_coin.util.util import ExchangeType
 
 class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
 
+    def onConnect(self):
+        pass
+
     def onOpen(self):
         msg = json.dumps({"type": "subscribe", "product_id": "BTC-USD"})
         res = self.sendMessage(msg.encode('utf-8'), isBinary=False)
@@ -20,6 +23,9 @@ class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
             msg = json.loads(payload.decode('utf8'))
             print(msg)
             #pprint(msg)
+
+    def onClose(self, wasClean, core, reason):
+        pass
 
 
 class CoinbaseExchangeClient(ExchangeClient):
