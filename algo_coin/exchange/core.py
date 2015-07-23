@@ -1,6 +1,7 @@
 
 from algo_coin.util.util import *
-from algo_coin.apis.coinbase_api import *
+from algo_coin.connectivity.coinbase import *
+from abc import abstractmethod
 
 # from abc import abstractmethod
 from autobahn.twisted.websocket import WebSocketClientFactory,  \
@@ -24,10 +25,16 @@ class Exchange(Endpoint):
 
         self.exchange_api.APIInit()
 
+    @abstractmethod
+    def connect(self):
+        pass
+
+    @abstractmethod
     def buy(self,):
         """ """
         pass
 
+    @abstractmethod
     def sell(self):
         """ """
         pass

@@ -18,6 +18,7 @@ class ConnectivityEngine(object):
         self.wlt_apis = {}
         self.wallets = {}
         self.exchanges = {}
+        self.down = []
         self.lg = log
         pass
 
@@ -26,8 +27,7 @@ class ConnectivityEngine(object):
         ex_key_d = {}
         wlt_key_d = {}
 
-        #Open and parse config file to get active
-        #exchanges and wallets
+        #Open and parse config file to get active exchanges and wallets
         f = open(cfg_filename, "r")
         for line in f:
             split_line = line.rstrip('\n').split("=")
@@ -35,8 +35,7 @@ class ConnectivityEngine(object):
         f.close()
 
         #Get list of actives and write to log
-        self.active = [exchange for exchange in self.cfg_d.keys()
-                       if self.cfg_d[exchange]]
+        self.active = [ex for ex in self.cfg_d.keys() if self.cfg_d[ex]]
         out = ""
         for exchange in self.active:
             out += exchange + "\t"
@@ -45,8 +44,8 @@ class ConnectivityEngine(object):
         #Parse API keys from each exchange
         f = open(ex_key_filename)
         for line in f:
-            exchange_name = line.split("_")[0]
-            if self.cfg_d[exchange_name]:
+            ex = line.split("_")[0]
+            if self.cfg_d[ex]:
                 split_line = line.rstrip('\n').split("=")
                 ex_key_d[split_line[0]] = \
                     line[len(split_line[0])+1:].rstrip('\n')
@@ -55,69 +54,70 @@ class ConnectivityEngine(object):
         #Parse API keys from each wallet
         f = open(wallet_key_filename)
         for line in f:
-            exchange_name = line.split("_")[0]
-            if self.cfg_d[exchange_name]:
+            end = line.split("_")[0]
+            if self.cfg_d[end]:
                 split_line = line.rstrip('\n').split("=")
                 wlt_key_d[split_line[0]] = \
                     line[len(split_line[0])+1:].rstrip('\n')
         f.close()
 
         #Initialize API key objects for all
-        for exchange in self.active:
-            self.ex_apis[exchange_name] = \
-                APIKey(ex_key_d[exchange_name + "_key"],
-                       ex_key_d[exchange_name + "_secret"])
-            self.wlt_apis[exchange_name] = \
-                APIKey(wlt_key_d[exchange_name + "_wallet_key"],
-                       wlt_key_d[exchange_name + "_wallet_secret"])
+        for end in self.active:
+            self.ex_apis[end] = \
+                APIKey(ex_key_d[end + "_key"],
+                       ex_key_d[end + "_secret"])
+            self.wlt_apis[end] = \
+                APIKey(wlt_key_d[end + "_wallet_key"],
+                       wlt_key_d[end + "_wallet_secret"])
 
         self.log("***APIS LOADED***")
 
 
     def add_wallets(self):
         """Add wallets"""
-        for exchange in self.active:
-            self.wallets[exchange] = Wallet(ExchangeType.type(exchange))
+        for end in self.active:
+            self.wallets[end] = Wallet(ExchangeType.type(end))
         self.log("***WALLETS LOADED***")
 
 
     def add_exchanges(self):
         """ Add exchanges"""
-        for exchange in self.active:
-            self.exchanges[exchange] = Exchange(ExchangeType.type(exchange))
+        for ex in self.active:
+            self.exchanges[ex] = Exchange(ExchangeType.type(ex))
         self.log("***EXCHANGES LOADED***")
 
 
-    def initialize_endpoints(self):
-        #TODO
+    def initialize_exchanges(self):
+        for end in self.exchanges.keys():
+            self.log(self.wallets[end].APIInit(self.ex_apis[end]))
+        self.log("***EXCHANGE APIS INITIALIZED***")
+
+
+    def initialize_wallets(self):
+        """Connect to all endpoints"""
+        for end in self.wallets.keys():
+            self.log(self.wallets[end].APIInit(self.wlt_apis[end]))
+        self.log("***WALLET APIS INITIALIZED***")
+
+
+    def connect_exchanges(self):
+        pass
+
+    def connect_wallets(self):
         pass
 
 
-    def connect(self):
-        """Connect to all endpoints"""
-        #TODO
-        for exchange in self.active:
-            # try:
-            #     self.log.log(self.wallets[exchange].APIInit(
-            #         self.wlt_apis[exchange]))
-            #     self.log.log(self.exchanges[exchange].APIInit(
-            #         self.ex_apis[exchange]))
-            # except Exception:
-            #     print("Initialization failed for: " + exchange)
-            self.log(self.wallets[exchange].APIInit(
-                self.wlt_apis[exchange]))
-            # self.log(self.exchanges[exchange].APIInit(
-                # self.ex_apis[exchange]))
-
-        self.log("***APIS INITIALIZED***")
-
     def heartbeat(self):
         """ """
-        #TODO
         self.log("***HEARTBEAT***")
-        #TODO for http requests, use specific request
-        #TODO for websockets, monitor actual connection
-        return False
+        for end in self.wallets.keys():
+            if not wallets[end].heartbeat():
+                self.down.append(wallets[end])
+        for end in self.exchanges.keys():
+            if not exchanges[end].heartbeat():
+                self.down.append(exchanges[end])
+        return (len(self.down) == 0)
+
 
     def log(self, message):
         """Log a message wrapper"""
@@ -133,10 +133,17 @@ class ConnectivityEngine(object):
         self.add_wallets()
         self.add_exchanges()
         self.initialize_endpoints()
-        self.connect()
+        self.initialize_wallets()
+        self.connect_wallets()
+        self.connect_exchanges()
+        self.monitor()
 
     def monitor(self):
-        return self.heartbeat()
+        if self.heartbeat():
+            self.log("STATUS: OK")
+        else:
+            self.log("STATUS: DOWN")
+            #TODO handle
 
     def close(self):
         self.log("***LOG END***")

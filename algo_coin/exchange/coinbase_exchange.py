@@ -11,6 +11,7 @@ from algo_coin.util.util import ExchangeType
 class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self):
+        #TODO
         pass
 
     def onOpen(self):
@@ -25,6 +26,7 @@ class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
             #pprint(msg)
 
     def onClose(self, wasClean, core, reason):
+        #TODO
         pass
 
 

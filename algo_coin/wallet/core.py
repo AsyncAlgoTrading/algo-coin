@@ -1,6 +1,7 @@
 
 from algo_coin.util.util import *
-from algo_coin.apis.coinbase_api import *
+from algo_coin.connectivity.coinbase import *
+from abc import abstractmethod
 
 
 class Wallet(Endpoint):
@@ -12,13 +13,18 @@ class Wallet(Endpoint):
         """ """
         if self.type is ExchangeType.coinbase:
             self.wallet_api = CoinbaseWalletAPI(api_key)
-
         return self.wallet_api.APIInit()
 
+    @abstractmethod
     def deposit(self, source):
         """ """
         pass
 
+    @abstractmethod
     def withdraw(self, destination):
         """ """
+        pass
+
+    @abstractmethod
+    def heartbeat():
         pass
