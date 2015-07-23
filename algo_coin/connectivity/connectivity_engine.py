@@ -100,10 +100,10 @@ class ConnectivityEngine(object):
         self.log("***WALLET APIS INITIALIZED***")
 
 
-    def connect_exchanges(self):
+    def connect_exchanges(self, recrouter):
         pass
 
-    def connect_wallets(self):
+    def connect_wallets(self, recrouter):
         pass
 
 
@@ -143,7 +143,12 @@ class ConnectivityEngine(object):
             self.log("STATUS: OK")
         else:
             self.log("STATUS: DOWN")
-            #TODO handle
+            for down in self.down:
+                self.restart(down)
+
+    def restart(self, down):
+        '''' '''
+        pass
 
     def close(self):
         self.log("***LOG END***")

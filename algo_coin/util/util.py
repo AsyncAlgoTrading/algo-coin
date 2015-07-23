@@ -34,7 +34,11 @@ class Endpoint(object):
 
     @abstractmethod
     def APIInit(self, api_key):
-        '''tp be implemented'''
+        '''to be implemented'''
+
+    @abstractmethod
+    def heartbeat(self):
+        """to be implemented """
 
 
 class APIKey(object):

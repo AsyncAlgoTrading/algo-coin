@@ -24,7 +24,3 @@ class Wallet(Endpoint):
     def withdraw(self, destination):
         """ """
         pass
-
-    @abstractmethod
-    def heartbeat():
-        pass
