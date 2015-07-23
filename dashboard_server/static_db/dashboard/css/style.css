@@ -126,9 +126,18 @@ a {
 
 
 .graph {
-    width:90%;
-    background-color:cyan;
+    width:80%;
+    height:250px;
+    background-color:white;
     margin: 0 auto;
+}
+
+.table {
+    width:75%;
+    height:250px;
+    background-color:white;
+    margin: 0 auto;
+    /*float:left;*/
 }
 
 .subsection {
@@ -137,9 +146,35 @@ a {
 
 .subsection h4{
     padding-left:15%;
+    /*float:left;*/
 }
 
 
+.bank {
+    width:75%;
+    height:100px;
+    background-color:white;
+    margin: 0 auto;
+  /*float:left;*/
+}
+
+.connection {
+    margin: 10px;
+    display: inline;
+}
+
+.connection p{
+  display: inline;
+  font-size: 30px;
+  background-color: #00FF00;
+  color:white;
+}
+
+#connectivity h4{
+  width:10%;
+  display: inline;
+  padding-left: 15%;
+}
 
 
 
