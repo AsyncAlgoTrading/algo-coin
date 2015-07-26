@@ -165,15 +165,32 @@ a {
 
 .connection p{
   display: inline;
-  font-size: 30px;
+
+
+}
+
+.connection p.up{
+  font-size: 25px;
   background-color: #00FF00;
   color:white;
+}
+
+.connection p.down{
+  font-size: 20px;
+  background-color: #FF0000;
+  color:white;
+}
+
+div#connectivity.subsection {
+  padding-left: 15%;
+  width:25%;
+
 }
 
 #connectivity h4{
   width:10%;
   display: inline;
-  padding-left: 15%;
+  padding-left: 0%
 }
 
 

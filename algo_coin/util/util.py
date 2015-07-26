@@ -5,7 +5,7 @@ from dateutil import parser
 
 
 @unique
-class ExchangeType(Enum):
+class EndpointType(Enum):
     coinbase = 1
     hitbtc = 2
     cryptsy = 3
@@ -16,7 +16,7 @@ class ExchangeType(Enum):
     @staticmethod
     def type(string):
         """ """
-        return ExchangeType[string]
+        return EndpointType[string]
 
 
 class Endpoint(object):
@@ -24,7 +24,7 @@ class Endpoint(object):
 
     def __init__(self, type):
         """ """
-        if not isinstance(type, ExchangeType):
+        if not isinstance(type, EndpointType):
             raise TypeError
         self.type = type
 
@@ -35,6 +35,10 @@ class Endpoint(object):
     @abstractmethod
     def APIInit(self, api_key):
         '''to be implemented'''
+
+    @abstractmethod
+    def run(self):
+        """to be implemented"""
 
     @abstractmethod
     def heartbeat(self):

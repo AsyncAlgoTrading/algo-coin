@@ -1,6 +1,7 @@
 
 from algo_coin.util.util import *
 from abc import ABCMeta, abstractmethod
+from multiprocessing import Process
 
 
 class API(object):
@@ -44,3 +45,20 @@ class ExchangeAPI(API):
     @abstractmethod
     def sell(self, amount):
         """to be implemented"""
+
+
+class EndPointConnection(Process):
+    def __init__(self, endpoint, q):
+        Process.__init__(self)
+        self.endpoint = endpoint
+        self.queue = q
+
+    def start(self):
+        self.endpoint.run()
+        self.queue.put_nowait(1)
+
+    def restart(self):
+        pass
+
+    def terminate(self):
+        endpoint.close()

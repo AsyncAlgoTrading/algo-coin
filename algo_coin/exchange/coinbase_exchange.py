@@ -4,7 +4,7 @@ from autobahn.twisted.websocket import WebSocketClientFactory,  \
 #from twisted.python import log
 from twisted.internet import reactor
 import json
-from . import ExchangeClient
+from algo_coin.exchange.core import ExchangeClient
 from algo_coin.util.util import ExchangeType
 
 

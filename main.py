@@ -1,37 +1,6 @@
 import sys
 import time
-from multiprocessing import Process
-
-
-def deploy_db():
-    DB = db.Dashboard(Log())
-    #DB.run()
-
-
-def deploy_ce(config_file, ex_keys_file, wlt_keys_file):
-    CE = ce.ConnectivityEngine(Log())
-    CE.setup(config_file, ex_keys_file, wlt_keys_file)
-    while(CE.monitory()):
-        time.sleep(5)
-        continue
-
-    CE.close()
-
-
-def deploy_rr():
-    RR = rr.ReceiverRouter(Log())
-
-
-def deploy_se():
-    SE = se.SendEngine(Log())
-
-
-def deploy_ob():
-    OB = ob.OrderBook(Log())
-
-
-def deploy_bk():
-    BK = bk.Bank(Log())
+# from multiprocessing import Process
 
 
 def cleanup(thread_pool):
@@ -48,71 +17,26 @@ if __name__ == "__main__":
             <ex-keys-file> <wallet-keys-file>\n')
         sys.exit(1)
 
-    # config files
-    # specify which exchanges we are trading on
-    # and where we the wallets are when moving
-    # funds across exchanges
     config_file = sys.argv[1]
-
-    # api keys
-    # this is where the exchange api keys are
     ex_keys_file = sys.argv[2]
-
-    # this is where the wallet api keys are
     wlt_keys_file = sys.argv[3]
 
     # make sure paths are all good by trying to import
-    from algo_coin.dashboard import dashboard as db
-    from algo_coin.connectivity import connectivity_engine as ce
-    try:
-        #from algo_coin.dashboard import dashboard as db
-        #from algo_coin.connectivity import connectivity_engine as ce
-        #from algo_coin.recrouter import recrouter as rr
-        #from algo_coin.sendeng import sendengine as se
-        #from algo_coin.orderbook import orderbook as ob
-        #from algo_coin.wallet import bank as bk
-        from algo_coin.util.log import *
+    from algo_coin.util.log import *
+    from algo_coin.util.processes import *
 
-    except Exception:
-        print()
-        print("Import Error.")
-        sys.exit(1)
-
-    # initialize and connect different processes TODO
-    # 1. startup dashboard
-    # 2. startup connectivity engine
-    # 3. startup receiver router
-    # 4. startup send engine
-    # 5. build order book
-    # 6. startup bank
-    # 7. startup strategy manager
     thread_pool = []
     processes = []
 
     p_db_args = ()
-    p_db = Process(target=deploy_db, args=p_db_args,
-                   name="Thread-Dashboard")
+    p_db = DashboardProcess()
     processes.append(p_db)
 
     p_ce_args = (config_file, ex_keys_file, wlt_keys_file)
-    p_ce = Process(target=deploy_ce, args=p_ce_args,
-                   name="Thread-ConnectivityEngine")
+    p_ce = ConnectivityProcess(p_ce_args)
+    processes.append(p_ce)
 
-    p_rr_args = ()
-    p_rr = Process(target=deploy_rr, args=p_rr_args,
-                   name="Thread-ReceiverRouter")
-
-    p_se_args = ()
-    p_se = Process(target=deploy_se, args=p_se_args,
-                   name="Thread-SendEngine")
-
-    p_ob_args = ()
-    p_ob = Process(target=deploy_ob, args=p_ob_args,
-                   name="Thread-Orderbook")
-
-    p_bk_args = ()
-    p_bk = Process(target=deploy_bk, args=p_bk_args,
-                   name="Thread-Bank")
+    import pdb; pdb.set_trace()  # breakpoint 3c08d8ef //
 
     try:
         for process in processes:

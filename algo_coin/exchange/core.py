@@ -1,6 +1,5 @@
 
 from algo_coin.util.util import *
-from algo_coin.connectivity.coinbase import *
 from abc import abstractmethod
 
 # from abc import abstractmethod
@@ -11,6 +10,7 @@ from twisted.internet import reactor
 #from pprint import pprint
 # import sys
 # import json
+
 
 
 class Exchange(Endpoint):
