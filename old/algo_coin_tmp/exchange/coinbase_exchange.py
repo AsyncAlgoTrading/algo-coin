@@ -1,12 +1,11 @@
 
 from autobahn.twisted.websocket import WebSocketClientFactory,  \
     WebSocketClientProtocol, connectWS
-from twisted.python import log
+#from twisted.python import log
 from twisted.internet import reactor
 import json
 from algo_coin.exchange.core import ExchangeClient
-from algo_coin.endpoint.endpoint import EndpointType
-import sys
+from algo_coin.util.util import EndpointType
 
 
 class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
@@ -38,10 +37,10 @@ class CoinbaseExchangeClient(ExchangeClient):
             EndpointType.type("coinbase"),
             endpoint, CoinbaseExchangeClientProtocol)
 
-    def connectSocket(self, queue):
-        log.startLogging(sys.stdout)
+    def connectSocket(self):
+        #log.startLogging(sys.stdout)
         factory = WebSocketClientFactory("wss://ws-feed.exchange.coinbase.com",
                                          debug=True)
         factory.protocol = CoinbaseExchangeClientProtocol
         connectWS(factory)
-        reactor.run()
+        # reactor.run()

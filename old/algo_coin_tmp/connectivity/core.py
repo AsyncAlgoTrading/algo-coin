@@ -47,14 +47,14 @@ class ExchangeAPI(API):
         """to be implemented"""
 
 
-class EndPointConnection(Process):
+class EndpointConnection(Process):
     def __init__(self, endpoint, q):
         Process.__init__(self)
         self.endpoint = endpoint
         self.queue = q
 
     def start(self):
-        self.endpoint.run()
+        self.endpoint.connectSocket()
         self.queue.put_nowait(1)
 
     def restart(self):
