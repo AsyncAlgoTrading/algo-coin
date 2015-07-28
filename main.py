@@ -20,13 +20,16 @@ if __name__ == "__main__":
     processes = []
     conn_manager = ConnectionManager(config_file, ex_keys_file)
     conn_engine = ConnectivityEngine(conn_manager)
-    conn_engine.init_processes()
-    conn_engine.run_processes()
+    # conn_engine.init_processes()
+    # conn_engine.run_processes()
+    # recrouter = ReceiverRouter(conn_engine)
+    # time.sleep(15)
+    # print("will it restart??")
+    # if not conn_engine.monitor_processes():
+    #     print("Connection down")
+    #     conn_engine.restart_down()
+    # time.sleep(10)
+    # conn_engine.terminate()
+
     recrouter = ReceiverRouter(conn_engine)
-    time.sleep(15)
-    print("will it restart??")
-    if not conn_engine.monitor_processes():
-        print("Connection down")
-        conn_engine.restart_down()
-    time.sleep(10)
-    conn_engine.terminate()
+    recrouter.run()
