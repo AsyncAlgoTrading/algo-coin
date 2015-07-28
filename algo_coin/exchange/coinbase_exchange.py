@@ -39,7 +39,7 @@ class CoinbaseExchangeClient(ExchangeClient):
             endpoint, CoinbaseExchangeClientProtocol)
 
     def connectSocket(self, queue):
-        log.startLogging(sys.stdout)
+        log.startLogging(sys.stderr)
         factory = WebSocketClientFactory("wss://ws-feed.exchange.coinbase.com",
                                          debug=True)
         factory.protocol = CoinbaseExchangeClientProtocol
