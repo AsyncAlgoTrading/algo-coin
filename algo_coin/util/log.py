@@ -15,7 +15,7 @@ class Log(object):
             self.logfile = open("logs/log-" + s_name +
                                 "-" + str(int(time.time())), "w")
             self.logfile.write(str(datetime.now()) +
-                               "***LOG START***")
+                               "***LOG START***\n")
             self.logstart = True
 
         self.logfile.write(str(datetime.now()) + "\t" +

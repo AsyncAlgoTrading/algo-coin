@@ -3,15 +3,18 @@ from algo_coin.util.api import APIKey
 from algo_coin.exchange.coinbase_exchange import CoinbaseExchangeClient
 from algo_coin.endpoint.endpoint import EndpointType
 
+s_name = "Connections"
 
-class ConnectionManager(object):
-    def __init__(self, config_file, ex_keys):
+
+class Connections(object):
+    def __init__(self, config_file, ex_keys, log):
+        self.log = log
         self.active = []
         self.exchanges = {}
         self.load(config_file, ex_keys)
-        pass
 
     def load(self, cfg_filename, ex_key_filename):
+        self.log.log(s_name, "Loading Configurations")
         cfg_d = {}
         ex_key_d = {}
         ex_apis = {}
@@ -45,11 +48,15 @@ class ConnectionManager(object):
         for ex in self.active:
             self.exchanges[ex] = LoadExchange(EndpointType.type(ex), "")  # TODO
 
+        self.log.log(s_name, "Configurations loaded")
+
+
     def get_active(self):
         return self.active
 
     def get_exchanges(self):
         return self.exchanges
+
 
 def LoadExchange(endpoint_type, endpoint):
     if(endpoint_type is EndpointType.coinbase):

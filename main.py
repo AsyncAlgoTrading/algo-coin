@@ -13,23 +13,27 @@ if __name__ == "__main__":
     ex_keys_file = sys.argv[2]
 
     from algo_coin.util.log import *
-    from algo_coin.connectivity.connection_manager import ConnectionManager
+    from algo_coin.connectivity.connections import Connections
     from algo_coin.connectivity.connectivity_engine import ConnectivityEngine
+    from algo_coin.connectivity.connection_monitor import ConnectionMonitor
     from algo_coin.recrouter.recrouter import ReceiverRouter
 
     processes = []
-    conn_manager = ConnectionManager(config_file, ex_keys_file)
-    conn_engine = ConnectivityEngine(conn_manager)
-    # conn_engine.init_processes()
-    # conn_engine.run_processes()
-    # recrouter = ReceiverRouter(conn_engine)
-    # time.sleep(15)
-    # print("will it restart??")
-    # if not conn_engine.monitor_processes():
-    #     print("Connection down")
-    #     conn_engine.restart_down()
-    # time.sleep(10)
-    # conn_engine.terminate()
+    conn_manager = Connections(config_file, ex_keys_file, Log())
+    conn_engine = ConnectivityEngine(conn_manager, Log())
+    conn_monitor = ConnectionMonitor(conn_engine, Log())
+    recrouter = ReceiverRouter(conn_engine.queues, Log())
 
-    recrouter = ReceiverRouter(conn_engine)
-    recrouter.run()
+    try:
+        #start recrouter
+        recrouter.run()
+
+        #start exchange processes
+        conn_monitor.start_exchange_processes()
+
+        #start connectivity monitor
+        conn_monitor.run()
+    except KeyboardInterrupt:
+        print("Terminating all processes")
+        recrouter.terminate()
+        conn_monitor.terminate()

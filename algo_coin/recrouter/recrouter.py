@@ -1,28 +1,32 @@
 
 from multiprocessing import Process
+import time
+
+s_name = "ReceiverRouter"
 
 
 class ReceiverRouter(object):
-    def __init__(self, conn_engine):
-        conn_engine.init_processes()
-        self.queues = conn_engine.queues
-        # self.connectivity = Process(target=monitor_connections,
-        #                             args=(conn_engine,))
+    def __init__(self, queues, log):
+        self.queues = queues
+        self.recrouter = Process(target=deploy_rr,
+                                 args=[self])
+        self.log = log
+
+    def select(self):
+        pass
 
     def run(self):
-        # self.connectivity.start()
-        pass
+        self.recrouter.start()
 
     def terminate(self):
-        # self.connectivity.terminate()  # TODO
-        pass
+        print("ReceiverRouter going down")
+        if self.recrouter.is_alive():
+            self.recrouter.terminate()
+        self.recrouter.join()
 
-def monitor_connections(conn_engine):
-    conn_engine.run_processes()
+
+def deploy_rr(recrouter):
     while(True):
-        if not conn_engine.monitor_connections():
-            conn_engine.restart_down()
-
-
-def terminate_connections(conn_engine):
-    conn_engine.terminate()
+        time.sleep(1)
+        continue
+    pass
