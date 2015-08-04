@@ -30,3 +30,7 @@ def deploy_rr(recrouter):
         time.sleep(1)
         continue
     pass
+
+
+def select(queues):
+    pass

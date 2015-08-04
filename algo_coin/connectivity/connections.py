@@ -2,6 +2,7 @@
 from algo_coin.util.api import APIKey
 from algo_coin.exchange.coinbase_exchange import CoinbaseExchangeClient
 from algo_coin.endpoint.endpoint import EndpointType
+import time
 
 s_name = "Connections"
 
@@ -50,7 +51,6 @@ class Connections(object):
 
         self.log.log(s_name, "Configurations loaded")
 
-
     def get_active(self):
         return self.active
 
@@ -60,5 +60,6 @@ class Connections(object):
 
 def LoadExchange(endpoint_type, endpoint):
     if(endpoint_type is EndpointType.coinbase):
-        return CoinbaseExchangeClient(endpoint)
-    pass
+        return CoinbaseExchangeClient(
+            endpoint, open("logs/log-Coinbase-" +
+                           str(int(time.time())), "w"))

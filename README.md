@@ -4,6 +4,9 @@ Algorithmic Trading Bitcoin across multiple exchanges
 
 This program performs intra-exchange trading and inter-exchange arbitrage.
 
+##Overview 
+This is a multithreaded algorithmic trading system written in Python. Primary features include per-exchange websockets for low latency feed and order entry data, configurable inter or intra exchange trading strategies, and Django dashboard for manual control and exchange, order book, and strategy monitoring. 
+
 ##Markets
 
 - Coinbase
@@ -22,12 +25,7 @@ This program performs intra-exchange trading and inter-exchange arbitrage.
 ##Status
 
 ###APIs
-- Coinbase - Wallet is ok, Exchange is unfinished
-- HitBTC - Unfinished
-- Cryptsy - Unfinished
-- Bitfinex - Unfinished
-- Kraken - Unfinished
-- BTC-E - Unfinished
+Unfinished
 
 ###Tests
 Unfinished
