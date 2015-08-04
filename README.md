@@ -1,4 +1,4 @@
-#AlgoBTC
+#AlgoCoin
 
 Algorithmic Trading Bitcoin across multiple exchanges
 
