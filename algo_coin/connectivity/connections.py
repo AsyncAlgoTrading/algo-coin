@@ -2,6 +2,7 @@
 from algo_coin.util.api import APIKey
 from algo_coin.exchange.coinbase_exchange import CoinbaseExchangeClient
 from algo_coin.endpoint.endpoint import EndpointType
+from algo_coin.connectivity.feed_handler import FeedHandler
 import time
 
 s_name = "Connections"
@@ -61,5 +62,6 @@ class Connections(object):
 def LoadExchange(endpoint_type, endpoint):
     if(endpoint_type is EndpointType.coinbase):
         return CoinbaseExchangeClient(
-            endpoint, open("logs/log-Coinbase-" +
-                           str(int(time.time())), "w"))
+            endpoint, FeedHandler(),
+            open("logs/log-Coinbase-" +
+                 str(int(time.time())), "w"))

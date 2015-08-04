@@ -55,4 +55,4 @@ class ConnectivityEngine(object):
 
 
 def run(exchange, queue):
-    exchange.run(queue)
+    exchange.connect_socket(queue)

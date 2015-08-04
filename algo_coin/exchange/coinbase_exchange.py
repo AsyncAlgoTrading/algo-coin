@@ -6,18 +6,22 @@ from twisted.internet import reactor
 import json
 from algo_coin.exchange.core import ExchangeClient
 from algo_coin.endpoint.endpoint import EndpointType
-# import sys
+import sys
 
 
 class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
-    queue = None
+    def __init__(self):
+        super().__init__()
+        self.queue = None
+        self.log = None
 
     def onConnect(self):
         #TODO
-        print(self.queue)
+        self.log.write("here")
         pass
 
     def onOpen(self):
+        self.log.write("here2")
         msg = json.dumps({"type": "subscribe", "product_id": "BTC-USD"})
         res = self.sendMessage(msg.encode('utf-8'), isBinary=False)
         print(res)
@@ -33,17 +37,27 @@ class CoinbaseExchangeClientProtocol(WebSocketClientProtocol):
         pass
 
 
+class CoinbaseWebSocketClientFactory(WebSocketClientFactory):
+    def __init__(self, string, queue, debug=True):
+        super().__init__(string, debug)
+        self.protocol = CoinbaseExchangeClientProtocol
+        self.queue = queue
+        CoinbaseExchangeClientProtocol.queue = queue
+
+
 class CoinbaseExchangeClient(ExchangeClient):
-    def __init__(self, endpoint, log):
+    def __init__(self, endpoint, feed_handler, log):
         super(CoinbaseExchangeClient, self).__init__(
             EndpointType.type("coinbase"),
             endpoint, CoinbaseExchangeClientProtocol)
         self.log = log
+        self.feed_handler = feed_handler
 
-    def connectSocket(self, queue):
+    def connect_socket(self, queue):
         tp_log.startLogging(self.log)
-        factory = WebSocketClientFactory("wss://ws-feed.exchange.coinbase.com",
-                                         debug=True)
-        factory.protocol = CoinbaseExchangeClientProtocol
+        factory = CoinbaseWebSocketClientFactory(
+            "wss://ws-feed.exchange.coinbase.com",
+            queue,
+            debug=True)
         connectWS(factory)
         reactor.run()
