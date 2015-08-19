@@ -28,5 +28,5 @@ class ConnectionMonitor(object):
             self.log.log(s_name, "Monitoring Connections (HEARTBEAT)")
             if not self.conn_engine.monitor_processes():
                 self.conn_engine.restart_down()
-            time.sleep(1)
+            time.sleep(5)
             print("HEARTBEAT-"+str(int(time.time())))

@@ -1,6 +1,0 @@
-coinbase="wss://ws-feed.exchange.coinbase.com"
-hitbtc=
-cryptsy=
-bitfinex=
-kraken=
-btce=
