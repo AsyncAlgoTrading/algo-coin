@@ -11,7 +11,7 @@ class ReceiverRouter(object):
         self.threads = [self.setup(end) for end in self.active]
 
     def setup_thread_queues(self):
-        self.thread_queues = [thread.queue for thread in self.threads]
+        self.thread_queues = [thread.protocol.queue for thread in self.threads]
 
     def get_thread_queues(self):
         return self.thread_queues
@@ -24,7 +24,7 @@ class ReceiverRouter(object):
         f = ex.AlgoCoinWebSocketClientFactory(self.endpoints[endpoint],
                                               debug=True)
         f.protocol = load_protocol(endpoint)
-        f.queue = Queue()
+        f.protocol.queue = Queue()
         return f
 
 
