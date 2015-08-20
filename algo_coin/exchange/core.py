@@ -13,6 +13,16 @@ class AlgoCoinWebSocketClientFactory(WebSocketClientFactory):
     def __str__(self):
         return self.__repr__()
 
+    def clientConnectionLost(self, connector, reason):
+        print(reason)
+
+    def clientConnectionFailed(self, connector, reason):
+        print(reason)
+
+
+
+
+
 
 # from algo_coin.endpoint.endpoint import *
 # from abc import abstractmethod
