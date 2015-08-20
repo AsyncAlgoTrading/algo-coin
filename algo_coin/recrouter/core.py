@@ -1,12 +1,14 @@
 
 from multiprocessing import Queue
+import algo_coin.exchange as ex
 
 
 class ReceiverRouter(object):
     def __init__(self, settings, active, endpoints):
         self.active = active.copy()
         self.endpoints = endpoints.copy()
-        self.threads = [setup(end) for end in self.active]
+        self.websockets = {}
+        self.threads = [self.setup(end) for end in self.active]
         print(self.threads)
 
     def setup_thread_queues(self):
@@ -19,8 +21,14 @@ class ReceiverRouter(object):
         self.write_queue = write_queue  # to stratman
         self.compliance = comp_queue  # to compliance
 
+    def setup(self, endpoint):
+        f = ex.AlgoCoinWebSocketClientFactory(self.endpoints[endpoint],
+                                              debug=True)
+        f.protocol = load_protocol(endpoint)
+        return f
 
-def setup(endpoint):
+
+def load_protocol(endpoint):
     if endpoint == "coinbase":
-        return 1
-    return 0
+        return ex.CoinbaseExchangeClientProtocol
+    pass
