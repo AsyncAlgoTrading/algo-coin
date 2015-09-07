@@ -60,3 +60,7 @@ target/
 horizon
 
 *.DS_Store
+AutobahnPython-master/
+d3.zip
+dashboard_server/node_modules/
+notes.txt
