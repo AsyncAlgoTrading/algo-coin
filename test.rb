@@ -137,11 +137,10 @@ websocket.match do |resp|
     if tick_5.mean > tick_30.mean
         # buy or sell?
         if death1 and not first1
+            # first golden cross after death cross
             buy1 = true
             sell1 = false
             buy_price1 = resp.price
-        elsif death1
-            first1 = false
         else
             buy1 = false
             sell1 = false
@@ -158,7 +157,8 @@ websocket.match do |resp|
             buy_price1 = 0.0
             buy1 = false
             sell1 = true
-        elsif death1
+        elsif golden1
+            # seen death cross
             first1 = false
         else
             buy1 = false
@@ -181,8 +181,6 @@ websocket.match do |resp|
             buy2 = true
             sell2 = false
             buy_price2 = resp.price
-        elsif death2
-            first2 = false
         else
             buy2 = false
             sell2 = false
@@ -199,7 +197,7 @@ websocket.match do |resp|
             buy_price2 = 0.0
             buy2 = false
             sell2 = true
-        elsif death2
+        elsif golden2 
             first2 = false
         else
             buy2 = false
