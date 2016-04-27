@@ -2,24 +2,82 @@ require 'coinbase/exchange'
 require 'eventmachine'
 require 'ostruct'
 
-# signals
-tick_5 = Array.new
-tick_15 = Array.new
-tick_30 = Array.new
-tick_50 = Array.new
-tick_100 = Array.new
-tick_200 = Array.new
-tick_500 = Array.new
-tick_1000 = Array.new
+# make it easy
+class Array
+  def sum
+    inject(0.0) { |result, el| result + el }
+  end
 
-momentum_5 = Array.new
-momentum_15 = Array.new
-momentum_30 = Array.new
-momentum_50 = Array.new
-momentum_100 = Array.new
-momentum_200 = Array.new
-momentum_500 = Array.new
-momentum_1000 = Array.new
+  def mean 
+    sum / size
+  end
+end
+
+class Signals
+    def initialize( short_size, long_size )
+        @short                      = Array.new
+        @momentum_short  = Array.new
+        @short_size              = short_size
+        @long                       = Array.new
+        @momentum_long   = Array.new
+        @long_size  = long_size
+    end
+
+    def tick( value )
+        @short << value
+        @long  << value
+        @momentum_short << @short.mean
+        @momentum_long  << @long.mean
+
+        if short.length > @short_size
+            @short.shift
+            @momentum_short.shift
+        end
+
+        if long.length > @long_size
+            @long.shift
+            @momentum_long.shift
+        end
+
+    end
+
+    def ready()
+        return @long.length > @long_size
+    end
+
+    def golden()
+        return @short.mean > @long.mean
+    end
+
+    def death()
+        return @long.mean > @short.mean
+    end 
+
+end
+
+# signals
+signal1 = Signals.new(5, 15)
+signal2 = Signals.new(5, 30)
+signal3 = Signals.new(5, 50)
+signal4 = Signals.new(5, 100)
+signal5 = Signals.new(15, 30)
+signal6 = Signals.new(15, 50)
+signal7 = Signals.new(15, 100)
+signal8 = Signals.new(15, 200)
+signal9 = Signals.new(30, 50)
+signal10 = Signals.new(30, 100)
+signal11 = Signals.new(30, 200)
+signal12 = Signals.new(30, 500)
+signal13 = Signals.new(50, 100)
+signal14 = Signals.new(50, 200)
+signal15 = Signals.new(50, 500)
+signal16 = Signals.new(100, 200)
+signal17 = Signals.new(100, 500)
+signal18 = Signals.new(100, 1000)
+signal19 = Signals.new(200, 500)
+signal20 = Signals.new(200, 1000)
+signal21 = Signals.new(500, 1000)
+
 
 golden1 = false
 golden2 = false
@@ -31,7 +89,6 @@ sell1 = false
 sell2 = false
 first1 = true
 first2 = true
-
 
 intermediate_count = 0
 buy_price1 = 0.0
@@ -61,80 +118,14 @@ rest_api.accounts do |resp|
   end
 end
 
-# make it easy
-class Array
-  def sum
-    inject(0.0) { |result, el| result + el }
-  end
-
-  def mean 
-    sum / size
-  end
-end
-
 # logic
 websocket.match do |resp|
-  tick_5 << resp.price
-  tick_15 << resp.price
-  tick_30 << resp.price
-  tick_50 << resp.price
-  tick_100 << resp.price
-  tick_200 << resp.price
-  tick_500 << resp.price
-  tick_1000 << resp.price
-  
-  # manage ticks
-  if tick_5.length > 5
-    tick_5.shift
-    momentum_5 << tick_5.mean
-    momentum_5.shift
-  end
-
-  if tick_15.length > 15
-    tick_15.shift
-    momentum_15 << tick_15.mean
-    momentum_15.shift
-  end
-
-  if tick_30.length > 30
-    tick_30.shift
-    momentum_30 << tick_30.mean
-    momentum_30.shift
-  end
-
-  if tick_50.length > 50
-    tick_50.shift
-    momentum_50 << tick_50.mean
-    momentum_50.shift
-  end
-
-  if tick_100.length > 100
-    tick_100.shift
-    momentum_100 << tick_100.mean
-    momentum_100.shift
-  end
-
-  if tick_200.length > 200
-    tick_200.shift
-    momentum_200 << tick_200.mean
-    momentum_200.shift
-  end
-  
-  if tick_500.length > 500
-    tick_500.shift
-    momentum_500 << tick_500.mean
-    momentum_500.shift
-  end
-
-  if tick_1000.length > 1000
-    tick_1000.shift
-    momentum_1000 << tick_1000.mean
-    momentum_1000.shift
-  end
+  signal2.tick( resp.price )
+  signal6.tick( resp.price )
 
   # buying/selling
-  if tick_30.length == 30
-    if tick_5.mean > tick_30.mean
+  if signal2.ready()
+    if signal2.golden()
         # buy or sell?
         if death1 and not first1
             # first golden cross after death cross
@@ -149,7 +140,8 @@ websocket.match do |resp|
         # period
         golden1 = true
         death1 = false
-    elsif tick_30.mean > tick_5.mean
+
+    elsif signal2.death() # death SELL
         if golden1 and not first1
             profits1 = profits1 + resp.price - buy_price1
             print "Transaction1: $ %.2f\n" % (resp.price - buy_price1)
@@ -174,8 +166,8 @@ websocket.match do |resp|
   end
 
   # buying/selling
-  if tick_50.length == 50
-    if tick_15.mean > tick_50.mean
+  if signal6.ready() == 50
+    if signal6.golden() # golden BUY
         # buy or sell?
         if death2 and not first2
             buy2 = true
@@ -189,7 +181,8 @@ websocket.match do |resp|
         # period
         golden2 = true
         death2 = false
-    elsif tick_50.mean > tick_15.mean
+
+    elsif signal6.death()
         if golden2 and not first2
             profits2 = profits2 + resp.price - buy_price2
             print "Transaction2: $ %.2f\n" % (resp.price - buy_price2)
