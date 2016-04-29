@@ -15,10 +15,10 @@ end
 
 class Signals
     def initialize( short_size, long_size )
-        @short                      = Array.new
+        @short = Array.new
         @momentum_short  = Array.new
-        @short_size              = short_size
-        @long                       = Array.new
+        @short_size = short_size
+        @long = Array.new
         @momentum_long   = Array.new
         @long_size  = long_size
     end
@@ -29,12 +29,12 @@ class Signals
         @momentum_short << @short.mean
         @momentum_long  << @long.mean
 
-        if short.length > @short_size
+        if @short.length > @short_size
             @short.shift
             @momentum_short.shift
         end
 
-        if long.length > @long_size
+        if @long.length > @long_size
             @long.shift
             @momentum_long.shift
         end
