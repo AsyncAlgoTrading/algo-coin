@@ -56,28 +56,45 @@ class Signals
 end
 
 # signals
-signal1 = Signals.new(5, 15)
-signal2 = Signals.new(5, 30)
-signal3 = Signals.new(5, 50)
-signal4 = Signals.new(5, 100)
-signal5 = Signals.new(15, 30)
-signal6 = Signals.new(15, 50)
-signal7 = Signals.new(15, 100)
-signal8 = Signals.new(15, 200)
-signal9 = Signals.new(30, 50)
-signal10 = Signals.new(30, 100)
-signal11 = Signals.new(30, 200)
-signal12 = Signals.new(30, 500)
-signal13 = Signals.new(50, 100)
-signal14 = Signals.new(50, 200)
-signal15 = Signals.new(50, 500)
-signal16 = Signals.new(100, 200)
-signal17 = Signals.new(100, 500)
-signal18 = Signals.new(100, 1000)
-signal19 = Signals.new(200, 500)
-signal20 = Signals.new(200, 1000)
-signal21 = Signals.new(500, 1000)
+all_signals = Array.new
+all_signals << Signals.new(5, 15)
+all_signals << Signals.new(5, 30)
+all_signals << Signals.new(5, 50)
+all_signals << Signals.new(5, 100)
+all_signals << Signals.new(15, 30)
+all_signals << Signals.new(15, 50)
+all_signals << Signals.new(15, 100)
+all_signals << Signals.new(15, 200)
+all_signals << Signals.new(30, 50)
+all_signals << Signals.new(30, 100)
+all_signals << Signals.new(30, 200)
+all_signals << Signals.new(30, 500)
+all_signals << Signals.new(50, 100)
+all_signals << Signals.new(50, 200)
+all_signals << Signals.new(50, 500)
+all_signals << Signals.new(100, 200)
+all_signals << Signals.new(100, 500)
+all_signals << Signals.new(100, 1000)
+all_signals << Signals.new(200, 500)
+all_signals << Signals.new(200, 1000)
+all_signals << Signals.new(500, 1000)
 
+signal2 = Signals.new(5, 30)
+signal6 = Signals.new(15, 50)
+
+goldens = Array.new
+deaths = Array.new
+buys = Array.new
+sells = Array.new
+firsts = Array.new
+
+for item in all_signals
+    goldens << false
+    deaths << false
+    buys << false
+    sells << false
+    firsts << true
+end
 
 golden1 = false
 golden2 = false
@@ -89,6 +106,15 @@ sell1 = false
 sell2 = false
 first1 = true
 first2 = true
+
+buy_prices = Array.new
+sell_prices = Array.new
+profits = Array.new
+for item in all_signals
+    buy_prices << 0.0
+    sell_prices << 0.0
+    profits << 0.0
+end
 
 intermediate_count = 0
 buy_price1 = 0.0
@@ -123,90 +149,51 @@ websocket.match do |resp|
   signal2.tick( resp.price )
   signal6.tick( resp.price )
 
-  # buying/selling
-  if signal2.ready()
-    if signal2.golden()
-        # buy or sell?
-        if death1 and not first1
-            # first golden cross after death cross
-            buy1 = true
-            sell1 = false
-            buy_price1 = resp.price
-        else
-            buy1 = false
-            sell1 = false
-        end
-
-        # period
-        golden1 = true
-        death1 = false
-
-    elsif signal2.death() # death SELL
-        if golden1 and not first1
-            profits1 = profits1 + resp.price - buy_price1
-            print "Transaction1: $ %.2f\n" % (resp.price - buy_price1)
-            print "Profits1: $ %.2f\n" % profits1
-            buy_price1 = 0.0
-            buy1 = false
-            sell1 = true
-        elsif golden1
-            # seen death cross
-            first1 = false
-        else
-            buy1 = false
-            sell1 = false
-        end
-        # period
-        golden1 = false
-        death1 = true
-    else
-        golden1 = false
-        death1 = false
-    end
+  for item in all_signals
+    item.tick( resp.price )
   end
 
-  # buying/selling
-  if signal6.ready() == 50
-    if signal6.golden() # golden BUY
-        # buy or sell?
-        if death2 and not first2
-            buy2 = true
-            sell2 = false
-            buy_price2 = resp.price
-        else
-            buy2 = false
-            sell2 = false
-        end
 
-        # period
-        golden2 = true
-        death2 = false
-
-    elsif signal6.death()
-        if golden2 and not first2
-            profits2 = profits2 + resp.price - buy_price2
-            print "Transaction2: $ %.2f\n" % (resp.price - buy_price2)
-            print "Profits2: $ %.2f\n" % profits2
-            buy_price2 = 0.0
-            buy2 = false
-            sell2 = true
-        elsif golden2 
-            first2 = false
+  all_signals.each_with_index do |item, i|
+    if item.ready()
+        if item.golden()
+            if deaths[i] and not first[i]
+                buys[i] = true
+                sells[i] = false
+                buy_prices[i] = resp.price
+            else
+                buys[i] = false
+                sells[i] = false
+            end
+            # period
+            goldens[i] = true
+            deaths[i] = false
+        elsif item.death() # death SELL
+            if goldens[i] and not firsts[i] and buy_prices[i] > 0.0
+                profits[i] = profits[i] + resp.price - buy_prices[i]
+                val = resp.price - buy_prices[i]
+                print "Transaction%d: $ %.2f\n" % i, val 
+                print "Profits%d: $ %.2f\n" % i, profits[i]
+                buy_prices[i] = 0.0
+                buys[i] = false
+                sells[i] = true
+            elsif goldens[i]
+                # seen death cross
+                firsts[i] = false
+            else
+                buys[i] = false
+                sells[i] = false
+            end
+            # period
+            goldens[i] = false
+            deaths[i] = true
         else
-            buy2 = false
-            sell2 = false
+            goldens[i] = false
+            deats[i] = false
         end
-        # period
-        golden2 = false
-        death2 = true
-    else
-        golden2 = false
-        death2 = false
+      end
     end
-  end
-  # print Time.now.strftime("%H:%M:%S %Y-%m-%d\t") + "$ %.2f\t" % resp.price + "$ %.2f\t" % tick_5.mean + "$ %.2f\n" % tick_30.mean
 end
-
 
 
 # websocket stuff
