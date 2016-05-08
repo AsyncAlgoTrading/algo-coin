@@ -14,13 +14,14 @@ class Array
 end
 
 class Signals
-    def initialize( short_size, long_size )
+    def initialize( short_size, long_size, rev )
         @short = Array.new
         @momentum_short  = Array.new
         @short_size = short_size
         @long = Array.new
         @momentum_long   = Array.new
         @long_size  = long_size
+        @rev = rev
     end
 
     def tick( value )
@@ -42,14 +43,22 @@ class Signals
     end
 
     def ready()
-        return @long.length > @long_size
+        return @long.length >= @long_size
     end
 
     def golden()
+        if @rev
+            return @long.mean > @short.mean
+        end
+        
         return @short.mean > @long.mean
     end
 
     def death()
+        if @rev
+            return @short.mean > @long.mean
+        end
+
         return @long.mean > @short.mean
     end 
 
@@ -57,55 +66,40 @@ end
 
 # signals
 all_signals = Array.new
-all_signals << Signals.new(5, 15)
-all_signals << Signals.new(5, 30)
-all_signals << Signals.new(5, 50)
-all_signals << Signals.new(5, 100)
-all_signals << Signals.new(15, 30)
-all_signals << Signals.new(15, 50)
-all_signals << Signals.new(15, 100)
-all_signals << Signals.new(15, 200)
-all_signals << Signals.new(30, 50)
-all_signals << Signals.new(30, 100)
-all_signals << Signals.new(30, 200)
-all_signals << Signals.new(30, 500)
-all_signals << Signals.new(50, 100)
-all_signals << Signals.new(50, 200)
-all_signals << Signals.new(50, 500)
-all_signals << Signals.new(100, 200)
-all_signals << Signals.new(100, 500)
-all_signals << Signals.new(100, 1000)
-all_signals << Signals.new(200, 500)
-all_signals << Signals.new(200, 1000)
-all_signals << Signals.new(500, 1000)
-
-signal2 = Signals.new(5, 30)
-signal6 = Signals.new(15, 50)
+all_signals << Signals.new(1, 5, true)                         #1
+all_signals << Signals.new(5, 15, true)                      #2
+all_signals << Signals.new(5, 30, true)                      #3
+all_signals << Signals.new(5, 50, true)                      #4
+all_signals << Signals.new(5, 100, true)                    #5
+all_signals << Signals.new(15, 30, true)                    #6
+all_signals << Signals.new(15, 50, true)                    #7
+all_signals << Signals.new(15, 100, true)                  #8  
+all_signals << Signals.new(15, 200, true)                  #9
+all_signals << Signals.new(30, 50, true)                    #10
+all_signals << Signals.new(30, 100, true)                  #11
+all_signals << Signals.new(30, 200, true)                  #12
+all_signals << Signals.new(30, 500, true)                  #13
+all_signals << Signals.new(50, 100, true)                  #14
+all_signals << Signals.new(50, 200, true)                  #15
+all_signals << Signals.new(50, 500, true)                  #16
+all_signals << Signals.new(100, 200, true)                #17
+all_signals << Signals.new(100, 500, false)              #18
+all_signals << Signals.new(100, 1000, false)            #19
+all_signals << Signals.new(200, 500, false)              #20
+all_signals << Signals.new(200, 1000, false)            #21
+all_signals << Signals.new(500, 1000, false)            #22
 
 goldens = Array.new
 deaths = Array.new
 buys = Array.new
 sells = Array.new
-firsts = Array.new
 
 for item in all_signals
     goldens << false
     deaths << false
     buys << false
     sells << false
-    firsts << true
 end
-
-golden1 = false
-golden2 = false
-death1 = false
-death2 = false
-buy1 = false
-buy2 = false
-sell1 = false
-sell2 = false
-first1 = true
-first2 = true
 
 buy_prices = Array.new
 sell_prices = Array.new
@@ -115,12 +109,6 @@ for item in all_signals
     sell_prices << 0.0
     profits << 0.0
 end
-
-intermediate_count = 0
-buy_price1 = 0.0
-buy_price2 = 0.0
-profits1 = 0.0
-profits2 = 0.0
 
 # new websocket
 websocket = Coinbase::Exchange::Websocket.new(product_id: 'BTC-USD',
@@ -146,54 +134,54 @@ end
 
 # logic
 websocket.match do |resp|
-  signal2.tick( resp.price )
-  signal6.tick( resp.price )
-
   for item in all_signals
     item.tick( resp.price )
+    # print "current price : %.2f\n" % resp.price
   end
-
 
   all_signals.each_with_index do |item, i|
     if item.ready()
-        if item.golden()
-            if deaths[i] and not first[i]
+        if item.golden() # golden BUY
+            if deaths[i]
                 buys[i] = true
                 sells[i] = false
                 buy_prices[i] = resp.price
+                # print "Buying strat %d at %.2f\n" % [i, resp.price]
             else
                 buys[i] = false
                 sells[i] = false
             end
+
             # period
             goldens[i] = true
             deaths[i] = false
+
         elsif item.death() # death SELL
-            if goldens[i] and not firsts[i] and buy_prices[i] > 0.0
+            if goldens[i] and buy_prices[i] > 0.0
                 profits[i] = profits[i] + resp.price - buy_prices[i]
                 val = resp.price - buy_prices[i]
-                print "Transaction%d: $ %.2f\n" % i, val 
-                print "Profits%d: $ %.2f\n" % i, profits[i]
+                print "Transaction%d: $ %.2f\n" % [i, val] 
+                print "Profits%d: $ %.2f\n" % [i, profits[i]]
                 buy_prices[i] = 0.0
                 buys[i] = false
                 sells[i] = true
-            elsif goldens[i]
-                # seen death cross
-                firsts[i] = false
             else
                 buys[i] = false
                 sells[i] = false
             end
+
             # period
             goldens[i] = false
             deaths[i] = true
-        else
+
+        else # do nothing
             goldens[i] = false
-            deats[i] = false
+            deaths[i] = false
         end
-      end
-    end
-end
+
+      end # item.golden()
+    end # item.ready()
+end # websocket.match
 
 
 # websocket stuff
@@ -204,7 +192,7 @@ EM.run do
       # p "Websocket is alive"
     end
   }
-  EM.error_handler { |e|
-    p "Websocket Error: #{e.message}"
-  }
+  # EM.error_handler { |e|
+  #   p "Websocket Error: #{e.message}"
+  # }
 end
