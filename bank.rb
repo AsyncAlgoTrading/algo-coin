@@ -24,6 +24,7 @@ class Accounts
         @usd = 0.0
         @eth = 0.0
         @btc = 0.0
+        @ltc = 0.0
 
         @accounts = Hash.new
 
@@ -34,7 +35,7 @@ class Accounts
 
         @rest_api.accounts do |resp|
             resp.each do |account|
-                # p "#{account.id}: %.2f #{account.currency} available for trading" % account.available
+                p "#{account.id}: %.2f #{account.currency} available for trading" % account.available
                 if account.currency == 'USD'
                     @accounts[ 'USD' ] = account
                     @usd = account.available
@@ -44,6 +45,9 @@ class Accounts
                 elsif account.currency == 'BTC'
                     @accounts[ 'BTC' ] = account
                     @btc = account.available
+                elsif account.currency == 'BTC'
+                    @accounts[ 'LTC' ] = account
+                    @ltc = account.available
                 end
             end
         end
@@ -51,6 +55,8 @@ class Accounts
 
     attr_reader :usd
     attr_reader :btc
+    attr_reader :eth
+    attr_reader :ltc
 end
 
 class Balance

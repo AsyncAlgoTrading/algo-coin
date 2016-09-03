@@ -74,11 +74,11 @@ class StrategyManager
         @all_signals << CrossesStrat.new(50, 200, true)               #15
         @all_signals << CrossesStrat.new(50, 500, true)               #16
         @all_signals << CrossesStrat.new(100, 200, true)              #17
-        @all_signals << CrossesStrat.new(100, 500, false)             #18
-        @all_signals << CrossesStrat.new(100, 1000, false)            #19
-        @all_signals << CrossesStrat.new(200, 500, false)             #20
-        @all_signals << CrossesStrat.new(200, 1000, false)            #21
-        @all_signals << CrossesStrat.new(500, 1000, false)            #22
+        @all_signals << CrossesStrat.new(100, 500, true)             #18
+        @all_signals << CrossesStrat.new(100, 1000, true)            #19
+        @all_signals << CrossesStrat.new(200, 500, true)             #20
+        @all_signals << CrossesStrat.new(200, 1000, true)            #21
+        @all_signals << CrossesStrat.new(500, 1000, true)            #22
         
         @buy_state = Array.new # should be bought 
         @sell_state  = Array.new # should be sold
@@ -130,8 +130,7 @@ class StrategyManager
                             @sell[i] = false
                             @buy_prices[i] = price
                             @buy_qtys[i]    = price
-                            print "Buying %.2f @ %.2f\n" % [ amt, price ]
-                        # print "Buying strat %d at %.2f\n" % [i, resp.price]
+                            # print "Buying %.2f @ %.2f\n" % [ amt, price ]
                         end
                     else
                         @buy[i] = false
@@ -146,8 +145,11 @@ class StrategyManager
                     if @buy_state[i] and @buy_prices[i] > 0.0
                         @profits[i] = @profits[i] + price - @buy_prices[i]
                         val = price - @buy_prices[i]
-                        print "Transaction%d: $ %.2f\n" % [i, val] 
-                        print "Profits%d: $ %.2f\n" % [i, @profits[i]]
+                        # print "Transaction%d: $ %.2f\n" % [i, val] 
+                        @profits.each_with_index do |pft, i|
+                            print "%d: $ %.2f\t" % [i, pft]
+                        end
+                        print "\n"
                         @buy_prices[i] = 0.0
                         @buy[i] = false
                         @sell[i] = true
