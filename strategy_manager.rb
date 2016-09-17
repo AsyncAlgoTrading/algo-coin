@@ -59,6 +59,7 @@ class StrategyManager
                     @all_signals[i].bought( price )
                     print "Buying %.2f @ %.2f\n" % [ amt, price ]
                     @bank.register_action( Transaction.new( i, amt, price ) )
+                end
             elsif item == 's'
                 @all_signals[i].sold( price )
                 @profits[i] = @profits[i] + price - @all_signals[i].buy_price
