@@ -3,7 +3,7 @@ require 'eventmachine'
 require 'ostruct'
 require_relative 'utils'
 require_relative 'bank'
-require_relative 'strategies'
+require_relative 'strategy_manager'
 
 accts = Bank.new()
 strat = StrategyManager.new( accts )
@@ -12,9 +12,7 @@ VERBOSE = false
 # new websocket
 websocket = Coinbase::Exchange::Websocket.new(product_id: 'BTC-USD',
     keepalive: true)
-#rest api
 
-# logic
 #execution
 websocket.match do |resp|
     strat.tick( resp.price )

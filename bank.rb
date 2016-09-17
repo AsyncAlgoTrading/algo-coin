@@ -1,6 +1,8 @@
 require 'coinbase/exchange'
 require_relative 'utils'
+require_relative 'accounts'
 
+# Request an action at a certain price
 class TransactionRequest
     def initialize( id, side, price )
         @id = id
@@ -12,6 +14,7 @@ class TransactionRequest
     attr_reader :price
 end
 
+# Amount allowed
 class TransactionResponse
     def initialize( amt )
         @amt = amt
@@ -19,38 +22,18 @@ class TransactionResponse
     attr_reader :amt
 end
 
-class Accounts
-    def initialize( env )
-        @usd = 0.0
-        @eth = 0.0
-        @btc = 0.0
-
-        @accounts = Hash.new
-
-        # for transactions
-        @rest_api = Coinbase::Exchange::Client.new(env.api_key, env.api_secret, env.api_pass)
-        @sandbox = Coinbase::Exchange::Client.new(env.api_key, env.api_secret, env.api_pass, api_url: "https://api-public.sandbox.exchange.coinbase.com")
-        @rest_api_async = Coinbase::Exchange::AsyncClient.new(env.api_key, env.api_secret, env.api_pass)
-
-        @rest_api.accounts do |resp|
-            resp.each do |account|
-                # p "#{account.id}: %.2f #{account.currency} available for trading" % account.available
-                if account.currency == 'USD'
-                    @accounts[ 'USD' ] = account
-                    @usd = account.available
-                elsif account.currency == 'ETH'
-                    @accounts[ 'ETH' ] = account
-                    @eth = account.available
-                elsif account.currency == 'BTC'
-                    @accounts[ 'BTC' ] = account
-                    @btc = account.available
-                end
-            end
-        end
+# Execute an action for a certain amount at a certain price
+class Transaction
+    def initialize( id, side, amt, price )
+        @id = id
+        @side = side 
+        @amt = amt
+        @price = price
     end
-
-    attr_reader :usd
-    attr_reader :btc
+    attr_reader :id
+    attr_reader :side
+    attr_reader :amt
+    attr_reader :price
 end
 
 class Balance
@@ -76,10 +59,20 @@ class Bank
         if tx_req.side == 'b'
             # val = ( @strats[ tx_req.id ].allowance - @strats[ tx_req.id ].balance ) / tx_req.price
             val = @strats[ tx_req.id ].allowance / tx_req.price
-            ret = TransactionResponse.new( val )
+            return TransactionResponse.new( val )
         else
             val = @strats[ tx_req.id ].allowance / tx_req.price
-            ret = TransactionResponse.new( val )
+            return TransactionResponse.new( val )
+        end
+    end
+
+    def register_action( tx )
+        if tx.side == 'b'
+            @strats[ tx.id ].allowance -= tx.amt*tx.price
+            return TransactionResponse.new( @strats[ tx.id ].allowance )
+        else
+            @strats[ tx.id ].allowance += tx.amt*tx.price
+            return TransactionResponse.new( @strats[ tx.id ].allowance )
         end
     end
 end
