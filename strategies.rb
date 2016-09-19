@@ -42,11 +42,11 @@ class CrossesStrat
 
     end
 
-    def ready()
+    def ready
         return @long.length >= @long_size
     end
 
-    def buy()
+    def buy
         if @rev
             return @long.mean > @short.mean
         end
@@ -54,7 +54,7 @@ class CrossesStrat
         return @short.mean > @long.mean
     end
 
-    def sell()
+    def sell
         if @rev
             return @short.mean > @long.mean
         end
@@ -62,25 +62,25 @@ class CrossesStrat
         return @long.mean > @short.mean
     end 
 
-    def action()
-        if @ready
-            if @buy #  BUY
-                @sell_state = false
+    def action
+        if ready
+            if buy #  BUY
+                @buy_state = true
                 if @sell_state # sell -> buy ?
-                    @buy_state = true
+                    @sell_state = false
                     return 'b'
                 else
-                    @buy_state = false
+                    @sell_state = false
                     return 'n'
                 end
 
-            elsif @sell # SELL
-                @buy_state = false
+            elsif sell # SELL
+                @sell_state = true
                 if @buy_state and @buy_price > 0.0
-                    @sell_state = true
+                    @buy_state = false
                     return 's'
                 else
-                    @sell_state = false
+                    @buy_state = false
                     return 'n'
                 end
 
@@ -88,7 +88,10 @@ class CrossesStrat
                 @buy_state = false
                 @sell_state = false
             end # if buy/elsif sell
+        else
+            return 'n'
         end # ready
+
     end   
 
     def bought( px )

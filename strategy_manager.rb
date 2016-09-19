@@ -27,14 +27,13 @@ class StrategyManager
         @all_signals << CrossesStrat.new(100, 200, true)              #17
         @all_signals << CrossesStrat.new(100, 500, false)             #18
         @all_signals << CrossesStrat.new(100, 1000, false)            #19
-        @all_signals << CrossesStrat.new(200, 500, false)             #20
-        @all_signals << CrossesStrat.new(200, 1000, false)            #21
-        @all_signals << CrossesStrat.new(500, 1000, false)            #22
+        # @all_signals << CrossesStrat.new(200, 500, false)             #20
+        # @all_signals << CrossesStrat.new(200, 1000, false)            #21
+        # @all_signals << CrossesStrat.new(500, 1000, false)            #22
         
         @all_signals.each_with_index do |item, i|
             @bank.register_strategy( i )
         end
-
         @profits = Array.new
 
         for item in @all_signals
@@ -44,10 +43,10 @@ class StrategyManager
 
     def tick( price )
 
+        actions = Array.new
         for item in @all_signals
-            actions = Array.new
             item.tick( price )
-            actions << item.action( price )
+            actions << item.action()
         end
 
         # buy when sell state transitions to buy state 
@@ -55,18 +54,28 @@ class StrategyManager
         actions.each_with_index do |item, i|
             if item == 'b'
                 amt = @bank.request_action( TransactionRequest.new( i, 'b', price ) ).amt
-                if amt > 0.0
+                if amt > 0.0000
                     @all_signals[i].bought( price )
-                    print "Buying %.2f @ %.2f\n" % [ amt, price ]
-                    @bank.register_action( Transaction.new( i, amt, price ) )
+                    @bank.register_action( Transaction.new( i, 'b', amt, price ) )
+                    p 'bamt'
+                    p amt
+                    print "%d Buying %.2f @ %.2f\n" % [ i, amt, price ]
                 end
+
             elsif item == 's'
-                @all_signals[i].sold( price )
-                @profits[i] = @profits[i] + price - @all_signals[i].buy_price
-                val = price - @all_signals[i].buy_price
-                print "Transaction%d: $ %.2f\n" % [i, val] 
-                print "Profits%d: $ %.2f\n" % [i, @profits[i]]
+                amt = @bank.request_action( TransactionRequest.new( i, 'b', price ) ).amt
+                if amt > 0.0
+                    @all_signals[i].sold( price )
+                    @bank.register_action( Transaction.new( i, 's', amt, price ) )
+                    
+                    @profits[i] = @profits[i] + price - @all_signals[i].buy_price
+                    val = price - @all_signals[i].buy_price
+                    print "%d Transaction: $ %.2f\n" % [i, val] 
+                    print "%d Profits: $ %.2f\n" % [i, @profits[i]]
+                end
+
             elsif item == 'n'
+                # p 'n'
             end
         end
     end

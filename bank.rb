@@ -42,6 +42,7 @@ class Balance
         @balance = 0.0
     end
     attr_reader :allowance
+    attr_writer :allowance
     attr_reader :balance
 end
 
@@ -59,8 +60,14 @@ class Bank
         if tx_req.side == 'b'
             # val = ( @strats[ tx_req.id ].allowance - @strats[ tx_req.id ].balance ) / tx_req.price
             val = @strats[ tx_req.id ].allowance / tx_req.price
+            p 'breq'
+            p @strats[ tx_req.id ].allowance
+            p tx_req.price
             return TransactionResponse.new( val )
         else
+            p 'sreq'
+            p @strats[ tx_req.id ].allowance
+            p tx_req.price
             val = @strats[ tx_req.id ].allowance / tx_req.price
             return TransactionResponse.new( val )
         end
@@ -68,10 +75,16 @@ class Bank
 
     def register_action( tx )
         if tx.side == 'b'
-            @strats[ tx.id ].allowance -= tx.amt*tx.price
+            p 'breg'
+            p tx.amt
+            p tx.price
+            @strats[ tx.id ].allowance -= tx.amt * tx.price
             return TransactionResponse.new( @strats[ tx.id ].allowance )
         else
-            @strats[ tx.id ].allowance += tx.amt*tx.price
+            p 'sreg'
+            p tx.amt
+            p tx.price
+            @strats[ tx.id ].allowance += tx.amt * tx.price
             return TransactionResponse.new( @strats[ tx.id ].allowance )
         end
     end

@@ -16,7 +16,7 @@ class Accounts
 
         @rest_api.accounts do |resp|
             resp.each do |account|
-                # p "#{account.id}: %.2f #{account.currency} available for trading" % account.available
+                p "#{account.id}: %.2f #{account.currency} available for trading" % account.available
                 if account.currency == 'USD'
                     @accounts[ 'USD' ] = account
                     @usd = account.available
