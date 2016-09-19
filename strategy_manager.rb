@@ -57,8 +57,6 @@ class StrategyManager
                 if amt > 0.0000
                     @all_signals[i].bought( price )
                     @bank.register_action( Transaction.new( i, 'b', amt, price ) )
-                    p 'bamt'
-                    p amt
                     print "%d Buying %.2f @ %.2f\n" % [ i, amt, price ]
                 end
 

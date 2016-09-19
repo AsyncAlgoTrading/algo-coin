@@ -66,7 +66,7 @@ EM.run do
       # p "Websocket is alive"
   end
 }
-  # EM.error_handler { |e|
-  #   p "Websocket Error: #{e.message}"
-  # }
+  EM.error_handler { |e|
+    p "Websocket Error: #{e.message}"
+  }
 end

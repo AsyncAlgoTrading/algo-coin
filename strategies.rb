@@ -65,7 +65,7 @@ class CrossesStrat
     def action
         if ready
             if buy #  BUY
-                @buy_state = true
+               @buy_state = true
                 if @sell_state # sell -> buy ?
                     @sell_state = false
                     return 'b'
