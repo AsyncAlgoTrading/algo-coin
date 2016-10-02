@@ -6,6 +6,10 @@ class StrategyManager
     def initialize( bank )
         @bank = bank
 
+
+        
+
+
         # signals
         @all_signals = Array.new
         @all_signals << CrossesStrat.new(1, 5, true)                  #1
@@ -77,55 +81,4 @@ class StrategyManager
             end
         end
     end
-    #     # buy when sell state transitions to buy state 
-    #     # sell when buy state transitions to sell state
-    #     @all_signals.each_with_index do |item, i|
-    #         if item.ready()
-    #             if item.buy() #  BUY
-    #                 if @sell_state[i] # sell -> buy ?
-    #                     amt = @bank.request_action( TransactionRequest.new( i, 'b', price ) ).amt
-    #                     if amt > 0.0
-    #                         @buy[i] = true
-    #                         @sell[i] = false
-    #                         @buy_prices[i] = price
-    #                         @buy_qtys[i]    = price
-    #                         print "Buying %.2f @ %.2f\n" % [ amt, price ]
-
-    #                         @bank.register_action( Transaction.new( i, amt, price ) )
-    #                     # print "Buying strat %d at %.2f\n" % [i, resp.price]
-    #                     end
-    #                 else
-    #                     @buy[i] = false
-    #                     @sell[i] = false
-    #                 end
-
-    #                 # period
-    #                 @buy_state[i] = true
-    #                 @sell_state[i] = false
-
-    #             elsif item.sell() # SELL
-    #                 if @buy_state[i] and @buy_prices[i] > 0.0
-    #                     @profits[i] = @profits[i] + price - @buy_prices[i]
-    #                     val = price - @buy_prices[i]
-    #                     print "Transaction%d: $ %.2f\n" % [i, val] 
-    #                     print "Profits%d: $ %.2f\n" % [i, @profits[i]]
-    #                     @buy_prices[i] = 0.0
-    #                     @buy[i] = false
-    #                     @sell[i] = true
-    #                 else
-    #                     @buy[i] = false
-    #                     @sell[i] = false
-    #                 end
-
-    #                 # period
-    #                 @buy_state[i] = false
-    #                 @sell_state[i] = true
-
-    #             else # do nothing
-    #                 @buy_state[i] = false
-    #                 @sell_state[i] = false
-    #             end
-    #         end 
-    #     end
-    # end
 end

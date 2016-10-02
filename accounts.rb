@@ -6,6 +6,7 @@ class Accounts
         @usd = 0.0
         @eth = 0.0
         @btc = 0.0
+        @ltc = 0.0
 
         @accounts = Hash.new
 
@@ -26,6 +27,9 @@ class Accounts
                 elsif account.currency == 'BTC'
                     @accounts[ 'BTC' ] = account
                     @btc = account.available
+                elsif account.currency == 'LTC'
+                    @accounts[ 'LTC' ] = account
+                    @ltc = account.available
                 end
             end
         end
@@ -33,5 +37,7 @@ class Accounts
 
     attr_reader :usd
     attr_reader :btc
+    attr_reader :eth
+    attr_reader :ltc
 end
 

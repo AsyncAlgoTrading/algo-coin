@@ -5,13 +5,18 @@ class CrossesStrat
     def initialize( short_size, long_size, rev )
         @short = Array.new
         @momentum_short  = Array.new
-        @short_size = short_size
+        @short_size = Integer( short_size )
         
         @long = Array.new
         @momentum_long   = Array.new
-        @long_size  = long_size
+        @long_size  = Integer( long_size )
         
-        @rev = rev
+
+        if rev.is_a?(String)
+            @rev = rev.downcase =='true'
+        else
+            @rev = rev
+        end
 
         @sell_state = false
         @buy_state = false
