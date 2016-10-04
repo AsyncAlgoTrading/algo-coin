@@ -16,30 +16,6 @@ class StrategyManager
             @all_signals <<  clazz.new( *row[ 2..-1 ] )
         end
         
-        # signals
-        # @all_signals << CrossesStrat.new(1, 5, true)                  #1
-        # @all_signals << CrossesStrat.new(5, 15, true)                 #2
-        # @all_signals << CrossesStrat.new(5, 30, true)                 #3
-        # @all_signals << CrossesStrat.new(5, 50, true)                 #4
-        # @all_signals << CrossesStrat.new(5, 100, true)                #5
-        # @all_signals << CrossesStrat.new(15, 30, true)                #6
-        # @all_signals << CrossesStrat.new(15, 50, true)                #7
-        # @all_signals << CrossesStrat.new(15, 100, true)               #8  
-        # @all_signals << CrossesStrat.new(15, 200, true)               #9
-        # @all_signals << CrossesStrat.new(30, 50, true)                #10
-        # @all_signals << CrossesStrat.new(30, 100, true)               #11
-        # @all_signals << CrossesStrat.new(30, 200, true)               #12
-        # @all_signals << CrossesStrat.new(30, 500, true)               #13
-        # @all_signals << CrossesStrat.new(50, 100, true)               #14
-        # @all_signals << CrossesStrat.new(50, 200, true)               #15
-        # @all_signals << CrossesStrat.new(50, 500, true)               #16
-        # @all_signals << CrossesStrat.new(100, 200, true)              #17
-        # @all_signals << CrossesStrat.new(100, 500, false)             #18
-        # @all_signals << CrossesStrat.new(100, 1000, false)            #19
-        # @all_signals << CrossesStrat.new(200, 500, false)             #20
-        # @all_signals << CrossesStrat.new(200, 1000, false)            #21
-        # @all_signals << CrossesStrat.new(500, 1000, false)            #22
-        
         @all_signals.each_with_index do |item, i|
             @bank.register_strategy( i )
         end
