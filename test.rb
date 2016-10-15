@@ -13,13 +13,21 @@ VERBOSE = false
 websocket = Coinbase::Exchange::Websocket.new(product_id: 'BTC-USD',
     keepalive: true)
 
+f1 = File.open( 'matches.log', 'w' )
+f2 = File.open( 'order.log', 'w' )
+
+
 #execution
 websocket.match do |resp|
     strat.tick( resp.price )
+    f1.write( resp )
+    f1.write( "\n" )
 end # websocket.match
 
 # new order received
 websocket.received do |resp|
+    f2.write( resp )
+    f2.write( "\n" )
     if VERBOSE
     # p resp
     end
@@ -27,6 +35,8 @@ end
 
 #order opened
 websocket.open do |resp|
+    f2.write( resp )
+    f2.write( "\n" )
     if VERBOSE
     if resp.remaining_size > 10
         print "[NEW] \t %s \t\t %3.3f \t@ %.2f\n" % [resp.side, resp.remaining_size, resp.price]
@@ -38,6 +48,8 @@ end
 
 #order off the books
 websocket.done do |resp|
+    f2.write( resp )
+    f2.write( "\n" )
     if VERBOSE
     if resp.reason == 'filled'
         if resp.key?('remaining_size') 
@@ -53,6 +65,8 @@ end
 
 #order changed
 websocket.change do |resp|
+    f2.write( resp )
+    f2.write( "\n" )
     if VERBOSE
         print "[MOD] \t %s \t\t %3.3f \t\t@ %.2f\n" % [resp.side, resp.remaining_size, resp.price]
     end

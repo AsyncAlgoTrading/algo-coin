@@ -6,10 +6,6 @@ class StrategyManager
     def initialize( bank )
         @bank = bank
 
-
-        
-
-
         # signals
         @all_signals = Array.new
         @all_signals << CrossesStrat.new(1, 5, true)                  #1
