@@ -15,9 +15,23 @@ class TradingEngine(object):
                       onChange=False,
                       onError=False))
 
+        self._ticked = []
+
     def registerStrategy(self, strat):
         self._ex.registerCallback(strat.callback())
         self._strats.append(strat)
 
     def run(self):
-        self._ex.run()
+        self._ex.run(self)
+
+    def tick(self):
+        for strat in self._strats:
+            if strat.ticked():
+                self._ticked.append(strat)
+
+        self.ticked()
+
+    def ticked(self):
+        while len(self._ticked):
+            strat = self._ticked.pop()
+            print('Strat ticked', strat)

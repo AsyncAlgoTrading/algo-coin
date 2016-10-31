@@ -14,16 +14,21 @@ class Exchange(object):
         self._lastseqnum = -1
         self._missingseqnum = set()
 
-    def run(self):
+    def run(self, engine):
         print('Starting....')
         self.ws = create_connection('wss://ws-feed.exchange.coinbase.com')
         print('Connected!')
-        sub = json.dumps({"type": "subscribe", "product_id": "BTC-USD"})
+
+        sub = json.dumps({"type": "subscribe",
+                          "product_id": "BTC-USD"})
         self.ws.send(sub)
         print('Sending Subscription %s' % sub)
+
         try:
             while True:
                 self._receive()
+                engine.tick()
+
         except KeyboardInterrupt:
             self._close()
 
