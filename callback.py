@@ -1,12 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Callback(object):
-    __meta__ = ABCMeta
-
-    def __init__(self):
-        pass
-
+class Callback(metaclass=ABCMeta):
+    '''callback interface'''
     @abstractmethod
     def onMatch(self, data):
         '''onMatch'''
@@ -30,6 +26,29 @@ class Callback(object):
     @abstractmethod
     def onError(self, data):
         '''onError'''
+
+
+class NullCallback(Callback):
+    def __init__(self):
+        pass
+
+    def onMatch(self, data):
+        pass
+
+    def onReceived(self, data):
+        pass
+
+    def onOpen(self, data):
+        pass
+
+    def onDone(self, data):
+        pass
+
+    def onChange(self, data):
+        pass
+
+    def onError(self, data):
+        pass
 
 
 class Print(Callback):

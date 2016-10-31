@@ -1,17 +1,15 @@
-from exchange import Exchange
-from callback import Print
+from trading import TradingEngine
+from strategy import SMACrossesStrategy
 
 
 def main():
-    ex = Exchange(sandbox=False)
-    ex.registerCallback(
-        Print(onMatch=True,
-              onReceived=False,
-              onOpen=False,
-              onDone=False,
-              onChange=False,
-              onError=False))
-    ex.run()
+    te = TradingEngine(sandbox=False, verbose=False)
+
+    ts = SMACrossesStrategy(5, 10)
+
+    te.registerStrategy(ts)
+
+    te.run()
 
 if __name__ == '__main__':
     main()
