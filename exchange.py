@@ -67,7 +67,7 @@ class Exchange(object):
         elif res.get('type') == 'change':
             self._callback('CHANGE', res)
         else:
-            self.onError(res)
+            self._callback('ERROR', res)
 
     def _close(self):
         print('Closing....')

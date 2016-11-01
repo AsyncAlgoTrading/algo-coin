@@ -35,6 +35,11 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.prev_state = ''
         self.state = ''
 
+        self._tick = False
+
+        self.bought = 0.0
+        self.profits = 0.0
+
     def onMatch(self, data):
         self.shorts.append(float(data['price']))
         self.longs.append(float(data['price']))
@@ -56,12 +61,28 @@ class SMACrossesStrategy(NullTradingStrategy):
         else:
             self.state = ''
 
-    def ticked(self):
         if len(self.longs) < self.long:
+            self._tick = False
             return
-        print("short_av", self.short_av, len(self.shorts))
-        print("long_av", self.long_av, len(self.longs))
+
+        # print("short_av", self.short_av, len(self.shorts))
+        # print("long_av", self.long_av, len(self.longs))
+
         if self.state == 'golden' and self.prev_state != 'golden':
-            print('BUY!')
-        elif self.state == 'death' and self.prev_state != 'death':
-            print('SELL!')
+            self.bought = float(data['price'])
+            print('death->golden:bought: ', self.bought)
+            self._tick = True
+
+        elif self.state == 'death' and self.prev_state != 'death' and \
+                self.bought > 0.0:
+            profit = float(data['price']) - self.bought
+            self.profits += profit
+            print('golden->death:profit: ', profit, self.profits)
+            self.bought = 0.0
+            self._tick = True
+
+    def ticked(self):
+        return self._tick
+
+    def reset(self):
+        self._tick = False

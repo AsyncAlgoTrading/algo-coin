@@ -1,5 +1,6 @@
 from exchange import Exchange
 from callback import Print
+import time
 
 
 class TradingEngine(object):
@@ -28,10 +29,11 @@ class TradingEngine(object):
         for strat in self._strats:
             if strat.ticked():
                 self._ticked.append(strat)
+                strat.reset()
 
         self.ticked()
 
     def ticked(self):
         while len(self._ticked):
             strat = self._ticked.pop()
-            print('Strat ticked', strat)
+            print('Strat ticked', strat, time.time())
