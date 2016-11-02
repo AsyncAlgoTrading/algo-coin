@@ -5,7 +5,7 @@ from strategy import SMACrossesStrategy
 def main():
     te = TradingEngine(sandbox=False, verbose=False)
 
-    ts = SMACrossesStrategy(5, 10)
+    ts = SMACrossesStrategy(10, 5)
 
     te.registerStrategy(ts)
 

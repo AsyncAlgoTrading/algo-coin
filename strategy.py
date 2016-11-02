@@ -61,19 +61,19 @@ class SMACrossesStrategy(NullTradingStrategy):
         else:
             self.state = ''
 
-        if len(self.longs) < self.long:
+        if len(self.longs) < self.long or len(self.shorts) < self.short:
             self._tick = False
             return
 
         # print("short_av", self.short_av, len(self.shorts))
         # print("long_av", self.long_av, len(self.longs))
 
-        if self.state == 'death' and self.prev_state != 'death':
+        if self.state == 'golden' and self.prev_state != 'golden':
             self.bought = float(data['price'])
             print('death->golden:bought: ', self.bought)
             self._tick = True
 
-        elif self.state == 'golden' and self.prev_state != 'golden' and \
+        elif self.state == 'death' and self.prev_state != 'death' and \
                 self.bought > 0.0:
             profit = float(data['price']) - self.bought
             self.profits += profit
