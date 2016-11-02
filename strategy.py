@@ -1,13 +1,33 @@
 from callback import Callback, NullCallback
 from abc import ABCMeta, abstractmethod
 
+def ticks( f ):
+    def wrapper(self, *args, **kwargs):
+        self._tick = f(*args, **kwargs)
+    return wrapper
 
 class Strategy(metaclass=ABCMeta):
     '''Strategy interface'''
+    def __init__(self, *args, **kwargs):
+        self._tick = False
 
-    @abstractmethod
     def ticked(self):
-        '''strategy has ticked'''
+        return self._tick
+    
+    def reset(self):
+        self._tick = False
+
+    def requestBuy(self):
+        pass
+
+    def requestSell(self):
+        pass
+
+    def bought(self):
+        pass
+
+    def sold(self):
+        pass
 
 
 class TradingStrategy(Strategy, Callback):
@@ -35,11 +55,11 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.prev_state = ''
         self.state = ''
 
-        self._tick = False
 
         self.bought = 0.0
         self.profits = 0.0
 
+    @ticks
     def onMatch(self, data):
         self.shorts.append(float(data['price']))
         self.longs.append(float(data['price']))
@@ -62,8 +82,7 @@ class SMACrossesStrategy(NullTradingStrategy):
             self.state = ''
 
         if len(self.longs) < self.long or len(self.shorts) < self.short:
-            self._tick = False
-            return
+            return False
 
         # print("short_av", self.short_av, len(self.shorts))
         # print("long_av", self.long_av, len(self.longs))
@@ -71,7 +90,7 @@ class SMACrossesStrategy(NullTradingStrategy):
         if self.state == 'golden' and self.prev_state != 'golden':
             self.bought = float(data['price'])
             print('death->golden:bought: ', self.bought)
-            self._tick = True
+            return True
 
         elif self.state == 'death' and self.prev_state != 'death' and \
                 self.bought > 0.0:
@@ -79,10 +98,6 @@ class SMACrossesStrategy(NullTradingStrategy):
             self.profits += profit
             print('golden->death:profit: ', profit, self.profits)
             self.bought = 0.0
-            self._tick = True
+            return True
 
-    def ticked(self):
-        return self._tick
 
-    def reset(self):
-        self._tick = False
