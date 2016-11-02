@@ -36,4 +36,5 @@ class TradingEngine(object):
     def ticked(self):
         while len(self._ticked):
             strat = self._ticked.pop()
-            print('Strat ticked', strat, time.time())
+            #print('Strat ticked', strat, time.time())
+
