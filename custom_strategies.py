@@ -1,4 +1,8 @@
+import pandas
+from datetime import datetime
 from strategy import ticks, NullTradingStrategy
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class SMACrossesStrategy(NullTradingStrategy):
@@ -19,15 +23,32 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.bought = 0.0
         self.profits = 0.0
 
+        self._intitialvalue = 0.0
+        self._portfoliovalue = []
+
     def onBuy(self, data):
+        if self._intitialvalue == 0.0:
+            self._intitialvalue = (
+                datetime.fromtimestamp(float(data['time'])),
+                float(data['price'])
+                )
+            self._portfoliovalue.append(self._intitialvalue)
+
         self.bought = float(data['price'])
-        print('death->golden:bought: ', self.bought)
+        # print('d->g:bought at', self.bought)
 
     def onSell(self, data):
         profit = float(data['price']) - self.bought
         self.profits += profit
-        print('golden->death:profit: ', profit, self.profits)
+        # print('g->d:sold at',
+        #       float(data['price']),
+        #       profit,
+        #       self.profits)
         self.bought = 0.0
+
+        self._portfoliovalue.append((
+                datetime.fromtimestamp(float(data['time'])),
+                self._portfoliovalue[-1][1] + profit))
 
     @ticks
     def onMatch(self, data):
@@ -65,3 +86,34 @@ class SMACrossesStrategy(NullTradingStrategy):
             return True
 
         return False
+
+    def onAnalyze(self, _):
+        # pd = pandas.DataFrame(self._actions,
+        #                       columns=['time', 'action', 'price'])
+        pd = pandas.DataFrame(self._portfoliovalue,
+                              columns=['time', 'value'])
+        pd.set_index(['time'], inplace=True)
+        print(pd)
+
+        sp500 = pandas.DataFrame()
+        tmp = pandas.read_csv('sp500_v_kraken.csv')
+        sp500['Date'] = pandas.to_datetime(tmp['Date'])
+        sp500['Close'] = tmp['Close']
+        sp500.set_index(['Date'], inplace=True)
+        print(sp500)
+
+        sns.set_style('darkgrid')
+        fig, ax1 = plt.subplots()
+
+        plt.title('BTC mean-rev algo 1 performance')
+        ax1.plot(pd)
+
+        ax1.set_ylabel('Portfolio value($)')
+        ax1.set_xlabel('Date')
+        for xy in [self._portfoliovalue[0]] + [self._portfoliovalue[-1]]:
+            ax1.annotate('$%s' % xy[1], xy=xy, textcoords='data')
+
+        # ax2 = ax1.twinx()
+        # ax2.plot(sp500, 'r')
+        # ax2.set_ylabel('S&P500 ($)')
+        plt.show()

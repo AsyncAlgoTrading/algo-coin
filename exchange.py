@@ -1,16 +1,12 @@
 from websocket import create_connection
 import json
 from callback import Callback
+from data_source import DataSource
 
 
-class Exchange(object):
+class Exchange(DataSource):
     def __init__(self, sandbox=False):
-        self._callbacks = {'MATCH': [],
-                           'RECEIVED': [],
-                           'ERROR': [],
-                           'OPEN': [],
-                           'DONE': [],
-                           'CHANGE': []}
+        super(Exchange, self).__init__()
         self._lastseqnum = -1
         self._missingseqnum = set()
 

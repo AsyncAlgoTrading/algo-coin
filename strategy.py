@@ -1,5 +1,6 @@
 from callback import Callback, NullCallback
 from abc import ABCMeta, abstractmethod
+from datetime import datetime
 
 
 def ticks(f):
@@ -12,6 +13,7 @@ class Strategy(metaclass=ABCMeta):
     '''Strategy interface'''
     def __init__(self, *args, **kwargs):
         self._tick = False
+        self._actions = []
 
     def ticked(self):
         return self._tick
@@ -44,7 +46,15 @@ class NullTradingStrategy(Strategy, NullCallback):
         return self
 
     def requestBuy(self, callback, data):
-        return
+        self._actions.append((datetime.fromtimestamp(float(data['time'])),
+                              'buy',
+                              data['price']))
+        # let them do whatever
+        callback(data)
 
     def requestSell(self, callback, data):
-        return
+        # let them do whatever
+        self._actions.append((datetime.fromtimestamp(float(data['time'])),
+                              'sell',
+                              data['price']))
+        callback(data)
