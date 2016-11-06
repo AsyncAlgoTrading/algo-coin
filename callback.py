@@ -99,4 +99,4 @@ class Print(Callback):
         print(data)
 
     def onAnalyze(self, data):
-        print(self._actions)
+        pass

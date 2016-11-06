@@ -3,6 +3,8 @@ from callback import Print
 from backtest import Backtest
 from options import TradingEngineConfig
 from enums import TradingType
+from risk import Risk
+from execution import Execution
 # import time
 
 
@@ -16,6 +18,8 @@ class TradingEngine(object):
         self._strats = []
         self._ex = Exchange(options.exchange_options)
         self._bt = Backtest(options.backtest_options)
+        self._rk = Risk(options.risk_options)
+        self._ec = Execution(options.execution_options)
 
         if self._verbose:
             print('WARNING: Running in verbose mode')
@@ -67,3 +71,9 @@ class TradingEngine(object):
             self._ticked.pop()
             # strat = self._ticked.pop()
             # print('Strat ticked', strat, time.time())
+
+    def requestBuy(self, data):
+        pass
+
+    def requestSell(self, data):
+        pass
