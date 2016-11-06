@@ -96,7 +96,7 @@ class SMACrossesStrategy(NullTradingStrategy):
         print(pd)
 
         sp500 = pandas.DataFrame()
-        tmp = pandas.read_csv('sp500_v_kraken.csv')
+        tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
         sp500['Date'] = pandas.to_datetime(tmp['Date'])
         sp500['Close'] = tmp['Close']
         sp500.set_index(['Date'], inplace=True)

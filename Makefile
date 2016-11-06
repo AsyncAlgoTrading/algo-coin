@@ -1,5 +1,11 @@
 run: clean  ## clean and make target, run target
-	python3 main.py
+	python3 main.py live
+
+sandbox: clean  ## clean and make target, run target
+	python3 main.py sandbox
+
+backtest: clean  ## clean and make target, run target
+	python3 main.py backtest
 
 tests: clean ## Clean and Make unit tests
 	python3 main.py tests
