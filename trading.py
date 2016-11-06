@@ -19,8 +19,14 @@ class TradingEngine(object):
         self._ticked = []
 
     def registerStrategy(self, strat):
+        # register for exchange data
         self._ex.registerCallback(strat.callback())
-        self._strats.append(strat)
+
+        # add to tickables
+        self._strats.append(strat)  # add to tickables
+
+        # give self to strat so it can request trading actions
+        strat._te = self
 
     def run(self):
         self._ex.run(self)
