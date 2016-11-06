@@ -1,19 +1,36 @@
 import sys
 from trading import TradingEngine
 from custom_strategies import SMACrossesStrategy
+from options import TradingEngineConfig, BacktestConfig
+from enums import TradingType
+
+
+def parse_command_line(argv):
+    config = TradingEngineConfig()
+    if 'live' in argv:
+        config.type = TradingType.LIVE
+    elif 'sandbox' in argv:
+        config.type = TradingType.SANDBOX
+    elif 'backtest' in argv:
+        config.type = TradingType.BACKTEST
+        config.backtest_options = BacktestConfig()
+        config.backtest_options.file = "./data/exchange/krakenUSD.csv"
+
+    if 'verbose' in argv:
+        config.verbose = True
+
+    return config
 
 
 def main(argv):
+    config = parse_command_line(argv)
+
     # Instantiate trading engine
     #
     # The engine is responsible for managing the different components,
     # including the strategies, the bank/risk engine, and the
     # exchange/backtest engine.
-    te = TradingEngine(live=True     if 'live'     in argv else False,
-                       sandbox=True  if 'sandbox'  in argv else False,
-                       backtest=True if 'backtest' in argv else False,
-                       verbose=True  if 'verbose'  in argv else False,
-                       bt_file="./data/exchange/krakenUSD.csv")
+    te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
     ts = SMACrossesStrategy(10, 5)

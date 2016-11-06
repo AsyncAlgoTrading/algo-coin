@@ -2,10 +2,11 @@ from websocket import create_connection
 import json
 from callback import Callback
 from data_source import DataSource
+from options import ExchangeConfig
 
 
 class Exchange(DataSource):
-    def __init__(self, sandbox=False):
+    def __init__(self, options: ExchangeConfig):
         super(Exchange, self).__init__()
         self._lastseqnum = -1
         self._missingseqnum = set()

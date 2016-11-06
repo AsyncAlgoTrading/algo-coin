@@ -1,11 +1,12 @@
 from data_source import DataSource
 from callback import Callback
+from options import BacktestConfig
 
 
-class BackTest(DataSource):
-    def __init__(self, file):
-        super(BackTest, self).__init__()
-        self._file = file
+class Backtest(DataSource):
+    def __init__(self, options: BacktestConfig):
+        super(Backtest, self).__init__()
+        self._file = options.file
 
     def run(self, engine):
         print('Starting....')

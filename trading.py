@@ -1,28 +1,23 @@
 from exchange import Exchange
 from callback import Print
-from backtest import BackTest
+from backtest import Backtest
+from options import TradingEngineConfig
+from enums import TradingType
 # import time
 
 
 class TradingEngine(object):
-    def __init__(self,
-                 live=True,        # Run with exchange
-                 sandbox=False,    # Run with sandbox
-                 backtest=False,   # Run with backtest
-                 verbose=False,    # Debug print
-                 *args,
-                 **kwargs):
-
-        self._live = live
-        self._sandbox = sandbox
-        self._backtest = backtest
-        self._verbose = verbose
+    def __init__(self, options: TradingEngineConfig):
+        self._live = options.type == TradingType.LIVE
+        self._sandbox = options.type == TradingType.SANDBOX
+        self._backtest = options.type == TradingType.BACKTEST
+        self._verbose = options.verbose
 
         self._strats = []
-        self._ex = Exchange(sandbox=sandbox)
-        self._bt = BackTest(kwargs.get('bt_file', ''))
+        self._ex = Exchange(options.exchange_options)
+        self._bt = Backtest(options.backtest_options)
 
-        if verbose:
+        if self._verbose:
             print('WARNING: Running in verbose mode')
 
             self._ex.registerCallback(
