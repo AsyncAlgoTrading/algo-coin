@@ -2,7 +2,7 @@
 Algorithmic Trading Bitcoin. 
 
 ##Overview 
-Lightweight, extensible ruby program for algorithmically trading bitcoin across multiple exchanges. 
+Lightweight, extensible program for algorithmically trading bitcoin across multiple exchanges. 
 
 ##Markets
 
