@@ -16,22 +16,26 @@ class TradingEngine(object):
         self._verbose = options.verbose
 
         self._strats = []
-        self._ex = Exchange(options.exchange_options)
-        self._bt = Backtest(options.backtest_options)
+        if self._live or self._sandbox:
+            self._ex = Exchange(options.exchange_options)
+        if self._backtest:
+            self._bt = Backtest(options.backtest_options)
         self._rk = Risk(options.risk_options)
         self._ec = Execution(options.execution_options)
 
         if self._verbose:
             print('WARNING: Running in verbose mode')
 
-            self._ex.registerCallback(
+            if self._live or self._sandbox:
+                self._ex.registerCallback(
                 Print(onMatch=True,
                       onReceived=False,
                       onOpen=False,
                       onDone=False,
                       onChange=False,
                       onError=False))
-            self._bt.registerCallback(Print())
+            if self._backtest:
+                self._bt.registerCallback(Print())
 
         self._ticked = []
 

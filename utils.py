@@ -2,8 +2,9 @@ def create_pair(key, typ, default=None):
     def get(self):
         if hasattr(self, '__' + str(key)):
             return getattr(self, '__' + str(key))
-        if default and type(default) == typ:
+        if default is not None and type(default) == typ:
             return default
+        print(key,typ,default)
         raise TypeError("%s is unset" % key)
 
     def set(self, val):

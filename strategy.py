@@ -46,9 +46,11 @@ class NullTradingStrategy(Strategy, NullCallback):
         return self
 
     def requestBuy(self, callback, data):
-        self._actions.append((datetime.fromtimestamp(float(data['time'])),
-                              'buy',
-                              data['price']))
+        try:
+            date = datetime.fromtimestamp(float(data['time']))
+        except ValueError:
+            date = datetime.strptime("YYYY-mm-dd", data['time'])
+        self._actions.append((date,'buy',data['price']))
         # let them do whatever
         callback(data)
 

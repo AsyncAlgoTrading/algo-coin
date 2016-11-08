@@ -25,7 +25,7 @@ class ExecutionConfig:
 @config
 class TradingEngineConfig:
     type = TradingType, TradingType.SANDBOX
-    verbose = bool, True
+    verbose = bool, False 
     exchange_options = ExchangeConfig, ExchangeConfig()
     backtest_options = BacktestConfig, BacktestConfig()
     risk_options = RiskConfig, RiskConfig()
