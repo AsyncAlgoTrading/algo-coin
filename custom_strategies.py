@@ -28,8 +28,12 @@ class SMACrossesStrategy(NullTradingStrategy):
 
     def onBuy(self, data):
         if self._intitialvalue == 0.0:
+            try:
+                date = datetime.fromtimestamp(float(data['time']))
+            except ValueError:
+                date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
             self._intitialvalue = (
-                datetime.fromtimestamp(float(data['time'])),
+                date,
                 float(data['price'])
                 )
             self._portfoliovalue.append(self._intitialvalue)
@@ -46,8 +50,12 @@ class SMACrossesStrategy(NullTradingStrategy):
         #       self.profits)
         self.bought = 0.0
 
+        try:
+            date = datetime.fromtimestamp(float(data['time']))
+        except ValueError:
+            date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
         self._portfoliovalue.append((
-                datetime.fromtimestamp(float(data['time'])),
+                date,
                 self._portfoliovalue[-1][1] + profit))
 
     @ticks
