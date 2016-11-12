@@ -2,7 +2,7 @@ from websocket import create_connection
 import json
 from callback import Callback
 from data_source import DataSource
-from options import ExchangeConfig
+from config import ExchangeConfig
 
 
 class Exchange(DataSource):

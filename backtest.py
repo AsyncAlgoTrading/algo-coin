@@ -1,6 +1,6 @@
 from data_source import DataSource
 from callback import Callback
-from options import BacktestConfig
+from config import BacktestConfig
 
 
 class Backtest(DataSource):

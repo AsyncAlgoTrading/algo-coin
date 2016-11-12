@@ -1,6 +1,6 @@
 from callback import Callback, NullCallback
 from abc import ABCMeta, abstractmethod
-from datetime import datetime
+from utils import parseDate
 
 
 def ticks(f):
@@ -34,32 +34,25 @@ class TradingStrategy(Strategy, Callback):
     def callback(self):
         return self
 
-    def requestBuy(self, callback, data):
-        self._te.requestBuy(data)
+    def requestBuy(self, callback, data, callback_failure=None):
+        self._te.requestBuy(callback, data, callback_failure)
 
-    def requestSell(self, callback, data):
-        self._te.requestBuy(data)
+    def requestSell(self, callback, data, callback_failure=None):
+        self._te.requestSell(callback, data, callback_failure)
 
 
 class NullTradingStrategy(Strategy, NullCallback):
     def callback(self):
         return self
 
-    def requestBuy(self, callback, data):
-        try:
-            date = datetime.fromtimestamp(float(data['time']))
-        except ValueError:
-            date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
-        self._actions.append((date,'buy',data['price']))
+    def requestBuy(self, callback, data, callback_failure=None):
         # let them do whatever
+        date = parseDate(data['time'])
+        self._actions.append((date, 'buy', data['price']))
         callback(data)
 
-    def requestSell(self, callback, data):
+    def requestSell(self, callback, data, callback_failure=None):
         # let them do whatever
-        try:
-            date = datetime.fromtimestamp(float(data['time']))
-        except ValueError:
-            date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
-        self._actions.append((date,'sell',data['price']))
-        # let them do whatever
+        date = parseDate(data['time'])
+        self._actions.append((date, 'sell', data['price']))
         callback(data)

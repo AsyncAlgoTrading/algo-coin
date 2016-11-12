@@ -1,7 +1,7 @@
 import sys
 from trading import TradingEngine
 from custom_strategies import SMACrossesStrategy
-from options import TradingEngineConfig, BacktestConfig
+from config import TradingEngineConfig, BacktestConfig
 from enums import TradingType
 
 

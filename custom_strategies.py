@@ -1,8 +1,6 @@
 import pandas
-from datetime import datetime
 from strategy import ticks, NullTradingStrategy
-import matplotlib.pyplot as plt
-import seaborn as sns
+from utils import parseDate
 
 
 class SMACrossesStrategy(NullTradingStrategy):
@@ -23,15 +21,12 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.bought = 0.0
         self.profits = 0.0
 
-        self._intitialvalue = 0.0
+        self._intitialvalue = None
         self._portfoliovalue = []
 
     def onBuy(self, data):
-        if self._intitialvalue == 0.0:
-            try:
-                date = datetime.fromtimestamp(float(data['time']))
-            except ValueError:
-                date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        if self._intitialvalue is None:
+            date = parseDate(data['time'])
             self._intitialvalue = (
                 date,
                 float(data['price'])
@@ -39,36 +34,36 @@ class SMACrossesStrategy(NullTradingStrategy):
             self._portfoliovalue.append(self._intitialvalue)
 
         self.bought = float(data['price'])
-        # print('d->g:bought at', self.bought)
+        print('d->g:bought at', self.bought)
 
     def onSell(self, data):
         profit = float(data['price']) - self.bought
         self.profits += profit
-        # print('g->d:sold at',
-        #       float(data['price']),
-        #       profit,
-        #       self.profits)
+        print('g->d:sold at',
+              float(data['price']),
+              profit,
+              self.profits)
         self.bought = 0.0
 
-        try:
-            date = datetime.fromtimestamp(float(data['time']))
-        except ValueError:
-            date = datetime.strptime(data['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        date = parseDate(data['time'])
         self._portfoliovalue.append((
                 date,
                 self._portfoliovalue[-1][1] + profit))
 
     @ticks
     def onMatch(self, data):
+        # add data to arrays
         self.shorts.append(float(data['price']))
         self.longs.append(float(data['price']))
 
+        # check requirements
         if len(self.shorts) > self.short:
             self.shorts.pop(0)
 
         if len(self.longs) > self.long:
             self.longs.pop(0)
 
+        # calc averages
         self.short_av = float(sum(self.shorts)) / max(len(self.shorts), 1)
         self.long_av = float(sum(self.longs)) / max(len(self.longs), 1)
 
@@ -96,6 +91,8 @@ class SMACrossesStrategy(NullTradingStrategy):
         return False
 
     def onAnalyze(self, _):
+        import matplotlib.pyplot as plt
+        import seaborn as sns
         # pd = pandas.DataFrame(self._actions,
         #                       columns=['time', 'action', 'price'])
         pd = pandas.DataFrame(self._portfoliovalue,
@@ -103,12 +100,12 @@ class SMACrossesStrategy(NullTradingStrategy):
         pd.set_index(['time'], inplace=True)
         print(pd)
 
-        sp500 = pandas.DataFrame()
-        tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
-        sp500['Date'] = pandas.to_datetime(tmp['Date'])
-        sp500['Close'] = tmp['Close']
-        sp500.set_index(['Date'], inplace=True)
-        print(sp500)
+        # sp500 = pandas.DataFrame()
+        # tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
+        # sp500['Date'] = pandas.to_datetime(tmp['Date'])
+        # sp500['Close'] = tmp['Close']
+        # sp500.set_index(['Date'], inplace=True)
+        # print(sp500)
 
         sns.set_style('darkgrid')
         fig, ax1 = plt.subplots()

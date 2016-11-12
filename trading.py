@@ -1,7 +1,7 @@
 from exchange import Exchange
 from callback import Print
 from backtest import Backtest
-from options import TradingEngineConfig
+from config import TradingEngineConfig
 from enums import TradingType
 from risk import Risk
 from execution import Execution
@@ -18,8 +18,10 @@ class TradingEngine(object):
         self._strats = []
         if self._live or self._sandbox:
             self._ex = Exchange(options.exchange_options)
+
         if self._backtest:
             self._bt = Backtest(options.backtest_options)
+
         self._rk = Risk(options.risk_options)
         self._ec = Execution(options.execution_options)
 
@@ -28,12 +30,13 @@ class TradingEngine(object):
 
             if self._live or self._sandbox:
                 self._ex.registerCallback(
-                Print(onMatch=True,
-                      onReceived=False,
-                      onOpen=False,
-                      onDone=False,
-                      onChange=False,
-                      onError=False))
+                    Print(onMatch=True,
+                          onReceived=False,
+                          onOpen=False,
+                          onDone=False,
+                          onChange=False,
+                          onError=False))
+
             if self._backtest:
                 self._bt.registerCallback(Print())
 
@@ -57,8 +60,10 @@ class TradingEngine(object):
     def run(self):
         if self._live or self._sandbox:
             self._ex.run(self)
+
         elif self._backtest:
             self._bt.run(self)
+
         else:
             raise Exception('Invalid configuration')
 
@@ -76,8 +81,26 @@ class TradingEngine(object):
             # strat = self._ticked.pop()
             # print('Strat ticked', strat, time.time())
 
-    def requestBuy(self, data):
-        pass
+    def requestBuy(self, callback, data, callback_failure=None):
+        resp = self._rk.requestBuy(data)
+        if resp.success:
+            res = self._ec.requestBuy(resp)
+            self._rk.update(res)
+            callback(res)
+            return
+        if callback_failure:
+            callback_failure(resp)
+            return
+        callback(resp)
 
-    def requestSell(self, data):
-        pass
+    def requestSell(self, callback, data, callback_failure=None):
+        resp = self._rk.requestSell(data)
+        if resp.success:
+            res = self._ec.requestSell(resp)
+            self._rk.update(res)
+            callback(res)
+            return
+        if callback_failure:
+            callback_failure(resp)
+            return
+        callback(resp)

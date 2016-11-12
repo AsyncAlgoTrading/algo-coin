@@ -23,3 +23,13 @@ class CurrencyType(Enum):
     BTC = 1
     ETH = 2
     LTC = 3
+
+
+class Side(Enum):
+    BUY = 0
+    SELL = 0
+
+
+class OrderType(Enum):
+    MARKET = 0
+    LIMIT = 1
