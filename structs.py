@@ -20,3 +20,8 @@ class TradeResponse:
     volume = float
     price = float
     success = bool
+
+
+@struct
+class ExecutionReport:
+    pass

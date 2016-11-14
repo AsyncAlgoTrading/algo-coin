@@ -1,11 +1,11 @@
 from callback import Callback
 from config import BacktestConfig
-from data_source import DataSource
+from data_source import StreamingDataSource
 
 
-class Backtest(DataSource):
-    def __init__(self,
-                 options: BacktestConfig):
+class Backtest(StreamingDataSource):
+    def __init__(self, options: BacktestConfig):
+
         super(Backtest, self).__init__()
         self._file = options.file
 

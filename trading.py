@@ -18,13 +18,13 @@ class TradingEngine(object):
         self._verbose = options.verbose
 
         self._strats = []
-        if self._live or self._sandbox:
-            self._ex = Exchange(options.exchange_options)
 
-        if self._backtest:
-            self._bt = Backtest(options.backtest_options)
+        self._ex = Exchange(options.exchange_options)
+
+        self._bt = Backtest(options.backtest_options)
 
         self._rk = Risk(options.risk_options)
+
         self._ec = Execution(options.execution_options, self._ex)
 
         if self._verbose:

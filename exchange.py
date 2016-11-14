@@ -1,13 +1,13 @@
 import json
 # from callback import Callback
 from config import ExchangeConfig
-from data_source import WebsocketDataSource
+from data_source import StreamingDataSource
 # from data_source import WebsocketDataSource, RestAPIDataSource
 from structs import MarketData
 from websocket import create_connection
 
 
-class Exchange(WebsocketDataSource):
+class Exchange(StreamingDataSource):
     def __init__(self, options: ExchangeConfig):
         super(Exchange, self).__init__(options)
         self._lastseqnum = -1

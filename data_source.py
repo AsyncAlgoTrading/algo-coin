@@ -17,7 +17,7 @@ class RestAPIDataSource(DataSource):
         '''send order to exchange'''
 
 
-class WebsocketDataSource(DataSource):
+class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs):
         self._callbacks = {'MATCH': [],
                            'RECEIVED': [],
