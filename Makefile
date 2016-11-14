@@ -14,7 +14,7 @@ test: ## run the tests for travis CI
 	@ python3 test.py
  
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__
+	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
