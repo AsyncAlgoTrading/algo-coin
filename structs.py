@@ -8,10 +8,25 @@ class MarketData:
 
 
 @struct
+class RiskRequest:
+    side = Side
+    volume = float
+    price = float
+
+
+@struct
 class TradeRequest:
     side = Side
     volume = float
     price = float
+
+
+@struct
+class RiskResponse:
+    side = Side
+    volume = float
+    price = float
+    success = bool
 
 
 @struct

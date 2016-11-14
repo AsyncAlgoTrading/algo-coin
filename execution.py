@@ -1,14 +1,14 @@
 from config import ExecutionConfig
 from exchange import Exchange
-from structs import MarketData
+from structs import TradeRequest, TradeResponse
 
 
 class Execution(object):
     def __init__(self, options: ExecutionConfig, exchange: Exchange):
         pass
 
-    def requestBuy(self, data: MarketData):
+    def requestBuy(self, req: TradeRequest) -> TradeResponse:
         pass
 
-    def requestSell(self, data: MarketData):
+    def requestSell(self, req: TradeRequest) -> TradeResponse:
         pass

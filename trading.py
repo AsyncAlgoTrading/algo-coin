@@ -21,7 +21,8 @@ class TradingEngine(object):
 
         self._ex = Exchange(options.exchange_options)
 
-        self._bt = Backtest(options.backtest_options)
+        self._bt = Backtest(options.backtest_options) \
+            if self._backtest else None
 
         self._rk = Risk(options.risk_options)
 
@@ -87,26 +88,26 @@ class TradingEngine(object):
                    callback: Callback,
                    data: TradeRequest,
                    callback_failure=None):
+
         resp = self._rk.requestBuy(data)
+
         if resp.success:
             res = self._ec.requestBuy(resp)
             self._rk.update(res)
             callback(res)
-        elif callback_failure:
-            callback_failure(resp)
-        else:
-            callback(resp)
+
+        callback_failure(resp) if callback_failure else callback(resp)
 
     def requestSell(self,
                     callback: Callback,
                     data: TradeRequest,
                     callback_failure=None):
+
         resp = self._rk.requestSell(data)
+
         if resp.success:
             res = self._ec.requestSell(resp)
             self._rk.update(res)
             callback(res)
-        elif callback_failure:
-            callback_failure(resp)
-        else:
-            callback(resp)
+
+        callback_failure(resp) if callback_failure else callback(resp)
