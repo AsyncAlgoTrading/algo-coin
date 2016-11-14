@@ -1,16 +1,21 @@
-from utils import struct
 from enums import Side
+from utils import struct
 
 
 @struct
-class RiskRequest:
+class MarketData:
+    pass
+
+
+@struct
+class TradeRequest:
     side = Side
     volume = float
     price = float
 
 
 @struct
-class RiskResponse:
+class TradeResponse:
     side = Side
     volume = float
     price = float

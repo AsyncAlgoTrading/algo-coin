@@ -1,30 +1,31 @@
 from abc import ABCMeta, abstractmethod
+from structs import MarketData
 
 
 class Callback(metaclass=ABCMeta):
     '''callback interface'''
     @abstractmethod
-    def onMatch(self, data):
+    def onMatch(self, data: MarketData):
         '''onMatch'''
 
     @abstractmethod
-    def onReceived(self, data):
+    def onReceived(self, data: MarketData):
         '''onReceived'''
 
     @abstractmethod
-    def onOpen(self, data):
+    def onOpen(self, data: MarketData):
         '''onOpen'''
 
     @abstractmethod
-    def onDone(self, data):
+    def onDone(self, data: MarketData):
         '''onDone'''
 
     @abstractmethod
-    def onChange(self, data):
+    def onChange(self, data: MarketData):
         '''onChange'''
 
     @abstractmethod
-    def onError(self, data):
+    def onError(self, data: MarketData):
         '''onError'''
 
     @abstractmethod
@@ -36,22 +37,22 @@ class NullCallback(Callback):
     def __init__(self):
         pass
 
-    def onMatch(self, data):
+    def onMatch(self, data: MarketData):
         pass
 
-    def onReceived(self, data):
+    def onReceived(self, data: MarketData):
         pass
 
-    def onOpen(self, data):
+    def onOpen(self, data: MarketData):
         pass
 
-    def onDone(self, data):
+    def onDone(self, data: MarketData):
         pass
 
-    def onChange(self, data):
+    def onChange(self, data: MarketData):
         pass
 
-    def onError(self, data):
+    def onError(self, data: MarketData):
         pass
 
     def onAnalyze(self, data):
@@ -80,22 +81,22 @@ class Print(Callback):
         if not onError:
             setattr(self, 'onError', False)
 
-    def onMatch(self, data):
+    def onMatch(self, data: MarketData):
         print(data)
 
-    def onReceived(self, data):
+    def onReceived(self, data: MarketData):
         print(data)
 
-    def onOpen(self, data):
+    def onOpen(self, data: MarketData):
         print(data)
 
-    def onDone(self, data):
+    def onDone(self, data: MarketData):
         print(data)
 
-    def onChange(self, data):
+    def onChange(self, data: MarketData):
         print(data)
 
-    def onError(self, data):
+    def onError(self, data: MarketData):
         print(data)
 
     def onAnalyze(self, data):

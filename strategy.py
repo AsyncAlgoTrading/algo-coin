@@ -1,5 +1,6 @@
-from callback import Callback, NullCallback
 from abc import ABCMeta, abstractmethod
+from callback import Callback, NullCallback
+from structs import MarketData
 from utils import parseDate
 
 
@@ -22,11 +23,15 @@ class Strategy(metaclass=ABCMeta):
         self._tick = False
 
     @abstractmethod
-    def requestBuy(self, callback, data):
+    def requestBuy(self,
+                   callback: Callback,
+                   data: MarketData):
         '''requestBuy'''
 
     @abstractmethod
-    def requestSell(self, callback, data):
+    def requestSell(self,
+                    callback: Callback,
+                    data: MarketData):
         '''requestSell'''
 
 
@@ -34,10 +39,16 @@ class TradingStrategy(Strategy, Callback):
     def callback(self):
         return self
 
-    def requestBuy(self, callback, data, callback_failure=None):
+    def requestBuy(self,
+                   callback: Callback,
+                   data: MarketData,
+                   callback_failure=None):
         self._te.requestBuy(callback, data, callback_failure)
 
-    def requestSell(self, callback, data, callback_failure=None):
+    def requestSell(self,
+                    callback: Callback,
+                    data: MarketData,
+                    callback_failure=None):
         self._te.requestSell(callback, data, callback_failure)
 
 
@@ -45,13 +56,19 @@ class NullTradingStrategy(Strategy, NullCallback):
     def callback(self):
         return self
 
-    def requestBuy(self, callback, data, callback_failure=None):
+    def requestBuy(self,
+                   callback: Callback,
+                   data: MarketData,
+                   callback_failure=None):
         # let them do whatever
         date = parseDate(data['time'])
         self._actions.append((date, 'buy', data['price']))
         callback(data)
 
-    def requestSell(self, callback, data, callback_failure=None):
+    def requestSell(self,
+                    callback: Callback,
+                    data: MarketData,
+                    callback_failure=None):
         # let them do whatever
         date = parseDate(data['time'])
         self._actions.append((date, 'sell', data['price']))

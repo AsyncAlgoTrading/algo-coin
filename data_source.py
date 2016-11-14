@@ -1,7 +1,23 @@
+# import json
 from abc import ABCMeta, abstractmethod
+from callback import Callback
+# from structs import MarketData
 
 
 class DataSource(metaclass=ABCMeta):
+    pass
+
+
+class RestAPIDataSource(DataSource):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def sendOrder(self, callback: Callback):
+        '''send order to exchange'''
+
+
+class WebsocketDataSource(DataSource):
     def __init__(self, *args, **kwargs):
         self._callbacks = {'MATCH': [],
                            'RECEIVED': [],
@@ -12,37 +28,40 @@ class DataSource(metaclass=ABCMeta):
                            'ANALYZE': []}
 
     def run(self, engine):
-        try:
-            while True:
-                engine.tick()
+        '''run the exchange'''
 
-        except KeyboardInterrupt:
-            return
+    def onMatch(self, callback: Callback):
+        self._callbacks['MATCH'].append(callback)
 
-    @abstractmethod
-    def onMatch(self, callback):
-        '''onMatch'''
+    def onReceived(self, callback: Callback):
+        self._callbacks['RECEIVED'].append(callback)
 
-    @abstractmethod
-    def onReceived(self, callback):
-        '''onReceived'''
+    def onOpen(self, callback: Callback):
+        self._callbacks['OPEN'].append(callback)
 
-    @abstractmethod
-    def onOpen(self, callback):
-        '''onOpen'''
+    def onDone(self, callback: Callback):
+        self._callbacks['DONE'].append(callback)
 
-    @abstractmethod
-    def onDone(self, callback):
-        '''onDone'''
+    def onChange(self, callback: Callback):
+        self._callbacks['CHANGE'].append(callback)
 
-    @abstractmethod
-    def onChange(self, callback):
-        '''onChange'''
+    def onError(self, callback: Callback):
+        self._callbacks['ERROR'].append(callback)
 
-    @abstractmethod
-    def onError(self, callback):
-        '''onError'''
+    def registerCallback(self, callback: Callback):
+        if not isinstance(callback, Callback):
+            raise Exception('%s is not an instance of class '
+                            'Callback' % callback)
 
-    @abstractmethod
-    def registerCallback(self, callback):
-        '''registerCallback'''
+        if callback.onMatch:
+            self.onMatch(callback.onMatch)
+        if callback.onReceived:
+            self.onReceived(callback.onReceived)
+        if callback.onOpen:
+            self.onOpen(callback.onOpen)
+        if callback.onDone:
+            self.onDone(callback.onDone)
+        if callback.onChange:
+            self.onChange(callback.onChange)
+        if callback.onError:
+            self.onError(callback.onError)

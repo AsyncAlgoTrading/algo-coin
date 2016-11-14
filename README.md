@@ -2,7 +2,7 @@
 Algorithmic Trading Bitcoin. 
 
 ##Overview 
-Lightweight, extensible program for algorithmically trading bitcoin across multiple exchanges. 
+Lightweight, extensible program for algorithmically trading cryptocurrencies across multiple exchanges. 
 
 ##Markets
 
@@ -16,8 +16,4 @@ Lightweight, extensible program for algorithmically trading bitcoin across multi
 - BTCChina
 - LakeBTC
 - Bitstamp
-
-##Contact
-
-t.paine154@gmail.com
 

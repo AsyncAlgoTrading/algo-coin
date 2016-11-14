@@ -14,7 +14,8 @@ class BacktestConfig:
 
 @config
 class RiskConfig:
-    pass
+    max_drawdown = float, 100.0  # % Max strat drawdown before liquidation
+    max_risk = float, 100.0  # % Max to risk on any trade
 
 
 @config

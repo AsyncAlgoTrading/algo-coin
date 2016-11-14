@@ -1,13 +1,15 @@
-from websocket import create_connection
 import json
-from callback import Callback
-from data_source import DataSource
+# from callback import Callback
 from config import ExchangeConfig
+from data_source import WebsocketDataSource
+# from data_source import WebsocketDataSource, RestAPIDataSource
+from structs import MarketData
+from websocket import create_connection
 
 
-class Exchange(DataSource):
+class Exchange(WebsocketDataSource):
     def __init__(self, options: ExchangeConfig):
-        super(Exchange, self).__init__()
+        super(Exchange, self).__init__(options)
         self._lastseqnum = -1
         self._missingseqnum = set()
 
@@ -29,24 +31,9 @@ class Exchange(DataSource):
         except KeyboardInterrupt:
             self._close()
 
-    def _seqnum(self, number):
-        if self._lastseqnum == -1:
-            # first seen
-            self._lastseqnum = number
-            return
-
-        if number in self._missingseqnum:
-            self._missingseqnum.remove(number)
-            print('INFO: Got out of order data for seqnum: %s' % number)
-
-        elif number != self._lastseqnum + 1:
-            print('ERROR: Missing sequence number/s: %s' % ','.join(
-                str(x) for x in range(self._lastseqnum+1, number+1)))
-            self._missingseqnum.add(
-                x for x in range(self._lastseqnum+1, number+1))
-
-        else:
-            self._lastseqnum = number
+    def _callback(self, field: str, data: MarketData):
+        for cb in self._callbacks[field]:
+            cb(data)
 
     def _receive(self):
         res = json.loads(self.ws.recv())
@@ -70,42 +57,21 @@ class Exchange(DataSource):
         print('Closing....')
         self.ws.close()
 
-    def _callback(self, field, data):
-        for cb in self._callbacks[field]:
-            cb(data)
+    def _seqnum(self, number: int):
+        if self._lastseqnum == -1:
+            # first seen
+            self._lastseqnum = number
+            return
 
-    def onMatch(self, callback):
-        self._callbacks['MATCH'].append(callback)
+        if number in self._missingseqnum:
+            self._missingseqnum.remove(number)
+            print('INFO: Got out of order data for seqnum: %s' % number)
 
-    def onReceived(self, callback):
-        self._callbacks['RECEIVED'].append(callback)
+        elif number != self._lastseqnum + 1:
+            print('ERROR: Missing sequence number/s: %s' % ','.join(
+                str(x) for x in range(self._lastseqnum+1, number+1)))
+            self._missingseqnum.add(
+                x for x in range(self._lastseqnum+1, number+1))
 
-    def onOpen(self, callback):
-        self._callbacks['OPEN'].append(callback)
-
-    def onDone(self, callback):
-        self._callbacks['DONE'].append(callback)
-
-    def onChange(self, callback):
-        self._callbacks['CHANGE'].append(callback)
-
-    def onError(self, callback):
-        self._callbacks['ERROR'].append(callback)
-
-    def registerCallback(self, callback):
-        if not isinstance(callback, Callback):
-            raise Exception('%s is not an instance of class '
-                            'Callback' % callback)
-
-        if callback.onMatch:
-            self.onMatch(callback.onMatch)
-        if callback.onReceived:
-            self.onReceived(callback.onReceived)
-        if callback.onOpen:
-            self.onOpen(callback.onOpen)
-        if callback.onDone:
-            self.onDone(callback.onDone)
-        if callback.onChange:
-            self.onChange(callback.onChange)
-        if callback.onError:
-            self.onError(callback.onError)
+        else:
+            self._lastseqnum = number

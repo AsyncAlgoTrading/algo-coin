@@ -1,10 +1,11 @@
-from data_source import DataSource
 from callback import Callback
 from config import BacktestConfig
+from data_source import DataSource
 
 
 class Backtest(DataSource):
-    def __init__(self, options: BacktestConfig):
+    def __init__(self,
+                 options: BacktestConfig):
         super(Backtest, self).__init__()
         self._file = options.file
 
@@ -16,7 +17,8 @@ class Backtest(DataSource):
                 engine.tick()
         self._callback('ANALYZE', None)
 
-    def _receive(self, line):
+    def _receive(self,
+                 line: str):
         res = line.strip().split(',')
         res = {'type': 'match',
                'time': res[0],
@@ -36,32 +38,42 @@ class Backtest(DataSource):
         else:
             self._callback('ERROR', res)
 
-    def _callback(self, field, data):
+    def _callback(self,
+                  field: str,
+                  data):
         for cb in self._callbacks[field]:
             cb(data)
 
-    def onMatch(self, callback):
+    def onMatch(self,
+                callback: Callback):
         self._callbacks['MATCH'].append(callback)
 
-    def onReceived(self, callback):
+    def onReceived(self,
+                   callback: Callback):
         self._callbacks['RECEIVED'].append(callback)
 
-    def onOpen(self, callback):
+    def onOpen(self,
+               callback: Callback):
         self._callbacks['OPEN'].append(callback)
 
-    def onDone(self, callback):
+    def onDone(self,
+               callback: Callback):
         self._callbacks['DONE'].append(callback)
 
-    def onChange(self, callback):
+    def onChange(self,
+                 callback: Callback):
         self._callbacks['CHANGE'].append(callback)
 
-    def onError(self, callback):
+    def onError(self,
+                callback: Callback):
         self._callbacks['ERROR'].append(callback)
 
-    def onAnalyze(self, callback):
+    def onAnalyze(self,
+                  callback: Callback):
         self._callbacks['ANALYZE'].append(callback)
 
-    def registerCallback(self, callback):
+    def registerCallback(self,
+                         callback: Callback):
         if not isinstance(callback, Callback):
             raise Exception('%s is not an instance of class '
                             'Callback' % callback)

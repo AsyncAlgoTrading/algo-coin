@@ -53,7 +53,7 @@ def struct(cls):
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
-def parseDate(date):
+def parseDate(date: str):
     try:
         date = datetime.fromtimestamp(float(date))
     except ValueError:

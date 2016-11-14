@@ -1,11 +1,11 @@
 import sys
-from trading import TradingEngine
 from custom_strategies import SMACrossesStrategy
 from config import TradingEngineConfig, BacktestConfig
 from enums import TradingType
+from trading import TradingEngine
 
 
-def parse_command_line(argv):
+def parse_command_line(argv: list):
     config = TradingEngineConfig()
     if 'live' in argv:
         config.type = TradingType.LIVE
@@ -22,7 +22,7 @@ def parse_command_line(argv):
     return config
 
 
-def main(argv):
+def main(argv: list):
     config = parse_command_line(argv)
 
     # Instantiate trading engine

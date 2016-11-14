@@ -1,10 +1,13 @@
 import pandas
 from strategy import ticks, NullTradingStrategy
+from structs import MarketData
 from utils import parseDate
 
 
 class SMACrossesStrategy(NullTradingStrategy):
-    def __init__(self, size_short, size_long):
+    def __init__(self,
+                 size_short: int,
+                 size_long: int):
         super(SMACrossesStrategy, self).__init__()
 
         self.short = size_short
@@ -24,7 +27,8 @@ class SMACrossesStrategy(NullTradingStrategy):
         self._intitialvalue = None
         self._portfoliovalue = []
 
-    def onBuy(self, data):
+    def onBuy(self,
+              data: MarketData):
         if self._intitialvalue is None:
             date = parseDate(data['time'])
             self._intitialvalue = (
@@ -36,7 +40,8 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.bought = float(data['price'])
         print('d->g:bought at', self.bought)
 
-    def onSell(self, data):
+    def onSell(self,
+               data: MarketData):
         profit = float(data['price']) - self.bought
         self.profits += profit
         print('g->d:sold at',
@@ -51,7 +56,8 @@ class SMACrossesStrategy(NullTradingStrategy):
                 self._portfoliovalue[-1][1] + profit))
 
     @ticks
-    def onMatch(self, data):
+    def onMatch(self,
+                data: MarketData):
         # add data to arrays
         self.shorts.append(float(data['price']))
         self.longs.append(float(data['price']))
@@ -90,7 +96,8 @@ class SMACrossesStrategy(NullTradingStrategy):
 
         return False
 
-    def onAnalyze(self, _):
+    def onAnalyze(self,
+                  _):
         import matplotlib.pyplot as plt
         import seaborn as sns
         # pd = pandas.DataFrame(self._actions,

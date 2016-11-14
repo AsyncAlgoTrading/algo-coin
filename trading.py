@@ -1,10 +1,12 @@
-from exchange import Exchange
-from callback import Print
 from backtest import Backtest
+from callback import Callback, Print
 from config import TradingEngineConfig
 from enums import TradingType
-from risk import Risk
+from exchange import Exchange
 from execution import Execution
+from risk import Risk
+from strategy import Strategy
+from structs import TradeRequest
 # import time
 
 
@@ -23,7 +25,7 @@ class TradingEngine(object):
             self._bt = Backtest(options.backtest_options)
 
         self._rk = Risk(options.risk_options)
-        self._ec = Execution(options.execution_options)
+        self._ec = Execution(options.execution_options, self._ex)
 
         if self._verbose:
             print('WARNING: Running in verbose mode')
@@ -42,7 +44,7 @@ class TradingEngine(object):
 
         self._ticked = []
 
-    def registerStrategy(self, strat):
+    def registerStrategy(self, strat: Strategy):
         if self._live or self._sandbox:
             # register for exchange data
             self._ex.registerCallback(strat.callback())
@@ -81,26 +83,30 @@ class TradingEngine(object):
             # strat = self._ticked.pop()
             # print('Strat ticked', strat, time.time())
 
-    def requestBuy(self, callback, data, callback_failure=None):
+    def requestBuy(self,
+                   callback: Callback,
+                   data: TradeRequest,
+                   callback_failure=None):
         resp = self._rk.requestBuy(data)
         if resp.success:
             res = self._ec.requestBuy(resp)
             self._rk.update(res)
             callback(res)
-            return
-        if callback_failure:
+        elif callback_failure:
             callback_failure(resp)
-            return
-        callback(resp)
+        else:
+            callback(resp)
 
-    def requestSell(self, callback, data, callback_failure=None):
+    def requestSell(self,
+                    callback: Callback,
+                    data: TradeRequest,
+                    callback_failure=None):
         resp = self._rk.requestSell(data)
         if resp.success:
             res = self._ec.requestSell(resp)
             self._rk.update(res)
             callback(res)
-            return
-        if callback_failure:
+        elif callback_failure:
             callback_failure(resp)
-            return
-        callback(resp)
+        else:
+            callback(resp)
