@@ -9,6 +9,15 @@ class Risk(object):
         self.total_funds = options.total_funds
         self.outstanding = 0.0
 
+        self.max_running_outstanding = 0.0
+        self.max_running_outstanding_incr = []
+
+        self.max_running_drawdown = 0.0
+        self.max_running_drawdown_incr = []
+
+        self.max_running_risk = 0.0
+        self.max_running_risk_incr = []
+
     def _constructResp(self, side, vol: float, price: float, success: bool) \
             -> RiskResponse:
         resp = RiskResponse()
@@ -20,6 +29,12 @@ class Risk(object):
         # don't care about side for now
         self.outstanding += abs(self.volume * self.price)
 
+        self.max_running_outstanding = max(self.max_running_outstanding,
+                                           self.outstanding)
+        self.max_running_outstanding_incr.append(self.max_running_outstanding)
+
+        # TODO self.max_running_risk =
+        # TODO self.max_running_drawdown =
         return resp
 
     def request(self, req: RiskRequest) -> RiskResponse:
