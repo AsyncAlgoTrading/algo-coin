@@ -14,7 +14,7 @@ test: ## run the tests for travis CI
 	@ python3 -m nose -v tests --with-coverage --cover-erase --cover-package=`ls ./*.py | sed "s=./==g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
  
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc .coverage
+	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc .coverage cover htmlcov
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
