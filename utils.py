@@ -32,7 +32,7 @@ def config(cls):
 
 
 def __init__(self, **kwargs):
-    for item in self._svars:
+    for item in self._vars:
         if item not in kwargs:
             print('WARNING %s unset!', item)
         else:
@@ -46,6 +46,11 @@ def struct(cls):
         if isinstance(v, type):
             v = create_pair(k, v)
             vars.append(k)
+        elif isinstance(v, tuple) and \
+                isinstance(v[0], type) and \
+                isinstance(v[1], v[0]):
+            print('WARNING: no defaults in structs')
+            v = create_pair(k, v[0])
 
         new_cls_dict[k] = v
     new_cls_dict['__init__'] = __init__

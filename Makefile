@@ -8,10 +8,10 @@ backtest: clean  ## clean and make target, run target
 	python3 main.py backtest
 
 tests: clean ## Clean and Make unit tests
-	python3 test.py
+	@ python3 -m nose -v tests
 
 test: ## run the tests for travis CI
-	@ python3 test.py
+	@ python3 -m nose -v tests
  
 clean: ## clean the repository
 	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc

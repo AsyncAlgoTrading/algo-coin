@@ -2,20 +2,20 @@ from enum import Enum
 
 
 class TradingType(Enum):
-    SANDBOX = 1
-    LIVE = 2
-    BACKTEST = 3
+    SANDBOX = 0
+    LIVE = 1
+    BACKTEST = 2
 
 
 class ExchangeType(Enum):
-    BITSTAMP = 1
-    BITFINEX = 2
-    BTCC = 3
-    CEX = 4
-    GDAX = 5
-    GEMINI = 6
-    HITBTC = 7
-    POLONIEX = 8
+    BITSTAMP = 0
+    BITFINEX = 1
+    BTCC = 2
+    CEX = 3
+    GDAX = 4
+    GEMINI = 5
+    HITBTC = 6
+    POLONIEX = 7
 
 
 class CurrencyType(Enum):
@@ -27,7 +27,7 @@ class CurrencyType(Enum):
 
 class Side(Enum):
     BUY = 0
-    SELL = 0
+    SELL = 1
 
 
 class OrderType(Enum):
