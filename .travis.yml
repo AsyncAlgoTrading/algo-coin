@@ -6,12 +6,14 @@ python:
 
 install:
     - pip install -r requirements.txt
-    - pip install coveralls
+    # - pip install coveralls
+    - pip install codecov
 
 script: make test
 
 after_success:
-      coveralls
+    - codecov --token 10cff21a-48fa-4326-9714-fd63aa7c785d
+    # - coveralls
 
 branches:
   only:
