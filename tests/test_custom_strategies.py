@@ -1,4 +1,8 @@
-class TestStructs:
+# for accurate coverage
+import custom_strategies
+
+
+class TestCustomStragies:
     def setup(self):
         pass
         # setup() before each test method

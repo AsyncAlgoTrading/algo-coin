@@ -1,4 +1,8 @@
-class TestData:
+# for accurate coverage
+import trading
+
+
+class TestTrading:
     def setup(self):
         pass
         # setup() before each test method

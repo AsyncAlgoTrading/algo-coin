@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from callback import Callback, NullCallback
 from structs import MarketData
-from utils import parseDate
+from utils import parse_date
 
 
 def ticks(f):
@@ -61,7 +61,7 @@ class NullTradingStrategy(Strategy, NullCallback):
                    data: MarketData,
                    callback_failure=None):
         # let them do whatever
-        date = parseDate(data['time'])
+        date = parse_date(data['time'])
         self._actions.append((date, 'buy', data['price']))
         callback(data)
 
@@ -70,6 +70,6 @@ class NullTradingStrategy(Strategy, NullCallback):
                     data: MarketData,
                     callback_failure=None):
         # let them do whatever
-        date = parseDate(data['time'])
+        date = parse_date(data['time'])
         self._actions.append((date, 'sell', data['price']))
         callback(data)

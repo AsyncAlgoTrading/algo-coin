@@ -1,4 +1,4 @@
-class TestData:
+class TestEnums:
     def setup(self):
         pass
         # setup() before each test method
@@ -88,3 +88,12 @@ class TestData:
         assert t1 == OrderType.LIMIT
         assert t0 == OrderType(0)
         assert t1 == OrderType(1)
+
+    def test_order_sub_type(self):
+        from enums import OrderSubType
+        t0 = OrderSubType.FILL_OR_KILL
+        t1 = OrderSubType.ALL_OR_NOTHING
+        assert t0 == OrderSubType.FILL_OR_KILL
+        assert t1 == OrderSubType.ALL_OR_NOTHING
+        assert t0 == OrderSubType(0)
+        assert t1 == OrderSubType(1)

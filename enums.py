@@ -33,3 +33,8 @@ class Side(Enum):
 class OrderType(Enum):
     MARKET = 0
     LIMIT = 1
+
+
+class OrderSubType(Enum):
+    FILL_OR_KILL = 0
+    ALL_OR_NOTHING = 1

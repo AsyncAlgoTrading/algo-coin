@@ -1,4 +1,4 @@
-class TestData:
+class TestConfig:
     def setup(self):
         pass
         # setup() before each test method

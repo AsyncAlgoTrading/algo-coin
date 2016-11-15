@@ -1,4 +1,8 @@
-class TestData:
+# for accurate coverage
+import exchange
+
+
+class TestExchange:
     def setup(self):
         pass
         # setup() before each test method

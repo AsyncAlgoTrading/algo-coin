@@ -26,22 +26,23 @@ class Risk(object):
         resp.price = price
         resp.success = success
 
-        # don't care about side for now
-        self.outstanding += abs(self.volume * self.price)
+        if success:
+            # don't care about side for now
+            self.outstanding += abs(vol * price)
 
-        self.max_running_outstanding = max(self.max_running_outstanding,
-                                           self.outstanding)
-        self.max_running_outstanding_incr.append(self.max_running_outstanding)
+            self.max_running_outstanding = max(self.max_running_outstanding,
+                                               self.outstanding)
+            self.max_running_outstanding_incr.append(
+                self.max_running_outstanding)
 
-        # TODO self.max_running_risk =
-        # TODO self.max_running_drawdown =
+            # TODO self.max_running_risk =
+            # TODO self.max_running_drawdown =
         return resp
 
     def request(self, req: RiskRequest) -> RiskResponse:
         total = req.volume * req.price
-        max = self.max_risk * self.total_funds
-
-        if total + self.outstanding < max:
+        max = self.max_risk/100.0 * self.total_funds
+        if (total + self.outstanding) <= max:
             # room for full volume
             return self._constructResp(req.side, req.volume, req.price, True)
 

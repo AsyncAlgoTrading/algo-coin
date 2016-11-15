@@ -1,7 +1,7 @@
 import pandas
 from strategy import ticks, NullTradingStrategy
 from structs import MarketData
-from utils import parseDate
+from utils import parse_date
 
 
 class SMACrossesStrategy(NullTradingStrategy):
@@ -30,7 +30,7 @@ class SMACrossesStrategy(NullTradingStrategy):
     def onBuy(self,
               data: MarketData):
         if self._intitialvalue is None:
-            date = parseDate(data['time'])
+            date = parse_date(data['time'])
             self._intitialvalue = (
                 date,
                 float(data['price'])
@@ -50,7 +50,7 @@ class SMACrossesStrategy(NullTradingStrategy):
               self.profits)
         self.bought = 0.0
 
-        date = parseDate(data['time'])
+        date = parse_date(data['time'])
         self._portfoliovalue.append((
                 date,
                 self._portfoliovalue[-1][1] + profit))

@@ -1,4 +1,8 @@
-class TestStructs:
+# for accurate coverage
+import main
+
+
+class TestMain:
     def setup(self):
         pass
         # setup() before each test method
