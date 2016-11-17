@@ -95,7 +95,9 @@ class TestCustomStragies:
     # @patch('matplotlib.pyplot')
     def test_plot(self):
         with patch('matplotlib.pyplot.subplots') as mm1, \
-           patch('matplotlib.pyplot.show'):
+           patch('matplotlib.pyplot.show'), \
+            patch('matplotlib.pyplot.show'), \
+            patch('matplotlib.pyplot.title'):
             mm1.return_value = (MagicMock(), MagicMock())
             # mm2= MagicMock()
 
