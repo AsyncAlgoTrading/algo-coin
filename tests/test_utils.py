@@ -59,9 +59,6 @@ class TestUtils:
         gold = datetime(2016, 11, 16, 0, 0)
         date1 = parse_date('1479272400.0')
         date2 = parse_date('2016-11-16T00:00:00.000000Z')
-        print(gold)
-        print(date1)
-        print(date2)
         assert gold == date1 == date2
 
     def test_struct_warnings(self):
