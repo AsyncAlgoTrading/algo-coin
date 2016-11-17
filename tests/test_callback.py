@@ -9,18 +9,25 @@ class TestCallback:
 
     @classmethod
     def setup_class(cls):
-        pass
         # setup_class() before any methods in this class
+        pass
 
     @classmethod
     def teardown_class(cls):
-        pass
         # teardown_class() after any methods in this class
+        pass
 
     def test_null_callback(self):
         from callback import NullCallback
+
         nc = NullCallback()
-        assert nc.onMatch(None) == None
+        assert nc.onMatch(None) is None
+        assert nc.onReceived(None) is None
+        assert nc.onOpen(None) is None
+        assert nc.onDone(None) is None
+        assert nc.onChange(None) is None
+        assert nc.onError(None) is None
+        assert nc.onAnalyze(None) is None
 
     def test_print_callback(self):
         from callback import Print

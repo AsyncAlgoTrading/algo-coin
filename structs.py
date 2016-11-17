@@ -24,6 +24,7 @@ class TradeRequest:
     order_type = OrderType
     order_sub_type = OrderSubType
 
+
 @struct
 class RiskResponse:
     side = Side

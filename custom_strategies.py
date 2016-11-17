@@ -1,4 +1,3 @@
-import pandas
 from strategy import ticks, NullTradingStrategy
 from structs import MarketData
 from utils import parse_date
@@ -12,11 +11,11 @@ class SMACrossesStrategy(NullTradingStrategy):
 
         self.short = size_short
         self.shorts = []
-        self.short_av = 0
+        self.short_av = 0.0
 
         self.long = size_long
         self.longs = []
-        self.long_av = []
+        self.long_av = 0.0
 
         self.prev_state = ''
         self.state = ''
@@ -25,7 +24,7 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.profits = 0.0
 
         self._intitialvalue = None
-        self._portfoliovalue = []
+        self._portfolio_value = []
 
     def onBuy(self,
               data: MarketData):
@@ -35,7 +34,7 @@ class SMACrossesStrategy(NullTradingStrategy):
                 date,
                 float(data['price'])
                 )
-            self._portfoliovalue.append(self._intitialvalue)
+            self._portfolio_value.append(self._intitialvalue)
 
         self.bought = float(data['price'])
         print('d->g:bought at', self.bought)
@@ -51,9 +50,9 @@ class SMACrossesStrategy(NullTradingStrategy):
         self.bought = 0.0
 
         date = parse_date(data['time'])
-        self._portfoliovalue.append((
+        self._portfolio_value.append((
                 date,
-                self._portfoliovalue[-1][1] + profit))
+                self._portfolio_value[-1][1] + profit))
 
     @ticks
     def onMatch(self,
@@ -98,11 +97,12 @@ class SMACrossesStrategy(NullTradingStrategy):
 
     def onAnalyze(self,
                   _):
+        import pandas
         import matplotlib.pyplot as plt
         import seaborn as sns
         # pd = pandas.DataFrame(self._actions,
         #                       columns=['time', 'action', 'price'])
-        pd = pandas.DataFrame(self._portfoliovalue,
+        pd = pandas.DataFrame(self._portfolio_value,
                               columns=['time', 'value'])
         pd.set_index(['time'], inplace=True)
         print(pd)
@@ -122,7 +122,7 @@ class SMACrossesStrategy(NullTradingStrategy):
 
         ax1.set_ylabel('Portfolio value($)')
         ax1.set_xlabel('Date')
-        for xy in [self._portfoliovalue[0]] + [self._portfoliovalue[-1]]:
+        for xy in [self._portfolio_value[0]] + [self._portfolio_value[-1]]:
             ax1.annotate('$%s' % xy[1], xy=xy, textcoords='data')
 
         # ax2 = ax1.twinx()

@@ -16,3 +16,53 @@ class TestStructs:
     def teardown_class(cls):
         pass
         # teardown_class() after any methods in this class
+
+    def test_MarketData(self):
+        from structs import MarketData
+        m = MarketData()
+        # TODO no fields yet
+        assert m
+
+    def test_RiskRequest(self):
+        from structs import RiskRequest
+        r = RiskRequest()
+        assert r
+        # side = Side
+        # volume = float
+        # price = float
+
+    def test_TradeRequest(self):
+        from structs import TradeRequest
+        t = TradeRequest()
+        assert t
+        # side = Side
+        # volume = float
+        # price = float
+        # exchange = ExchangeType
+        # currency = CurrencyType
+        # order_type = OrderType
+        # order_sub_type = OrderSubType
+
+    def test_RiskResponse(self):
+        from structs import RiskResponse
+        r = RiskResponse()
+        assert r
+        # side = Side
+        # volume = float
+        # price = float
+        # success = bool
+
+    def test_TradeResponse(self):
+        from structs import TradeResponse
+        t = TradeResponse()
+        assert t
+        # side = Side
+        # volume = float
+        # price = float
+        # success = bool
+
+    def test_ExecutionReport(self):
+        from structs import ExecutionReport
+        e = ExecutionReport()
+        # TODO no fields yet
+        assert e

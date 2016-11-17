@@ -20,6 +20,8 @@ class Backtest(StreamingDataSource):
     def _receive(self,
                  line: str):
         res = line.strip().split(',')
+
+        # TODO allow if market data for bid/ask
         res = {'type': 'match',
                'time': res[0],
                'price': res[1],
@@ -82,13 +84,13 @@ class Backtest(StreamingDataSource):
             self.onMatch(callback.onMatch)
         if callback.onAnalyze:
             self.onAnalyze(callback.onAnalyze)
-        # if callback.onReceived:
-        #     self.onReceived(callback.onReceived)
-        # if callback.onOpen:
-        #     self.onOpen(callback.onOpen)
-        # if callback.onDone:
-        #     self.onDone(callback.onDone)
-        # if callback.onChange:
-        #     self.onChange(callback.onChange)
-        # if callback.onError:
-        #     self.onError(callback.onError)
+        if callback.onReceived:
+            self.onReceived(callback.onReceived)
+        if callback.onOpen:
+            self.onOpen(callback.onOpen)
+        if callback.onDone:
+            self.onDone(callback.onDone)
+        if callback.onChange:
+            self.onChange(callback.onChange)
+        if callback.onError:
+            self.onError(callback.onError)

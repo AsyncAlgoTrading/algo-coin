@@ -54,6 +54,26 @@ class TestUtils:
         assert t.b == ''
 
     def test_parse_date(self):
-        pass
-        # date = datetime.fromtimestamp(float(date))
-        # date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+        from datetime import datetime
+        from utils import parse_date
+        gold = datetime(2016, 11, 16, 0, 0)
+        date1 = parse_date('1479272400.0')
+        date2 = parse_date('2016-11-16T00:00:00.000000Z')
+        assert gold == date1 == date2
+
+    def test_struct_warnings(self):
+        from utils import struct
+
+        @struct
+        class Test:
+            a = int, 5
+
+        t = Test()
+
+        try:
+            print(t.a)
+            assert False
+        except:
+            pass
+        t.a = 5
+        assert t.a == 5
