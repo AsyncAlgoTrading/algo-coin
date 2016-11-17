@@ -1,4 +1,5 @@
-from datetime import datetime
+import pytz
+from datetime import datetime, timezone
 
 
 def create_pair(key, typ, default=None):
@@ -61,6 +62,7 @@ def struct(cls):
 def parse_date(date: str):
     try:
         date = datetime.fromtimestamp(float(date))
+        date = date.replace(tzinfo=timezone.utc).astimezone(tz=pytz.timezone('EST')).replace(tzinfo=None)
     except ValueError:
         date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
     return date
