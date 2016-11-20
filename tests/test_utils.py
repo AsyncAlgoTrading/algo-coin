@@ -62,9 +62,7 @@ class TestUtils:
         print(gold)
         print(date1)
         print(date2)
-        
-        assert gold == date2
-        # FIXME need to localize correctly
+
         assert gold == date1 == date2
 
     def test_struct_warnings(self):
