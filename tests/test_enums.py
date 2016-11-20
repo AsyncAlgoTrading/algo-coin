@@ -91,9 +91,12 @@ class TestEnums:
 
     def test_order_sub_type(self):
         from enums import OrderSubType
-        t0 = OrderSubType.FILL_OR_KILL
-        t1 = OrderSubType.ALL_OR_NOTHING
-        assert t0 == OrderSubType.FILL_OR_KILL
-        assert t1 == OrderSubType.ALL_OR_NOTHING
+        t0 = OrderSubType.NONE
+        t1 = OrderSubType.FILL_OR_KILL
+        t2 = OrderSubType.ALL_OR_NOTHING
+        assert t0 == OrderSubType.NONE
+        assert t1 == OrderSubType.FILL_OR_KILL
+        assert t2 == OrderSubType.ALL_OR_NOTHING
         assert t0 == OrderSubType(0)
         assert t1 == OrderSubType(1)
+        assert t2 == OrderSubType(2)

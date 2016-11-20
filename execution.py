@@ -1,5 +1,6 @@
 from config import ExecutionConfig
 from exchange import Exchange
+from enums import Side
 from structs import TradeRequest, TradeResponse
 
 
@@ -18,8 +19,13 @@ class Execution(object):
 
     def requestBuy(self, req: TradeRequest) -> TradeResponse:
         # TODO
-        return self._constructResponse(req.side, req.volume, req.price, True)
+        return self._constructResp(req.side, req.volume, req.price, True)
 
     def requestSell(self, req: TradeRequest) -> TradeResponse:
         # TODO
-        return self._constructResponse(req.side, req.volume, req.price, True)
+        return self._constructResp(req.side, req.volume, req.price, True)
+
+    def request(self, req: TradeRequest) -> TradeResponse:
+        if req.side == Side.BUY:
+            return self.requestBuy(req)
+        return self.requestSell(req)
