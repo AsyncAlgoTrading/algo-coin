@@ -43,4 +43,5 @@ class TradeResponse:
 
 @struct
 class ExecutionReport:
-    pass
+    volume = float
+    price = float

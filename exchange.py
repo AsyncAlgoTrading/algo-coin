@@ -63,15 +63,17 @@ class Exchange(StreamingDataSource):
             self._lastseqnum = number
             return
 
+        if number != self._lastseqnum + 1 and \
+                number not in self._missingseqnum:
+            print('ERROR: Missing sequence number/s: %s' % ','.join(
+                str(x) for x in range(self._lastseqnum+1, number+1)))
+            self._missingseqnum.update(
+                x for x in range(self._lastseqnum+1, number+1))
+            print(self._missingseqnum)
+
         if number in self._missingseqnum:
             self._missingseqnum.remove(number)
             print('INFO: Got out of order data for seqnum: %s' % number)
-
-        elif number != self._lastseqnum + 1:
-            print('ERROR: Missing sequence number/s: %s' % ','.join(
-                str(x) for x in range(self._lastseqnum+1, number+1)))
-            self._missingseqnum.add(
-                x for x in range(self._lastseqnum+1, number+1))
 
         else:
             self._lastseqnum = number
