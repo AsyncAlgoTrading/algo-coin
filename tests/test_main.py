@@ -20,3 +20,7 @@ class TestMain:
     def teardown_class(cls):
         pass
         # teardown_class() after any methods in this class
+
+    def test_main(self):
+        pass
+
