@@ -1,3 +1,6 @@
+from mock import patch
+
+
 class TestExecution:
     def setup(self):
         pass
@@ -22,12 +25,13 @@ class TestExecution:
         from exchanges.gdax import GDAXExchange
         from config import ExecutionConfig, ExchangeConfig
 
-        exc = ExchangeConfig()
-        ex = GDAXExchange(exc)
+        with patch('os.environ'):
+            exc = ExchangeConfig()
+            ex = GDAXExchange(exc)
 
-        ec = ExecutionConfig()
-        e = Execution(ec, ex)
-        assert e
+            ec = ExecutionConfig()
+            e = Execution(ec, ex)
+            assert e
 
     def test_request(self):
         from execution import Execution
@@ -37,18 +41,19 @@ class TestExecution:
         from config import ExecutionConfig, ExchangeConfig
         from structs import TradeRequest
 
-        exc = ExchangeConfig()
-        ex = GDAXExchange(exc)
+        with patch('os.environ'):
+            exc = ExchangeConfig()
+            ex = GDAXExchange(exc)
 
-        ec = ExecutionConfig()
-        e = Execution(ec, ex)
+            ec = ExecutionConfig()
+            e = Execution(ec, ex)
 
-        req = TradeRequest(side=Side.BUY,
-                           volume=1.0,
-                           price=1.0,
-                           exchange=ExchangeType.GDAX,
-                           currency=CurrencyType.BTC,
-                           order_type=OrderType.LIMIT,
-                           order_sub_type=OrderSubType.NONE)
+            req = TradeRequest(side=Side.BUY,
+                               volume=1.0,
+                               price=1.0,
+                               exchange=ExchangeType.GDAX,
+                               currency=CurrencyType.BTC,
+                               order_type=OrderType.LIMIT,
+                               order_sub_type=OrderSubType.NONE)
 
-        resp = e.request(req)
+            resp = e.request(req)
