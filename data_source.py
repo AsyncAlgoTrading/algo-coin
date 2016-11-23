@@ -1,6 +1,7 @@
 # import json
 from abc import ABCMeta, abstractmethod
 from callback import Callback
+from structs import TradeRequest, TradeResponse, ExecutionReport
 # from structs import MarketData
 
 
@@ -16,6 +17,18 @@ class RestAPIDataSource(DataSource):
     def sendOrder(self, callback: Callback):
         '''send order to exchange'''
 
+    @abstractmethod
+    def orderResponse(self, response):
+        '''parse the response'''
+
+    @abstractmethod
+    def buy(self, req: TradeRequest) -> ExecutionReport:
+        '''execute a buy order'''
+
+    @abstractmethod
+    def sell(self, req: TradeRequest) -> ExecutionReport:
+        '''execute a sell order'''
+
 
 class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs):
@@ -27,6 +40,7 @@ class StreamingDataSource(DataSource):
                            'CHANGE': [],
                            'ANALYZE': []}
 
+    @abstractmethod
     def run(self, engine):
         '''run the exchange'''
 

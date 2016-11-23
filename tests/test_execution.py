@@ -19,11 +19,11 @@ class TestExecution:
 
     def test_init(self):
         from execution import Execution
-        from exchange import Exchange
+        from exchanges.gdax import GDAXExchange
         from config import ExecutionConfig, ExchangeConfig
 
         exc = ExchangeConfig()
-        ex = Exchange(exc)
+        ex = GDAXExchange(exc)
 
         ec = ExecutionConfig()
         e = Execution(ec, ex)
@@ -31,14 +31,14 @@ class TestExecution:
 
     def test_request(self):
         from execution import Execution
-        from exchange import Exchange
+        from exchanges.gdax import GDAXExchange
         from enums import Side, ExchangeType, CurrencyType, \
             OrderType, OrderSubType
         from config import ExecutionConfig, ExchangeConfig
         from structs import TradeRequest
 
         exc = ExchangeConfig()
-        ex = Exchange(exc)
+        ex = GDAXExchange(exc)
 
         ec = ExecutionConfig()
         e = Execution(ec, ex)

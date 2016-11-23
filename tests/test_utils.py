@@ -81,3 +81,9 @@ class TestUtils:
             pass
         t.a = 5
         assert t.a == 5
+
+    def test_ex_type_to_ex(self):
+        from utils import ex_type_to_ex
+        from enums import ExchangeType
+        from exchanges.gdax import GDAXExchange
+        assert ex_type_to_ex(ExchangeType.GDAX) == GDAXExchange

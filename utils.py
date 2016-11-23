@@ -1,5 +1,6 @@
 import pytz
 from datetime import datetime
+from enums import ExchangeType
 
 
 def create_pair(key, typ, default=None):
@@ -67,3 +68,9 @@ def parse_date(date: str):
     except ValueError:
         date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
     return date
+
+
+def ex_type_to_ex(ex: ExchangeType):
+    if ex == ExchangeType.GDAX:
+        from exchanges.gdax import GDAXExchange
+        return GDAXExchange

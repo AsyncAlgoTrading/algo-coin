@@ -19,7 +19,7 @@ test_verbose: ## run the tests with full output
  
 
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc .coverage cover htmlcov
+	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc exchanges/*.pyc exchange/__pycache__ .coverage cover htmlcov
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help

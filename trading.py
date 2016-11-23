@@ -7,6 +7,7 @@ from execution import Execution
 from risk import Risk
 from strategy import Strategy
 from structs import TradeRequest
+from utils import ex_type_to_ex
 # import time
 
 
@@ -19,7 +20,8 @@ class TradingEngine(object):
 
         self._strats = []
 
-        self._ex = Exchange(options.exchange_options)
+        self._ex = ex_type_to_ex(options.exchange_options.type)(
+            options.exchange_options)
 
         self._bt = Backtest(options.backtest_options) \
             if self._backtest else None

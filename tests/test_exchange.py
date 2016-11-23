@@ -1,6 +1,3 @@
-from mock import patch, MagicMock
-
-
 class TestExchange:
     def setup(self):
         pass
@@ -25,50 +22,10 @@ class TestExchange:
         from exchange import Exchange
 
         ec = ExchangeConfig()
-        e = Exchange(ec)
-        assert e
 
-    def test_receive(self):
-        from config import ExchangeConfig
-        from exchange import Exchange
-
-        ec = ExchangeConfig()
-        e = Exchange(ec)
-        assert e
-
-        e.ws = MagicMock()
-
-        with patch('json.loads') as m1:
-            for i, val in enumerate(['match',
-                                     'received',
-                                     'open',
-                                     'done',
-                                     'change',
-                                     'error']):
-                m1.return_value = {'type': val, 'sequence': i}
-                e._receive()
-
-    def test_seqnum_fix(self):
-        from config import ExchangeConfig
-        from exchange import Exchange
-
-        ec = ExchangeConfig()
-        e = Exchange(ec)
-        assert e
-
-        e.ws = MagicMock()
-
-        with patch('json.loads') as m1:
-            m1.return_value = {'type': 'match', 'sequence': 0}
-            e._receive()
-            for i, val in enumerate(['match',
-                                     'received',
-                                     'open',
-                                     'done',
-                                     'change',
-                                     'error']):
-                m1.return_value = {'type': val, 'sequence': 6-i}
-                if i != 0:
-                    assert e._missingseqnum
-                e._receive()
-            assert e._missingseqnum == set()
+        try:
+            e = Exchange(ec)
+            assert e
+            assert False
+        except:
+            assert True
