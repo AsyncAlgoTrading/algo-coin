@@ -10,14 +10,19 @@ Lightweight, extensible program for algorithmically trading cryptocurrencies acr
 
 ##Markets
 
-- Coinbase
-- HitBTC
-- Cryptsy
+- Bitstamp
 - Bitfinex
+- BTC China
+- CEX
+- GDAX
+- Gemini
+- HitBTC
+- Poloniex
+
+##Future
+- Cryptsy
 - Kraken
 - BTC-E
-- CEX.io
 - BTCChina
 - LakeBTC
-- Bitstamp
 
