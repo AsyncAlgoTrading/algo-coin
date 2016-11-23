@@ -2,7 +2,6 @@ from backtest import Backtest
 from callback import Callback, Print
 from config import TradingEngineConfig
 from enums import TradingType
-from exchange import Exchange
 from execution import Execution
 from risk import Risk
 from strategy import Strategy
@@ -20,8 +19,10 @@ class TradingEngine(object):
 
         self._strats = []
 
-        self._ex = ex_type_to_ex(options.exchange_options.type)(
+        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(
             options.exchange_options)
+
+        print(self._ex.accountInfo())
 
         self._bt = Backtest(options.backtest_options) \
             if self._backtest else None

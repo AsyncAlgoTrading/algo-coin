@@ -9,8 +9,10 @@ def parse_command_line(argv: list):
     config = TradingEngineConfig()
     if 'live' in argv:
         config.type = TradingType.LIVE
+        config.exchange_options.trading_type = TradingType.LIVE
     elif 'sandbox' in argv:
         config.type = TradingType.SANDBOX
+        config.exchange_options.trading_type = TradingType.SANDBOX
     elif 'backtest' in argv:
         config.type = TradingType.BACKTEST
         config.backtest_options = BacktestConfig()

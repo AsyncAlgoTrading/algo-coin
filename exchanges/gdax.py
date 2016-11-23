@@ -1,6 +1,11 @@
+import GDAX
 import json
+import os
+from callback import Callback
 from config import ExchangeConfig
+from enums import TradingType
 from exchange import Exchange
+from structs import TradeRequest, TradeResponse, ExecutionReport
 from websocket import create_connection
 
 
@@ -9,6 +14,24 @@ class GDAXExchange(Exchange):
         super(GDAXExchange, self).__init__(options)
         self._lastseqnum = -1
         self._missingseqnum = set()
+
+        if options.trading_type == TradingType.LIVE:
+            self._key = os.environ['GDAX_API_KEY']
+            self._secret = os.environ['GDAX_API_SECRET']
+            self._passphrase = os.environ['GDAX_API_PASS']
+            self.client = GDAX.AuthenticatedClient(self._key,
+                                                   self._secret,
+                                                   self._passphrase)
+
+        else:
+            self._key = os.environ['GDAX_SANDBOX_API_KEY']
+            self._secret = os.environ['GDAX_SANDBOX_API_SECRET']
+            self._passphrase = os.environ['GDAX_SANDBOX_API_PASS']
+            self.client = GDAX.AuthenticatedClient(self._key,
+                                                   self._secret,
+                                                   self._passphrase,
+                                                   api_url="https://api-public.sandbox.gdax.com"
+                                                   )
 
     def run(self, engine):
         print('Starting....')
@@ -70,3 +93,18 @@ class GDAXExchange(Exchange):
 
         else:
             self._lastseqnum = number
+
+    def accountInfo(self):
+        return self.client.getAccounts()
+
+    def sendOrder(self, callback: Callback):
+        '''send order to exchange'''
+
+    def orderResponse(self, response):
+        '''parse the response'''
+
+    def buy(self, req: TradeRequest) -> ExecutionReport:
+        '''execute a buy order'''
+
+    def sell(self, req: TradeRequest) -> ExecutionReport:
+        '''execute a sell order'''

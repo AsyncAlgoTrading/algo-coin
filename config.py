@@ -4,7 +4,8 @@ from enums import TradingType, ExchangeType
 
 @config
 class ExchangeConfig:
-    type = ExchangeType, ExchangeType.GDAX
+    exchange_type = ExchangeType, ExchangeType.GDAX
+    trading_type = TradingType, TradingType.LIVE
 
 
 @config

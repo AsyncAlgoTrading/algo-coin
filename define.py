@@ -1,7 +1,7 @@
 from enums import ExchangeType, TradingType
 
 
-EXCHANGE_ENDPOINT = lambda name, typ: {
+EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
     (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
@@ -19,3 +19,42 @@ EXCHANGE_ENDPOINT = lambda name, typ: {
     (ExchangeType.POLONIEX, TradingType.SANDBOX): '',
     (ExchangeType.POLONIEX, TradingType.LIVE): 'wss://api.poloniex.com',
 }.get((name, typ), None)
+
+EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {
+    (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
+    (ExchangeType.BITSTAMP, TradingType.LIVE): '',
+    (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
+    (ExchangeType.BITFINEX, TradingType.LIVE): '',
+    (ExchangeType.BTCC, TradingType.SANDBOX): '',
+    (ExchangeType.BTCC, TradingType.LIVE): '',
+    (ExchangeType.CEX, TradingType.SANDBOX): '',
+    (ExchangeType.CEX, TradingType.LIVE): '',
+    (ExchangeType.GDAX, TradingType.SANDBOX): 'https://api-public.sandbox.gdax.com',
+    (ExchangeType.GDAX, TradingType.LIVE): 'https://api.gdax.com',
+    (ExchangeType.GEMINI, TradingType.SANDBOX): '',
+    (ExchangeType.GEMINI, TradingType.LIVE): '',
+    (ExchangeType.HITBTC, TradingType.SANDBOX): '',
+    (ExchangeType.HITBTC, TradingType.LIVE): '',
+    (ExchangeType.POLONIEX, TradingType.SANDBOX): '',
+    (ExchangeType.POLONIEX, TradingType.LIVE): '',
+}.get((name, typ), None)
+
+ACCOUNTS = lambda name, typ: {
+    (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
+    (ExchangeType.BITSTAMP, TradingType.LIVE): '',
+    (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
+    (ExchangeType.BITFINEX, TradingType.LIVE): '',
+    (ExchangeType.BTCC, TradingType.SANDBOX): '',
+    (ExchangeType.BTCC, TradingType.LIVE): '',
+    (ExchangeType.CEX, TradingType.SANDBOX): '',
+    (ExchangeType.CEX, TradingType.LIVE): '',
+    (ExchangeType.GDAX, TradingType.SANDBOX): 'https://api-public.sandbox.gdax.com',
+    (ExchangeType.GDAX, TradingType.LIVE): 'https://api.gdax.com',
+    (ExchangeType.GEMINI, TradingType.SANDBOX): '',
+    (ExchangeType.GEMINI, TradingType.LIVE): '',
+    (ExchangeType.HITBTC, TradingType.SANDBOX): '',
+    (ExchangeType.HITBTC, TradingType.LIVE): '',
+    (ExchangeType.POLONIEX, TradingType.SANDBOX): '',
+    (ExchangeType.POLONIEX, TradingType.LIVE): '',
+}.get((name, typ), None)
+
