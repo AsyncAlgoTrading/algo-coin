@@ -5,6 +5,7 @@ from callback import Callback
 from config import ExchangeConfig
 from enums import TradingType
 from exchange import Exchange
+from manual import manual
 from structs import TradeRequest, TradeResponse, ExecutionReport
 from websocket import create_connection
 
@@ -43,13 +44,19 @@ class GDAXExchange(Exchange):
         self.ws.send(sub)
         print('Sending Subscription %s' % sub)
 
-        try:
-            while True:
-                self._receive()
-                engine.tick()
+        while True:
+            print('Starting algo trading')
+            try:
+                while True:
+                    self._receive()
+                    engine.tick()
 
-        except KeyboardInterrupt:
-            self._close()
+            except KeyboardInterrupt:
+                if manual():
+                    continue
+                else:
+                    self._close()
+                    return
 
     def _receive(self):
         res = json.loads(self.ws.recv())

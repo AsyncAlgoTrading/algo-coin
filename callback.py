@@ -32,6 +32,14 @@ class Callback(metaclass=ABCMeta):
     def onAnalyze(self, data):
         '''onError'''
 
+    @abstractmethod
+    def onHalt(self, data):
+        '''onHalt'''
+
+    @abstractmethod
+    def onContinue(self, data):
+        '''onContinue'''
+
 
 class NullCallback(Callback):
     def __init__(self):
@@ -56,6 +64,12 @@ class NullCallback(Callback):
         pass
 
     def onAnalyze(self, data):
+        pass
+
+    def onHalt(self, data):
+        pass
+
+    def onContinue(self, data):
         pass
 
 
@@ -100,4 +114,10 @@ class Print(Callback):
         print(data)
 
     def onAnalyze(self, data):
+        pass
+
+    def onHalt(self, data):
+        pass
+
+    def onContinue(self, data):
         pass

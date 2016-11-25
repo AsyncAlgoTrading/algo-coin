@@ -50,12 +50,18 @@ class TestDataSource:
             def onAnalyze(self):
                 pass
 
+            def onHalt(self, data):
+                pass
+
+            def onContinue(self, data):
+                pass
+
         try:
             t = Test()
 
             t.registerCallback(TestCB())
             assert t._callbacks
-            assert len(t._callbacks) == 7
+            assert len(t._callbacks) == 9
             assert len(t._callbacks['ERROR']) == 1
 
         except:

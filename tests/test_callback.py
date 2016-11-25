@@ -28,6 +28,8 @@ class TestCallback:
         assert nc.onChange(None) is None
         assert nc.onError(None) is None
         assert nc.onAnalyze(None) is None
+        assert nc.onHalt(None) is None
+        assert nc.onContinue(None) is None
 
     def test_print_callback(self):
         from callback import Print

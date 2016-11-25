@@ -38,7 +38,9 @@ class StreamingDataSource(DataSource):
                            'OPEN': [],
                            'DONE': [],
                            'CHANGE': [],
-                           'ANALYZE': []}
+                           'ANALYZE': [],
+                           'HALT': [],
+                           'CONTINUE': []}
 
     @abstractmethod
     def run(self, engine):
@@ -62,6 +64,15 @@ class StreamingDataSource(DataSource):
     def onError(self, callback: Callback):
         self._callbacks['ERROR'].append(callback)
 
+    def onAnalyze(self, callback: Callback):
+        self._callbacks['ANALYZE'].append(callback)
+
+    def onHalt(self, callback: Callback):
+        self._callbacks['HALT'].append(callback)
+
+    def onContinue(self, callback: Callback):
+        self._callbacks['CONTINUE'].append(callback)
+
     def registerCallback(self, callback: Callback):
         if not isinstance(callback, Callback):
             raise Exception('%s is not an instance of class '
@@ -79,3 +90,9 @@ class StreamingDataSource(DataSource):
             self.onChange(callback.onChange)
         if callback.onError:
             self.onError(callback.onError)
+        if callback.onAnalyze:
+            self.onAnalyze(callback.onAnalyze)
+        if callback.onHalt:
+            self.onHalt(callback.onHalt)
+        if callback.onContinue:
+            self.onContinue(callback.onContinue)

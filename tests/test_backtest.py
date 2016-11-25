@@ -16,13 +16,15 @@ class TestBacktest:
 
         class CallbackTester(Callback):
             def __init__(self):
-                self._onMatch = True
-                self._onReceived = True
-                self._onOpen = True
-                self._onDone = True
-                self._onChange = True
-                self._onError = True
-                self._onAnalyze = True
+                self._onMatch = False
+                self._onReceived = False
+                self._onOpen = False
+                self._onDone = False
+                self._onChange = False
+                self._onError = False
+                self._onAnalyze = False
+                self._onHalt = False
+                self._onContinue = False
 
             def onMatch(self, data):
                 self._onMatch = True
@@ -44,6 +46,12 @@ class TestBacktest:
 
             def onAnalyze(self, data):
                 self._onAnalyze = True
+
+            def onHalt(self, data):
+                self._onHalt = True
+
+            def onContinue(self, data):
+                self._onContinue = True
 
         cls.demo_callback = CallbackTester
 

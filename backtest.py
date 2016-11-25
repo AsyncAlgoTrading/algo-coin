@@ -74,6 +74,14 @@ class Backtest(StreamingDataSource):
                   callback: Callback):
         self._callbacks['ANALYZE'].append(callback)
 
+    def onHalt(self,
+               callback: Callback):
+        self._callbacks['HALT'].append(callback)
+
+    def onContinue(self,
+                   callback: Callback):
+        self._callbacks['CONTINUE'].append(callback)
+
     def registerCallback(self,
                          callback: Callback):
         if not isinstance(callback, Callback):
@@ -94,3 +102,7 @@ class Backtest(StreamingDataSource):
             self.onChange(callback.onChange)
         if callback.onError:
             self.onError(callback.onError)
+        if callback.onHalt:
+            self.onHalt(callback.onHalt)
+        if callback.onContinue:
+            self.onContinue(callback.onContinue)
