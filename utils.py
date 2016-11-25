@@ -41,6 +41,16 @@ def __init__(self, **kwargs):
             setattr(self, item, kwargs.get(item))
 
 
+def __repr__(self):
+    print(str(self.__class__))
+    return '<' + ', '.join([x + '-' +
+                           str(getattr(self, x))
+                           if hasattr(self, '__' + x)
+                           else x + '-' + 'UNSET'
+                           for x in self._vars])
+    + '>'
+
+
 def struct(cls):
     new_cls_dict = {}
     vars = []
@@ -56,6 +66,7 @@ def struct(cls):
 
         new_cls_dict[k] = v
     new_cls_dict['__init__'] = __init__
+    new_cls_dict['__repr__'] = __repr__
     new_cls_dict['_vars'] = vars
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 

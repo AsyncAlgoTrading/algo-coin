@@ -3,7 +3,7 @@ import json
 import os
 from callback import Callback
 from config import ExchangeConfig
-from enums import TradingType
+from enums import TradingType, ExchangeType
 from exchange import Exchange
 from manual import manual
 from structs import TradeRequest, TradeResponse, ExecutionReport
@@ -15,6 +15,7 @@ class GDAXExchange(Exchange):
         super(GDAXExchange, self).__init__(options)
         self._lastseqnum = -1
         self._missingseqnum = set()
+        self._type = ExchangeType.GDAX
 
         if options.trading_type == TradingType.LIVE:
             self._key = os.environ['GDAX_API_KEY']
@@ -45,6 +46,7 @@ class GDAXExchange(Exchange):
         print('Sending Subscription %s' % sub)
 
         while True:
+            print('')
             print('Starting algo trading')
             try:
                 while True:
@@ -52,7 +54,7 @@ class GDAXExchange(Exchange):
                     engine.tick()
 
             except KeyboardInterrupt:
-                if manual():
+                if manual(self):
                     continue
                 else:
                     self._close()

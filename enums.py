@@ -37,5 +37,6 @@ class OrderType(Enum):
 
 class OrderSubType(Enum):
     NONE = 0
-    FILL_OR_KILL = 1
-    ALL_OR_NOTHING = 2
+    POST_ONLY = 1
+    FILL_OR_KILL = 2
+    ALL_OR_NOTHING = 3
