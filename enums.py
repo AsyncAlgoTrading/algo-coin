@@ -39,4 +39,4 @@ class OrderSubType(Enum):
     NONE = 0
     POST_ONLY = 1
     FILL_OR_KILL = 2
-    ALL_OR_NOTHING = 3
+    # ALL_OR_NOTHING = 3

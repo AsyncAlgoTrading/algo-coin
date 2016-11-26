@@ -17,7 +17,7 @@ def manual(exchange):
             print('Buy')
             try:
                 d = parse_buy(x, exchange._type)
-                print(d)
+                exchange.buy(d)
             except IndexError:
                 print('Usage: b <volume> <price>'
                       " <l,m : limit or market order>"
@@ -29,7 +29,7 @@ def manual(exchange):
             print('Sell')
             try:
                 d = parse_sell(x. exchange._type)
-                print(d)
+                exchange.sell(d)
             except IndexError:
                 print('Usage: s <volume> <price>'
                       " <l,m : limit or market order>"
@@ -49,7 +49,7 @@ def parse_buy(x, typ):
     vol = x[1]
     price = x[2]
     extra = x[3]
-    extra2 = x[4] if len(x) == 4 else None
+    extra2 = x[4] if len(x) == 5 else None
 
     ret = TradeRequest(side=Side.BUY,
                        volume=float(vol),
@@ -66,7 +66,7 @@ def parse_sell(x, typ):
     vol = x[1]
     price = x[2]
     extra = x[3]
-    extra2 = x[4] if len(x) == 4 else None
+    extra2 = x[4] if len(x) == 5 else None
 
     ret = TradeRequest(side=Side.SELL,
                        volume=float(vol),

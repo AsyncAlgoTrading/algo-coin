@@ -8,6 +8,7 @@ from exchange import Exchange
 from manual import manual
 from structs import TradeRequest, TradeResponse, ExecutionReport
 from websocket import create_connection
+from utils import trade_req_to_params_gdax
 
 
 class GDAXExchange(Exchange):
@@ -128,8 +129,18 @@ class GDAXExchange(Exchange):
     def orderResponse(self, response):
         '''parse the response'''
 
+    def orderBook(self, level=1):
+        '''get order book'''
+        return self.client.getProductOrderBook(level=level)
+
     def buy(self, req: TradeRequest) -> ExecutionReport:
         '''execute a buy order'''
+        params = trade_req_to_params_gdax(req)
+        print(str(params))
+        # self.client.buy(params)
 
     def sell(self, req: TradeRequest) -> ExecutionReport:
         '''execute a sell order'''
+        params = trade_req_to_params_gdax(req)
+        print(str(params))
+        # self.client.sell(params)

@@ -1,6 +1,6 @@
 import pytz
 from datetime import datetime
-from enums import ExchangeType
+from enums import ExchangeType, CurrencyType, OrderType, OrderSubType
 
 
 def create_pair(key, typ, default=None):
@@ -85,3 +85,29 @@ def ex_type_to_ex(ex: ExchangeType):
     if ex == ExchangeType.GDAX:
         from exchanges.gdax import GDAXExchange
         return GDAXExchange
+
+
+def currency_to_string_gdax(cur: CurrencyType):
+    if cur == CurrencyType.BTC:
+        return 'BTC-USD'
+
+
+def order_type_to_string_gdax(typ: OrderType):
+    if typ == OrderType.LIMIT:
+        return 'limit'
+    elif typ == OrderType.MARKET:
+        return 'market'
+
+
+def trade_req_to_params_gdax(req):
+    p = {}
+    p['price'] = str(req.price)
+    p['size'] = str(req.volume)
+    p['product_id'] = currency_to_string_gdax(req.currency)
+    p['type'] = order_type_to_string_gdax(req.order_type)
+
+    if req.order_sub_type == OrderSubType.FILL_OR_KILL:
+        p['time_in_force'] = 'FOK'
+    elif req.order_sub_type == OrderSubType.POST_ONLY:
+        p['post_only'] = '1'
+    return p
