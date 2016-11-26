@@ -38,15 +38,19 @@ class GDAXExchange(Exchange):
                                                    api_url="https://api-public.sandbox.gdax.com"
                                                    )
 
+        self._ws_url = 'wss://ws-feed.exchange.coinbase.com'
+        self._subscription = json.dumps({"type": "subscribe",
+                                         "product_id": "BTC-USD"})
+
+        self._seqnum_enabled = True
+
     def run(self, engine):
         print('Starting....')
-        self.ws = create_connection('wss://ws-feed.exchange.coinbase.com')
+        self.ws = create_connection(self._ws_url)
         print('Connected!')
 
-        sub = json.dumps({"type": "subscribe",
-                          "product_id": "BTC-USD"})
-        self.ws.send(sub)
-        print('Sending Subscription %s' % sub)
+        self.ws.send(self._subscription)
+        print('Sending Subscription %s' % self._subscription)
 
         print('')
         print('Starting algo trading')
@@ -76,7 +80,8 @@ class GDAXExchange(Exchange):
     def _receive(self):
         res = json.loads(self.ws.recv())
 
-        self._seqnum(res['sequence'])
+        if self._seqnum_enabled:
+            self._seqnum(res['sequence'])
 
         if not self._running:
             return
