@@ -11,6 +11,8 @@ def manual(exchange):
         x = c.split(' ')
         if x[0] == 'stats':
             print('Stats:')
+            print(exchange._last)
+            print('')
         elif x[0] == 'b':
             print('Buy')
             try:
@@ -36,9 +38,11 @@ def manual(exchange):
                 continue
             # exchange.sell()
         elif x[0] == 'q':
-            return False
+            return 0
         elif x[0] == 'c':
-            return True
+            return 1
+        elif x[0] == 'h':
+            return 2
 
 
 def parse_buy(x, typ):
@@ -117,4 +121,7 @@ def commands():
     print("")
     print("    Continue: c")
     print("        Continue automated trading")
+    print("")
+    print("    Halt: h")
+    print("        Halt automated trading")
     print("")

@@ -16,6 +16,8 @@ class GDAXExchange(Exchange):
         self._lastseqnum = -1
         self._missingseqnum = set()
         self._type = ExchangeType.GDAX
+        self._last = None
+        self._running = True
 
         if options.trading_type == TradingType.LIVE:
             self._key = os.environ['GDAX_API_KEY']
@@ -45,18 +47,28 @@ class GDAXExchange(Exchange):
         self.ws.send(sub)
         print('Sending Subscription %s' % sub)
 
+        print('')
+        print('Starting algo trading')
         while True:
-            print('')
-            print('Starting algo trading')
             try:
                 while True:
                     self._receive()
                     engine.tick()
 
             except KeyboardInterrupt:
-                if manual(self):
-                    continue
+                x = manual(self)
+                if x:
+                    if x == 1:
+                        print('')
+                        print('Starting algo trading')
+                        self._running = True
+                    elif x == 2:
+                        print('')
+                        print('Halting algo trading')
+                        self._running = False
                 else:
+                    print('')
+                    print('Terminating program')
                     self._close()
                     return
 
@@ -65,7 +77,11 @@ class GDAXExchange(Exchange):
 
         self._seqnum(res['sequence'])
 
+        if not self._running:
+            return
+
         if res.get('type') == 'match':
+            self._last = res
             self._callback('MATCH', res)
         elif res.get('type') == 'received':
             self._callback('RECEIVED', res)
