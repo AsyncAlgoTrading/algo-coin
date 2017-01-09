@@ -12,17 +12,12 @@ Lightweight, extensible program for algorithmically trading cryptocurrencies acr
 
 - Bitstamp
 - Bitfinex
-- BTC China
 - CEX
 - GDAX
 - Gemini
 - HitBTC
-- Poloniex
-
-##Future
-- Cryptsy
+- ItBit
 - Kraken
-- BTC-E
-- BTCChina
 - LakeBTC
+- Poloniex
 
