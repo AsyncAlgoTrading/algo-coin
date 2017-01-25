@@ -1,25 +1,25 @@
 run: clean  ## clean and make target, run target
-	python3 main.py live
+	python3 -m algocoin live
 
 sandbox: clean  ## clean and make target, run target
-	python3 main.py sandbox
+	python3 -m algocoin sandbox
 
 backtest: clean  ## clean and make target, run target
-	python3 main.py backtest
+	python3 -m algocoin backtest
 
 tests: clean ## Clean and Make unit tests
-	python3 -m nose -v tests --with-coverage --cover-erase --cover-package=`ls ./*.py ./exchanges/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
 
 test: ## run the tests for travis CI
-	@ python3 -m nose -v tests --with-coverage --cover-erase --cover-package=`ls ./*.py ./exchanges/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	@ python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
  
 
 test_verbose: ## run the tests with full output
-	python3 -m nose -vv -s tests --with-coverage --cover-erase --cover-package=`ls ./*.py ./exchanges/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	python3 -m nose -vv -s algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
  
 
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ tests/__pycache__ tests/*.pyc exchanges/*.pyc exchange/__pycache__ .coverage cover htmlcov
+	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/exchanges/*.pyc algocoin/exchange/__pycache__ .coverage cover htmlcov
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
@@ -29,4 +29,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run wave test tests target
+.PHONY: clean run sandbox backtest test tests test_verbose help
