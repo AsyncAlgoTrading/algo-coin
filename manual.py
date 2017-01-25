@@ -1,10 +1,11 @@
 from enums import Side, CurrencyType, OrderType, OrderSubType
 from structs import TradeRequest
+from log import LOG as log
 
 
 def manual(exchange):
-    print('')
-    print('Entering manual mode')
+    log.info('')
+    log.critical('Entering manual mode')
     print(commands())
     while True:
         c = input('')

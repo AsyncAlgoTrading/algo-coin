@@ -1,6 +1,7 @@
 import pytz
 from datetime import datetime
 from enums import ExchangeType, CurrencyType, OrderType, OrderSubType
+from log import LOG as log
 
 
 def create_pair(key, typ, default=None):
@@ -9,7 +10,6 @@ def create_pair(key, typ, default=None):
             return getattr(self, '__' + str(key))
         if default is not None and type(default) == typ:
             return default
-        # print(key, typ, default)
         raise TypeError("%s is unset" % key)
 
     def set(self, val):
@@ -36,19 +36,18 @@ def config(cls):
 def __init__(self, **kwargs):
     for item in self._vars:
         if item not in kwargs:
-            print('WARNING %s unset!', item)
+            log.warn('WARNING %s unset!', item)
         else:
             setattr(self, item, kwargs.get(item))
 
 
 def __repr__(self):
-    print(str(self.__class__))
+    log.warn(str(self.__class__))
     return '<' + ', '.join([x + '-' +
                            str(getattr(self, x))
                            if hasattr(self, '__' + x)
                            else x + '-' + 'UNSET'
-                           for x in self._vars])
-    + '>'
+                           for x in self._vars]) + '>'
 
 
 def struct(cls):
@@ -61,7 +60,7 @@ def struct(cls):
         elif isinstance(v, tuple) and \
                 isinstance(v[0], type) and \
                 isinstance(v[1], v[0]):
-            print('WARNING: no defaults in structs')
+            log.warn('WARNING: no defaults in structs')
             v = create_pair(k, v[0])
 
         new_cls_dict[k] = v

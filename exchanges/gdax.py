@@ -1,6 +1,7 @@
 import GDAX
 import json
 import os
+import pprint
 from callback import Callback
 from config import ExchangeConfig
 from enums import TradingType, ExchangeType
@@ -9,6 +10,7 @@ from manual import manual
 from structs import TradeRequest, TradeResponse, ExecutionReport
 from websocket import create_connection
 from utils import trade_req_to_params_gdax
+from log import LOG as log, TXN as tlog, OTHER as olog
 
 
 class GDAXExchange(Exchange):
@@ -28,7 +30,7 @@ class GDAXExchange(Exchange):
                                                    self._secret,
                                                    self._passphrase)
 
-        else:
+        elif options.trading_type == TradingType.SANDBOX:
             self._key = os.environ['GDAX_SANDBOX_API_KEY']
             self._secret = os.environ['GDAX_SANDBOX_API_SECRET']
             self._passphrase = os.environ['GDAX_SANDBOX_API_PASS']
@@ -38,22 +40,22 @@ class GDAXExchange(Exchange):
                                                    api_url="https://api-public.sandbox.gdax.com"
                                                    )
 
-        self._ws_url = 'wss://ws-feed.exchange.coinbase.com'
+        self._ws_url = 'wss://ws-feed-public.sandbox.gdax.com'
         self._subscription = json.dumps({"type": "subscribe",
                                          "product_id": "BTC-USD"})
 
         self._seqnum_enabled = True
 
     def run(self, engine):
-        print('Starting....')
+        log.info('Starting....')
         self.ws = create_connection(self._ws_url)
-        print('Connected!')
+        log.info('Connected!')
 
         self.ws.send(self._subscription)
-        print('Sending Subscription %s' % self._subscription)
+        log.info('Sending Subscription %s' % self._subscription)
 
-        print('')
-        print('Starting algo trading')
+        log.info('')
+        log.info('Starting algo trading')
         while True:
             try:
                 while True:
@@ -64,16 +66,16 @@ class GDAXExchange(Exchange):
                 x = manual(self)
                 if x:
                     if x == 1:
-                        print('')
-                        print('Starting algo trading')
+                        log.warn('')
+                        log.warn('Starting algo trading')
                         self._running = True
                     elif x == 2:
-                        print('')
-                        print('Halting algo trading')
+                        log.warn('')
+                        log.warn('Halting algo trading')
                         self._running = False
                 else:
-                    print('')
-                    print('Terminating program')
+                    log.info('')
+                    log.critical('Terminating program')
                     self._close()
                     return
 
@@ -101,7 +103,7 @@ class GDAXExchange(Exchange):
             self._callback('ERROR', res)
 
     def _close(self):
-        print('Closing....')
+        log.critical('Closing....')
         self.ws.close()
 
     def _seqnum(self, number: int):
@@ -110,23 +112,22 @@ class GDAXExchange(Exchange):
             self._lastseqnum = number
             return
 
-        if number != self._lastseqnum + 1 and \
-                number not in self._missingseqnum:
-            print('ERROR: Missing sequence number/s: %s' % ','.join(
+        if number != self._lastseqnum + 1 and number not in self._missingseqnum:
+            log.error('ERROR: Missing sequence number/s: %s' % ','.join(
                 str(x) for x in range(self._lastseqnum+1, number+1)))
             self._missingseqnum.update(
                 x for x in range(self._lastseqnum+1, number+1))
-            print(self._missingseqnum)
+            log.error(self._missingseqnum)
 
         if number in self._missingseqnum:
             self._missingseqnum.remove(number)
-            print('INFO: Got out of order data for seqnum: %s' % number)
+            log.warning('INFO: Got out of order data for seqnum: %s' % number)
 
         else:
             self._lastseqnum = number
 
     def accountInfo(self):
-        return self.client.getAccounts()
+        return pprint.pformat(self.client.getAccounts()) if hasattr(self, 'client') else 'BACKTEST'
 
     def sendOrder(self, callback: Callback):
         '''send order to exchange'''
@@ -141,11 +142,11 @@ class GDAXExchange(Exchange):
     def buy(self, req: TradeRequest) -> ExecutionReport:
         '''execute a buy order'''
         params = trade_req_to_params_gdax(req)
-        print(str(params))
+        log.warn(str(params))
         # self.client.buy(params)
 
     def sell(self, req: TradeRequest) -> ExecutionReport:
         '''execute a sell order'''
         params = trade_req_to_params_gdax(req)
-        print(str(params))
+        log.warn(str(params))
         # self.client.sell(params)

@@ -1,6 +1,7 @@
 from strategy import ticks, NullTradingStrategy
 from structs import MarketData
 from utils import parse_date
+from log import STRAT as slog
 
 
 class SMACrossesStrategy(NullTradingStrategy):
@@ -37,16 +38,13 @@ class SMACrossesStrategy(NullTradingStrategy):
             self._portfolio_value.append(self._intitialvalue)
 
         self.bought = float(data['price'])
-        print('d->g:bought at', self.bought)
+        slog.info('d->g:bought at %d' % self.bought)
 
     def onSell(self,
                data: MarketData):
         profit = float(data['price']) - self.bought
         self.profits += profit
-        print('g->d:sold at',
-              float(data['price']),
-              profit,
-              self.profits)
+        slog.info('g->d:sold at %d - %d - %d' % (float(data['price']), profit, self.profits))
         self.bought = 0.0
 
         date = parse_date(data['time'])
@@ -105,7 +103,7 @@ class SMACrossesStrategy(NullTradingStrategy):
         pd = pandas.DataFrame(self._portfolio_value,
                               columns=['time', 'value'])
         pd.set_index(['time'], inplace=True)
-        print(pd)
+        # log.info(pd)
 
         # sp500 = pandas.DataFrame()
         # tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')

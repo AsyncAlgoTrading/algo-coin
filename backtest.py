@@ -1,6 +1,7 @@
 from callback import Callback
 from config import BacktestConfig
 from data_source import StreamingDataSource
+from log import LOG as log
 
 
 class Backtest(StreamingDataSource):
@@ -10,7 +11,7 @@ class Backtest(StreamingDataSource):
         self._file = options.file
 
     def run(self, engine):
-        print('Starting....')
+        log.info('Starting....')
         with open(self._file, 'r') as fp:
             for line in fp:
                 self._receive(line)

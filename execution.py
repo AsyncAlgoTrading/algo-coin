@@ -8,8 +8,7 @@ class Execution(object):
     def __init__(self, options: ExecutionConfig, exchange: Exchange):
         self._ex = exchange
 
-    def _constructResp(self, side, vol: float, price: float, success: bool) \
-            -> TradeResponse:
+    def _constructResp(self, side, vol: float, price: float, success: bool)-> TradeResponse:
         resp = TradeResponse()
         resp.side = side
         resp.volume = vol

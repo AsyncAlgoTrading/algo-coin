@@ -7,6 +7,7 @@ from risk import Risk
 from strategy import Strategy
 from structs import TradeRequest
 from utils import ex_type_to_ex
+from log import LOG as log
 # import time
 
 
@@ -19,20 +20,18 @@ class TradingEngine(object):
 
         self._strats = []
 
-        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(
-            options.exchange_options)
+        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
 
-        print(self._ex.accountInfo())
+        log.info(self._ex.accountInfo())
 
-        self._bt = Backtest(options.backtest_options) \
-            if self._backtest else None
+        self._bt = Backtest(options.backtest_options) if self._backtest else None
 
         self._rk = Risk(options.risk_options)
 
         self._ec = Execution(options.execution_options, self._ex)
 
         if self._verbose:
-            print('WARNING: Running in verbose mode')
+            log.warn('WARNING: Running in verbose mode')
 
             if self._live or self._sandbox:
                 self._ex.registerCallback(
