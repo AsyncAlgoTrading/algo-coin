@@ -1,8 +1,7 @@
 from .lib.strategy import ticks, NullTradingStrategy
 from .lib.structs import MarketData
 from .lib.utils import parse_date
-from .lib.logging import STRAT as slog
-
+from .lib.logging import STRAT as slog, ERROR as elog
 
 class SMACrossesStrategy(NullTradingStrategy):
     def __init__(self,
@@ -92,6 +91,9 @@ class SMACrossesStrategy(NullTradingStrategy):
             return True
 
         return False
+
+    def onError(self, e):
+        elog.critical(e)
 
     def onAnalyze(self,
                   _):

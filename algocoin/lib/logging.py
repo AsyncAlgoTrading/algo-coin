@@ -107,7 +107,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 LOG = logging.getLogger('')  # factory method
 OTHER = logging.getLogger('other')
 STRAT = logging.getLogger('strat')
-ERROR = logging.getLogger('error')
+ERROR = logging.getLogger('errors')
 DATA = logging.getLogger('data')
 TXN = logging.getLogger('transaction')
 MANUAL = logging.getLogger('manual')

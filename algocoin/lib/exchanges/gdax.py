@@ -78,6 +78,11 @@ class GDAXExchange(Exchange):
                     log.critical('Terminating program')
                     self._close()
                     return
+            except Exception as e:
+                log.critical(e)
+                self._callback('ERROR', e)
+                self._close()
+                return
 
     def _receive(self):
         res = json.loads(self.ws.recv())

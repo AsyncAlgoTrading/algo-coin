@@ -19,7 +19,7 @@ test_verbose: ## run the tests with full output
  
 
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/exchanges/*.pyc algocoin/exchange/__pycache__ .coverage cover htmlcov
+	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ .coverage cover htmlcov
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
