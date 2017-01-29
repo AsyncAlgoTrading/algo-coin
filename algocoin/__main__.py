@@ -3,7 +3,13 @@ from .custom_strategies import SMACrossesStrategy
 from .lib.config import TradingEngineConfig, BacktestConfig
 from .lib.enums import TradingType
 from .trading import TradingEngine
-from .lib.logging import LOG as log
+from .lib.logging import LOG as log, \
+                         OTHER as olog, \
+                         STRAT as slog, \
+                         ERROR as elog, \
+                         DATA as dlog, \
+                         TXN as tlog, \
+                         MANUAL as mlog
 
 
 def parse_command_line(argv: list):
@@ -31,7 +37,15 @@ def parse_command_line(argv: list):
 
     if 'verbose' in argv:
         # Print/log extra info
-        config.verbose = True
+        olog.propagate = True
+        slog.propagate = True
+        elog.propagate = True
+        dlog.propagate = False  # too much
+        tlog.propagate = True
+        mlog.propagate = True
+
+    if 'print' in argv:
+        config.print = True
 
     return config
 

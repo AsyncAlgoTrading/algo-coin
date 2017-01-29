@@ -5,7 +5,7 @@ sandbox: clean  ## clean and make target, run target
 	python3 -m algocoin sandbox
 
 backtest: clean  ## clean and make target, run target
-	python3 -m algocoin backtest
+	python3 -m algocoin backtest $(VERBOSE)
 
 tests: clean ## Clean and Make unit tests
 	python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`

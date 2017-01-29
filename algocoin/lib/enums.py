@@ -1,6 +1,18 @@
 from enum import Enum
 
 
+class TickType(Enum):
+    MATCH = 0
+    RECEIVED = 1
+    ERROR = 2
+    OPEN = 3
+    DONE = 4
+    CHANGE = 5
+    ANALYZE = 6
+    HALT = 7
+    CONTINUE = 8
+
+
 class TradingType(Enum):
     SANDBOX = 0
     LIVE = 1

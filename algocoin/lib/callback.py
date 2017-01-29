@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from .structs import MarketData
-from .logging import LOG as log
+from .logging import LOG as log, DATA as dlog, ERROR as elog
 
 
 class Callback(metaclass=ABCMeta):
@@ -40,6 +40,9 @@ class Callback(metaclass=ABCMeta):
     @abstractmethod
     def onContinue(self, data):
         '''onContinue'''
+
+    def callback(self):
+        return self
 
 
 class NullCallback(Callback):
@@ -97,28 +100,29 @@ class Print(Callback):
             setattr(self, 'onError', False)
 
     def onMatch(self, data: MarketData):
-        log.info(data)
+        dlog.info(data)
 
     def onReceived(self, data: MarketData):
-        log.info(data)
+        dlog.info(data)
 
     def onOpen(self, data: MarketData):
-        log.info(data)
+        dlog.info(data)
 
     def onDone(self, data: MarketData):
-        log.info(data)
+        dlog.info(data)
 
     def onChange(self, data: MarketData):
-        log.info(data)
+        dlog.info(data)
 
     def onError(self, data: MarketData):
-        log.info(data)
+        elog.info(data)
 
     def onAnalyze(self, data):
+        log.info('Analysis')
         pass
 
     def onHalt(self, data):
-        pass
+        log.info('Halt')
 
     def onContinue(self, data):
-        pass
+        log.info('Continue')

@@ -1,10 +1,20 @@
-from .enums import Side, CurrencyType, OrderType, OrderSubType, ExchangeType
+import datetime
+from .enums import Side, \
+                   CurrencyType, \
+                   OrderType, \
+                   OrderSubType, \
+                   ExchangeType, \
+                   TickType
 from .utils import struct
 
 
 @struct
 class MarketData:
-    pass
+    time = datetime.datetime
+    volume = float
+    price = float
+    type = TickType
+    currency = CurrencyType
 
 
 @struct
@@ -19,10 +29,10 @@ class TradeRequest:
     side = Side
     volume = float
     price = float
-    exchange = ExchangeType
     currency = CurrencyType
     order_type = OrderType
-    order_sub_type = OrderSubType
+    # order_sub_type = OrderSubType
+    # exchange = ExchangeType
 
 
 @struct

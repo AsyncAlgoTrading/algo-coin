@@ -27,12 +27,16 @@ class TestCustomStragies:
 
     def test_sma_match(self):
         from ..custom_strategies import SMACrossesStrategy
+        from ..lib.enums import TickType
+        from ..lib.structs import MarketData
+        from ..lib.utils import parse_date
+
         s = SMACrossesStrategy(1, 5)
 
-        data = [{'type': 'match',
-                 'time': '1479272400',
-                 'price': x,
-                 'volume': 100} for x in range(10)]
+        data = [MarketData(type=TickType.MATCH,
+                           time=parse_date('1479272400'),
+                           price=float(x),
+                           volume=float(100)) for x in range(10)]
 
         for x in range(10):
             s.onMatch(data[x])
@@ -45,12 +49,16 @@ class TestCustomStragies:
 
     def test_sma_buy(self):
         from ..custom_strategies import SMACrossesStrategy
+        from ..lib.enums import TickType
+        from ..lib.structs import MarketData
+        from ..lib.utils import parse_date
+
         s = SMACrossesStrategy(1, 5)
 
-        data = [{'type': 'match',
-                 'time': '1479272400',
-                 'price': x,
-                 'volume': 100} for x in range(10)]
+        data = [MarketData(type=TickType.MATCH,
+                           time=parse_date('1479272400'),
+                           price=float(x),
+                           volume=float(100)) for x in range(10)]
 
         for x in range(1, 11):
             s.onMatch(data[-x])
@@ -77,10 +85,15 @@ class TestCustomStragies:
 
     def test_sma_sell(self):
         self.test_sma_buy()
-        data = {'type': 'match',
-                'time': '1479272400',
-                'price': 0,
-                'volume': 100}
+
+        from ..lib.enums import TickType
+        from ..lib.structs import MarketData
+        from ..lib.utils import parse_date
+
+        data = MarketData(type=TickType.MATCH,
+                          time=parse_date('1479272400'),
+                          price=float(0),
+                          volume=float(100))
 
         s = self.s
         s.onMatch(data)
@@ -95,9 +108,9 @@ class TestCustomStragies:
     # @patch('matplotlib.pyplot')
     def test_plot(self):
         with patch('matplotlib.pyplot.subplots') as mm1, \
-           patch('matplotlib.pyplot.show'), \
-            patch('matplotlib.pyplot.show'), \
-            patch('matplotlib.pyplot.title'):
+             patch('matplotlib.pyplot.show'), \
+             patch('matplotlib.pyplot.show'), \
+             patch('matplotlib.pyplot.title'):
             mm1.return_value = (MagicMock(), MagicMock())
             # mm2= MagicMock()
 

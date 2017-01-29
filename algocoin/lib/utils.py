@@ -42,7 +42,7 @@ def __init__(self, **kwargs):
 
 
 def __repr__(self):
-    log.warn(str(self.__class__))
+    # log.warn(str(self.__class__))
     return '<' + ', '.join([x + '-' +
                            str(getattr(self, x))
                            if hasattr(self, '__' + x)

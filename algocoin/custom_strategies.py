@@ -1,12 +1,12 @@
-from .lib.strategy import ticks, NullTradingStrategy
+from .lib.strategy import ticks, \
+                          NullTradingStrategy, \
+                          BacktestTradingStrategy
 from .lib.structs import MarketData
-from .lib.utils import parse_date
 from .lib.logging import STRAT as slog, ERROR as elog
 
+
 class SMACrossesStrategy(NullTradingStrategy):
-    def __init__(self,
-                 size_short: int,
-                 size_long: int):
+    def __init__(self, size_short: int, size_long: int):
         super(SMACrossesStrategy, self).__init__()
 
         self.short = size_short
@@ -26,37 +26,31 @@ class SMACrossesStrategy(NullTradingStrategy):
         self._intitialvalue = None
         self._portfolio_value = []
 
-    def onBuy(self,
-              data: MarketData):
+    def onBuy(self, data: MarketData):
         if self._intitialvalue is None:
-            date = parse_date(data['time'])
-            self._intitialvalue = (
-                date,
-                float(data['price'])
-                )
+            date = data.time
+            self._intitialvalue = (date, data.price)
             self._portfolio_value.append(self._intitialvalue)
 
-        self.bought = float(data['price'])
+        self.bought = data.price
         slog.info('d->g:bought at %d' % self.bought)
 
-    def onSell(self,
-               data: MarketData):
-        profit = float(data['price']) - self.bought
+    def onSell(self, data: MarketData):
+        profit = data.price - self.bought
         self.profits += profit
-        slog.info('g->d:sold at %d - %d - %d' % (float(data['price']), profit, self.profits))
+        slog.info('g->d:sold at %d - %d - %d' % (data.price, profit, self.profits))
         self.bought = 0.0
 
-        date = parse_date(data['time'])
+        date = data.time
         self._portfolio_value.append((
                 date,
                 self._portfolio_value[-1][1] + profit))
 
     @ticks
-    def onMatch(self,
-                data: MarketData):
+    def onMatch(self, data: MarketData):
         # add data to arrays
-        self.shorts.append(float(data['price']))
-        self.longs.append(float(data['price']))
+        self.shorts.append(data.price)
+        self.longs.append(data.price)
 
         # check requirements
         if len(self.shorts) > self.short:
@@ -129,3 +123,7 @@ class SMACrossesStrategy(NullTradingStrategy):
         # ax2.plot(sp500, 'r')
         # ax2.set_ylabel('S&P500 ($)')
         plt.show()
+
+
+class SMACrossesBacktest(BacktestTradingStrategy):
+    pass

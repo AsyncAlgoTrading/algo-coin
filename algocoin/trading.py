@@ -16,7 +16,7 @@ class TradingEngine(object):
         self._live = options.type == TradingType.LIVE
         self._sandbox = options.type == TradingType.SANDBOX
         self._backtest = options.type == TradingType.BACKTEST
-        self._verbose = options.verbose
+        self._print = options.print
 
         self._strats = []
 
@@ -30,7 +30,7 @@ class TradingEngine(object):
 
         self._ec = Execution(options.execution_options, self._ex)
 
-        if self._verbose:
+        if self._print:
             log.warn('WARNING: Running in verbose mode')
 
             if self._live or self._sandbox:

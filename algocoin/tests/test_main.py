@@ -36,9 +36,9 @@ class TestMain:
         ret = parse_command_line(argv)
         assert ret.type == TradingType.BACKTEST
 
-        argv = ['verbose']
+        argv = ['print']
         ret = parse_command_line(argv)
-        assert ret.verbose
+        assert ret.print
 
     def test_main(self):
         from ..__main__ import main

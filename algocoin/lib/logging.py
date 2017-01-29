@@ -20,7 +20,7 @@ LOGGING_CONFIG = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'whenAndWhere'
         },
         'file': {
             'level': 'DEBUG',
@@ -85,7 +85,7 @@ LOGGING_CONFIG = {
             'handlers': ['file_strat']
         },
         'errors': {
-            'level': 'CRITICAL',
+            'level': 'DEBUG',
             'handlers': ['file_errors']
         },
         'data': {

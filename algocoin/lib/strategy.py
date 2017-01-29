@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from .callback import Callback, NullCallback
 from .structs import MarketData
-from .utils import parse_date
+from .enums import Side
 
 
 def ticks(f):
@@ -34,11 +34,12 @@ class Strategy(metaclass=ABCMeta):
                     data: MarketData):
         '''requestSell'''
 
+    def registerAction(self, time, actionType, data):
+        '''add action to log'''
+        self._actions.append((time, actionType, data))
+
 
 class TradingStrategy(Strategy, Callback):
-    def callback(self):
-        return self
-
     def requestBuy(self,
                    callback: Callback,
                    data: MarketData,
@@ -53,16 +54,12 @@ class TradingStrategy(Strategy, Callback):
 
 
 class NullTradingStrategy(Strategy, NullCallback):
-    def callback(self):
-        return self
-
     def requestBuy(self,
                    callback: Callback,
                    data: MarketData,
                    callback_failure=None):
         # let them do whatever
-        date = parse_date(data['time'])
-        self._actions.append((date, 'buy', data['price']))
+        self.registerAction(data.time, Side.BUY, data.price)
         callback(data)
 
     def requestSell(self,
@@ -70,6 +67,35 @@ class NullTradingStrategy(Strategy, NullCallback):
                     data: MarketData,
                     callback_failure=None):
         # let them do whatever
-        date = parse_date(data['time'])
-        self._actions.append((date, 'sell', data['price']))
+        self.registerAction(data.time, Side.SELL, data.price)
+        callback(data)
+
+
+class BacktestTradingStrategy(NullTradingStrategy):
+    # TODO data should be txn req not dict
+    def slippage(self, data):
+        '''slippage model. default is pass through'''
+        return data
+
+    # TODO data should be txn req not dict
+    def transactionCost(self, data):
+        '''txns cost model. default is pass through'''
+        return data
+
+    def requestBuy(self,
+                   callback: Callback,
+                   data: MarketData,
+                   callback_failure=None):
+        # let them do whatever
+        data = self.transactionCost(self.slippage(data))
+        self.registerAction(data.time, Side.BUY, data.price)
+        callback(data)
+
+    def requestSell(self,
+                    callback: Callback,
+                    data: MarketData,
+                    callback_failure=None):
+        # let them do whatever
+        data = self.transactionCost(self.slippage(data))
+        self.registerAction(data.time, Side.SELL, data.price)
         callback(data)

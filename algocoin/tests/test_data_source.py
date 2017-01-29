@@ -17,6 +17,7 @@ class TestDataSource:
     def test_StreamingDataSource(self):
         from ..lib.data_source import StreamingDataSource
         from ..lib.callback import Callback
+        from ..lib.enums import TickType
 
         try:
             x = StreamingDataSource()
@@ -62,7 +63,7 @@ class TestDataSource:
             t.registerCallback(TestCB())
             assert t._callbacks
             assert len(t._callbacks) == 9
-            assert len(t._callbacks['ERROR']) == 1
+            assert len(t._callbacks[TickType.ERROR]) == 1
 
         except:
             assert False

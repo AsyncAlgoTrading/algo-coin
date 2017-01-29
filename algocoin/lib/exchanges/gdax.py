@@ -4,7 +4,7 @@ import os
 import pprint
 from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType
+from ..enums import TradingType, ExchangeType, TickType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, ExecutionReport
@@ -80,7 +80,7 @@ class GDAXExchange(Exchange):
                     return
             except Exception as e:
                 log.critical(e)
-                self._callback('ERROR', e)
+                self._callback(TickType.ERROR, e)
                 self._close()
                 return
 
@@ -93,19 +93,19 @@ class GDAXExchange(Exchange):
         if not self._running:
             return
 
-        if res.get('type') == 'match':
+        if res.get('type') == TickType.MATCH:
             self._last = res
-            self._callback('MATCH', res)
-        elif res.get('type') == 'received':
-            self._callback('RECEIVED', res)
-        elif res.get('type') == 'open':
-            self._callback('OPEN', res)
-        elif res.get('type') == 'done':
-            self._callback('DONE', res)
-        elif res.get('type') == 'change':
-            self._callback('CHANGE', res)
+            self._callback(TickType.MATCH, res)
+        elif res.get('type') == TickType.RECEIVED:
+            self._callback(TickType.RECEIVED, res)
+        elif res.get('type') == TickType.OPEN:
+            self._callback(TickType.OPEN, res)
+        elif res.get('type') == TickType.DONE:
+            self._callback(TickType.DONE, res)
+        elif res.get('type') == TickType.CHANGE:
+            self._callback(TickType.CHANGE, res)
         else:
-            self._callback('ERROR', res)
+            self._callback(TickType.ERROR, res)
 
     def _close(self):
         log.critical('Closing....')
