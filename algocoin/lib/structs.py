@@ -31,7 +31,7 @@ class TradeRequest:
     price = float
     currency = CurrencyType
     order_type = OrderType
-    # order_sub_type = OrderSubType
+    order_sub_type = OrderSubType
     # exchange = ExchangeType
 
 

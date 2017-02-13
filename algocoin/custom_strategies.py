@@ -1,5 +1,5 @@
 from .lib.strategy import ticks, \
-                          NullTradingStrategy, \
+                          TradingStrategy, \
                           BacktestTradingStrategy
 from .lib.structs import MarketData
 from .lib.logging import STRAT as slog, ERROR as elog
@@ -129,7 +129,7 @@ class SMACrosses(object):
         return data
 
 
-class SMACrossesStrategy(NullTradingStrategy):
+class SMACrossesStrategy(TradingStrategy):
     def __init__(self, size_short: int, size_long: int):
         super(SMACrossesStrategy, self).__init__()
         # TODO autobind?

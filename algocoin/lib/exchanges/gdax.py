@@ -86,13 +86,10 @@ class GDAXExchange(Exchange):
 
     def _receive(self):
         res = json.loads(self.ws.recv())
-
         if self._seqnum_enabled:
             self._seqnum(res['sequence'])
-
         if not self._running:
             return
-
         if res.get('type') == TickType.MATCH:
             self._last = res
             self._callback(TickType.MATCH, res)
@@ -148,10 +145,10 @@ class GDAXExchange(Exchange):
         '''execute a buy order'''
         params = trade_req_to_params_gdax(req)
         log.warn(str(params))
-        # self.client.buy(params)
+        self.client.buy(params)
 
     def sell(self, req: TradeRequest) -> ExecutionReport:
         '''execute a sell order'''
         params = trade_req_to_params_gdax(req)
         log.warn(str(params))
-        # self.client.sell(params)
+        self.client.sell(params)

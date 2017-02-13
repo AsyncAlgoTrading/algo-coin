@@ -8,42 +8,46 @@ def manual(exchange):
     log.critical('Entering manual mode')
     print(commands())
     while True:
-        c = input('')
-        x = c.split(' ')
-        if x[0] == 'stats':
-            print('Stats:')
-            print(exchange._last)
-            print('')
-        elif x[0] == 'b':
-            print('Buy')
-            try:
-                d = parse_buy(x, exchange._type)
-                exchange.buy(d)
-            except IndexError:
-                print('Usage: b <volume> <price>'
-                      " <l,m : limit or market order>"
-                      " <p,f,a : post only,"
-                      " fill or kill, or all or nothing>")
-                continue
-            # exchange.buy()
-        elif x[0] == 's':
-            print('Sell')
-            try:
-                d = parse_sell(x. exchange._type)
-                exchange.sell(d)
-            except IndexError:
-                print('Usage: s <volume> <price>'
-                      " <l,m : limit or market order>"
-                      " <p,f,a : post only,"
-                      " fill or kill, or all or nothing>")
-                continue
-            # exchange.sell()
-        elif x[0] == 'q':
-            return 0
-        elif x[0] == 'c':
-            return 1
-        elif x[0] == 'h':
-            return 2
+        try:
+            c = input('')
+            x = c.split(' ')
+            if x[0] == 'stats':
+                print('Stats:')
+                print(exchange._last)
+                print('')
+            elif x[0] == 'b':
+                print('Buy')
+                try:
+                    d = parse_buy(x, exchange._type)
+                    exchange.buy(d)
+                except IndexError:
+                    print('Usage: b <volume> <price>'
+                          " <l,m : limit or market order>"
+                          " <p,f,a : post only,"
+                          " fill or kill, or all or nothing>")
+                    continue
+            elif x[0] == 's':
+                print('Sell')
+                try:
+                    d = parse_sell(x, exchange._type)
+                    exchange.sell(d)
+                except IndexError:
+                    print('Usage: s <volume> <price>'
+                          " <l,m : limit or market order>"
+                          " <p,f,a : post only,"
+                          " fill or kill, or all or nothing>")
+                    continue
+            elif x[0] == 'q':
+                return 0
+            elif x[0] == 'c':
+                return 1
+            elif x[0] == 'h':
+                return 2
+        except:
+            print("")
+            print("Invalid command")
+            print("")
+            continue
 
 
 def parse_buy(x, typ):
@@ -126,3 +130,12 @@ def commands():
     print("    Halt: h")
     print("        Halt automated trading")
     print("")
+
+
+def Manual(pipe, exchange):
+    while True:
+        try:
+            if pipe.recv():
+                pipe.send(manual(exchange))
+        except:
+            continue
