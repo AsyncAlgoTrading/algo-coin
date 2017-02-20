@@ -29,6 +29,18 @@ class TestDataSource:
             def run(self, engine):
                 pass
 
+            def close(self):
+                pass
+
+            def receive(self):
+                pass
+
+            def seqnum(self, num):
+                pass
+
+            def tickToData(self):
+                pass
+
         class TestCB(Callback):
             def onMatch(self):
                 pass

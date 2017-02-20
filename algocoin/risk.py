@@ -1,5 +1,5 @@
 from .lib.config import RiskConfig
-from .lib.structs import RiskRequest, RiskResponse, ExecutionReport
+from .lib.structs import TradeRequest, TradeResponse
 
 
 class Risk(object):
@@ -18,13 +18,19 @@ class Risk(object):
         self.max_running_risk = 0.0
         self.max_running_risk_incr = []
 
-    def _constructResp(self, side, vol: float, price: float, success: bool) \
-            -> RiskResponse:
-        resp = RiskResponse()
+    def _constructResp(self,
+                       data,
+                       side,
+                       vol: float,
+                       price: float,
+                       success: bool):
+        resp = TradeRequest()
+
+        resp.data = data
         resp.side = side
         resp.volume = vol
         resp.price = price
-        resp.success = success
+        resp.risk_check = success
 
         if success:
             # don't care about side for now
@@ -39,26 +45,29 @@ class Risk(object):
             # TODO self.max_running_drawdown =
         return resp
 
-    def request(self, req: RiskRequest) -> RiskResponse:
+    def request(self, req: TradeRequest):
         total = req.volume * req.price
         max = self.max_risk/100.0 * self.total_funds
         if (total + self.outstanding) <= max:
             # room for full volume
-            return self._constructResp(req.side, req.volume, req.price, True)
+            return self._constructResp(req.data, req.side, req.volume, req.price, True)
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
-            return self._constructResp(req.side, volume, req.price, True)
+            return self._constructResp(req.data, req.side, volume, req.price, True)
 
         # no room for volume
-        return self._constructResp(req.side, req.volume, req.price, False)
+        return self._constructResp(req.data, req.side, req.volume, req.price, False)
 
-    def requestBuy(self, req: RiskRequest) -> RiskResponse:
+    def requestBuy(self, req: TradeRequest):
+        '''precheck for risk compliance'''
         return self.request(req)
 
-    def requestSell(self, req: RiskRequest) -> RiskResponse:
+    def requestSell(self, req: TradeRequest):
+        '''precheck for risk compliance'''
         return self.request(req)
 
-    def update(self, data: ExecutionReport):
+    def update(self, data: TradeResponse):
+        '''update risk after execution'''
         pass

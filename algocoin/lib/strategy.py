@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from .callback import Callback, NullCallback
-from .structs import MarketData
+from .structs import MarketData, TradeRequest
 from .enums import Side
 
 
@@ -42,33 +42,33 @@ class Strategy(metaclass=ABCMeta):
 class TradingStrategy(Strategy, Callback):
     def requestBuy(self,
                    callback: Callback,
-                   data: MarketData,
+                   req: TradeRequest,
                    callback_failure=None):
-        self._te.requestBuy(callback, data, callback_failure)
+        self._te.requestBuy(callback, req, callback_failure)
 
     def requestSell(self,
                     callback: Callback,
-                    data: MarketData,
+                    req: TradeRequest,
                     callback_failure=None):
-        self._te.requestSell(callback, data, callback_failure)
+        self._te.requestSell(callback, req, callback_failure)
 
 
 class NullTradingStrategy(Strategy, NullCallback):
     def requestBuy(self,
                    callback: Callback,
-                   data: MarketData,
+                   req: TradeRequest,
                    callback_failure=None):
         # let them do whatever
-        self.registerAction(data.time, Side.BUY, data.price)
-        callback(data)
+        self.registerAction(req.time, Side.BUY, req.price)
+        callback(req)
 
     def requestSell(self,
                     callback: Callback,
-                    data: MarketData,
+                    req: TradeRequest,
                     callback_failure=None):
         # let them do whatever
-        self.registerAction(data.time, Side.SELL, data.price)
-        callback(data)
+        self.registerAction(req.time, Side.SELL, req.price)
+        callback(req)
 
 
 class BacktestTradingStrategy(NullTradingStrategy):
@@ -84,18 +84,18 @@ class BacktestTradingStrategy(NullTradingStrategy):
 
     def requestBuy(self,
                    callback: Callback,
-                   data: MarketData,
+                   req: TradeRequest,
                    callback_failure=None):
         # let them do whatever
-        data = self.transactionCost(self.slippage(data))
+        data = self.transactionCost(self.slippage(req))
         self.registerAction(data.time, Side.BUY, data.price)
         callback(data)
 
     def requestSell(self,
                     callback: Callback,
-                    data: MarketData,
+                    req: TradeRequest,
                     callback_failure=None):
         # let them do whatever
-        data = self.transactionCost(self.slippage(data))
+        data = self.transactionCost(self.slippage(req))
         self.registerAction(data.time, Side.SELL, data.price)
         callback(data)

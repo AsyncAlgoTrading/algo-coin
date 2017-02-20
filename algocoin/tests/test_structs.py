@@ -23,14 +23,6 @@ class TestStructs:
         # TODO no fields yet
         assert m
 
-    def test_RiskRequest(self):
-        from ..lib.structs import RiskRequest
-        r = RiskRequest()
-        assert r
-        # side = Side
-        # volume = float
-        # price = float
-
     def test_TradeRequest(self):
         from ..lib.structs import TradeRequest
         t = TradeRequest()
@@ -43,15 +35,6 @@ class TestStructs:
         # order_type = OrderType
         # order_sub_type = OrderSubType
 
-    def test_RiskResponse(self):
-        from ..lib.structs import RiskResponse
-        r = RiskResponse()
-        assert r
-        # side = Side
-        # volume = float
-        # price = float
-        # success = bool
-
     def test_TradeResponse(self):
         from ..lib.structs import TradeResponse
         t = TradeResponse()
@@ -60,9 +43,3 @@ class TestStructs:
         # volume = float
         # price = float
         # success = bool
-
-    def test_ExecutionReport(self):
-        from ..lib.structs import ExecutionReport
-        e = ExecutionReport()
-        # TODO no fields yet
-        assert e

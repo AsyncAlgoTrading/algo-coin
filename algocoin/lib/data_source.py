@@ -1,7 +1,7 @@
 # import json
 from abc import ABCMeta, abstractmethod
 from .callback import Callback
-from .structs import TradeRequest, TradeResponse, ExecutionReport
+from .structs import TradeRequest, TradeResponse
 from .enums import TickType
 # from structs import MarketData
 
@@ -15,6 +15,10 @@ class RestAPIDataSource(DataSource):
         pass
 
     @abstractmethod
+    def accountInfo(self):
+        '''get account information'''
+
+    @abstractmethod
     def sendOrder(self, callback: Callback):
         '''send order to exchange'''
 
@@ -23,16 +27,18 @@ class RestAPIDataSource(DataSource):
         '''parse the response'''
 
     @abstractmethod
-    def buy(self, req: TradeRequest) -> ExecutionReport:
+    def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
 
     @abstractmethod
-    def sell(self, req: TradeRequest) -> ExecutionReport:
+    def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
 
 
 class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs):
+        self._running = False
+
         self._callbacks = {TickType.MATCH: [],
                            TickType.RECEIVED: [],
                            TickType.ERROR: [],
@@ -47,9 +53,27 @@ class StreamingDataSource(DataSource):
     def run(self, engine):
         '''run the exchange'''
 
-    def _callback(self, field: str, data):
+    # internals
+    @abstractmethod
+    def close(self):
+        '''close the websocket'''
+
+    @abstractmethod
+    def seqnum(self, number: int):
+        '''manage sequence numbers'''
+
+    @abstractmethod
+    def receive(self):
+        '''receive data and call callbacks'''
+
+    def callback(self, field: str, data):
         for cb in self._callbacks[field]:
             cb(data)
+
+    # Data functions
+    @abstractmethod
+    def tickToData(self, data):
+        '''convert json to market data based on fields'''
 
     def onMatch(self, callback: Callback):
         self._callbacks[TickType.MATCH].append(callback)

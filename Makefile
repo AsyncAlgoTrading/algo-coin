@@ -1,8 +1,8 @@
 run: clean  ## clean and make target, run target
-	python3 -m algocoin live
+	python3 -m algocoin live $(VERBOSE)
 
 sandbox: clean  ## clean and make target, run target
-	python3 -m algocoin sandbox
+	python3 -m algocoin sandbox $(VERBOSE)
 
 backtest: clean  ## clean and make target, run target
 	python3 -m algocoin backtest $(VERBOSE)

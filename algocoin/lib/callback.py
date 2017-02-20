@@ -29,9 +29,9 @@ class Callback(metaclass=ABCMeta):
     def onError(self, data: MarketData):
         '''onError'''
 
-    @abstractmethod
     def onAnalyze(self, data):
-        '''onError'''
+        '''onAnalyze'''
+        raise NotImplemented()
 
     @abstractmethod
     def onHalt(self, data):

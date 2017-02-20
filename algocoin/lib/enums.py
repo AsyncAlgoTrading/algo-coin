@@ -11,6 +11,7 @@ class TickType(Enum):
     ANALYZE = 6
     HALT = 7
     CONTINUE = 8
+    HEARTBEAT = 9
 
 
 class TradingType(Enum):
@@ -35,6 +36,17 @@ class CurrencyType(Enum):
     BTC = 1
     ETH = 2
     LTC = 3
+
+
+def strToCurrencyType(s):
+    s = s.upper()
+    if 'BTC' in s:
+        return CurrencyType.BTC
+    if 'ETH' in s:
+        return CurrencyType.ETH
+    if 'LTC' in s:
+        return CurrencyType.LTC
+    return CurrencyType.USD
 
 
 class Side(Enum):

@@ -10,48 +10,44 @@ from .utils import struct
 
 @struct
 class MarketData:
+    # common
     time = datetime.datetime
     volume = float
     price = float
     type = TickType
-    currency = CurrencyType
+    currency = CurrencyType, CurrencyType.BTC
 
-
-@struct
-class RiskRequest:
-    side = Side
-    volume = float
-    price = float
+    # maybe specific
+    remaining = float, float('nan')
+    reason = str, ''
+    sequence = int, -1
 
 
 @struct
 class TradeRequest:
+    data = MarketData
     side = Side
+
     volume = float
     price = float
-    currency = CurrencyType
+    currency = CurrencyType, CurrencyType.BTC
+
     order_type = OrderType
     order_sub_type = OrderSubType
     # exchange = ExchangeType
 
-
-@struct
-class RiskResponse:
-    side = Side
-    volume = float
-    price = float
-    success = bool
+    risk_check = bool
 
 
 @struct
 class TradeResponse:
+    data = MarketData
     side = Side
+
     volume = float
     price = float
+    currency = CurrencyType, CurrencyType.BTC
+
+    order_type = OrderType, OrderType.MARKET
+    order_sub_type = OrderSubType, OrderSubType.NONE
     success = bool
-
-
-@struct
-class ExecutionReport:
-    volume = float
-    price = float

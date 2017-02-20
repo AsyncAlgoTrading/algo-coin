@@ -1,11 +1,13 @@
+import logging
 import sys
-from .custom_strategies import SMACrossesStrategy, SMACrossesBacktest
+from .custom_strategies import SMACrossesStrategy
 from .lib.config import TradingEngineConfig, BacktestConfig
 from .lib.enums import TradingType
 from .trading import TradingEngine
 from .lib.logging import LOG as log, \
                          OTHER as olog, \
                          STRAT as slog, \
+                         WARN as wlog, \
                          ERROR as elog, \
                          DATA as dlog, \
                          TXN as tlog, \
@@ -37,12 +39,21 @@ def parse_command_line(argv: list):
 
     if 'verbose' in argv:
         # Print/log extra info
-        olog.propagate = True
-        slog.propagate = True
-        elog.propagate = True
-        dlog.propagate = False  # too much
-        tlog.propagate = True
-        mlog.propagate = True
+        # olog.propagate = True
+        # slog.propagate = True
+        # elog.propagate = True
+        # dlog.propagate = False  # too much
+        # tlog.propagate = True
+        # mlog.propagate = True
+        log.setLevel(logging.DEBUG)
+        olog.setLevel(logging.DEBUG)
+        slog.setLevel(logging.DEBUG)
+        wlog.setLevel(logging.DEBUG)
+        elog.setLevel(logging.DEBUG)
+        dlog.setLevel(logging.DEBUG)
+        tlog.setLevel(logging.DEBUG)
+        mlog.setLevel(logging.DEBUG)
+        log.info('running in verbose mode!')
 
     if 'print' in argv:
         config.print = True
@@ -60,12 +71,10 @@ def main(argv: list):
     te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
-    # ts = SMACrossesStrategy(10, 5)
-    ts2 = SMACrossesBacktest(10, 5)
+    ts = SMACrossesStrategy(10, 5)
 
     # Register the strategy with the Trading engine
-    # te.registerStrategy(ts)
-    te.registerStrategy(ts2)
+    te.registerStrategy(ts)
 
     # Run the live trading engine
     te.run()

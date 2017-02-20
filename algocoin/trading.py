@@ -88,12 +88,12 @@ class TradingEngine(object):
 
     def requestBuy(self,
                    callback: Callback,
-                   data: TradeRequest,
+                   req: TradeRequest,
                    callback_failure=None):
 
-        resp = self._rk.requestBuy(data)
+        resp = self._rk.requestBuy(req)
 
-        if resp.success:
+        if resp.risk_check:
             res = self._ec.requestBuy(resp)
             self._rk.update(res)
             callback(res)
@@ -102,12 +102,12 @@ class TradingEngine(object):
 
     def requestSell(self,
                     callback: Callback,
-                    data: TradeRequest,
+                    req: TradeRequest,
                     callback_failure=None):
 
-        resp = self._rk.requestSell(data)
+        resp = self._rk.requestSell(req)
 
-        if resp.success:
+        if resp.risk_check:
             res = self._ec.requestSell(resp)
             self._rk.update(res)
             callback(res)

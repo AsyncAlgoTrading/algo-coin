@@ -1,12 +1,13 @@
 from .lib.strategy import ticks, \
-                          TradingStrategy, \
-                          BacktestTradingStrategy
-from .lib.structs import MarketData
+                          TradingStrategy
+from .lib.structs import MarketData, TradeRequest, TradeResponse
+from .lib.enums   import Side
 from .lib.logging import STRAT as slog, ERROR as elog
 
 
-class SMACrosses(object):
-    def initialize(self, size_short, size_long):
+class SMACrossesStrategy(TradingStrategy):
+    def __init__(self, size_short, size_long):
+        super(SMACrossesStrategy, self).__init__()
         self.short = size_short
         self.shorts = []
         self.short_av = 0.0
@@ -24,22 +25,22 @@ class SMACrosses(object):
         self._intitialvalue = None
         self._portfolio_value = []
 
-    def onBuy(self, data: MarketData):
+    def onBuy(self, res: TradeResponse):
         if self._intitialvalue is None:
-            date = data.time
-            self._intitialvalue = (date, data.price)
+            date = res.data.time
+            self._intitialvalue = (date, res.price)
             self._portfolio_value.append(self._intitialvalue)
 
-        self.bought = data.price
+        self.bought = res.price
         slog.info('d->g:bought at %d' % self.bought)
 
-    def onSell(self, data: MarketData):
-        profit = data.price - self.bought
+    def onSell(self, res: TradeResponse):
+        profit = res.price - self.bought
         self.profits += profit
-        slog.info('g->d:sold at %d - %d - %d' % (data.price, profit, self.profits))
+        slog.info('g->d:sold at %d - %d - %d' % (res.price, profit, self.profits))
         self.bought = 0.0
 
-        date = data.time
+        date = res.data.time
         self._portfolio_value.append((
                 date,
                 self._portfolio_value[-1][1] + profit))
@@ -74,12 +75,22 @@ class SMACrosses(object):
 
         if self.state == 'golden' and self.prev_state != 'golden' and \
                 self.bought == 0.0:  # watch for floating point error
-            self.requestBuy(self.onBuy, data)
+            req = TradeRequest(data=data,
+                               side=Side.BUY,
+                               volume=data.volume,
+                               currency=data.currency,
+                               price=data.price)
+            self.requestBuy(self.onBuy, req)
             return True
 
         elif self.state == 'death' and self.prev_state != 'death' and \
                 self.bought > 0.0:
-            self.requestSell(self.onSell, data)
+            req = TradeRequest(data=data,
+                               side=Side.SELL,
+                               volume=data.volume,
+                               currency=data.currency,
+                               price=data.price)
+            self.requestSell(self.onSell, req)
             return True
 
         return False
@@ -120,6 +131,24 @@ class SMACrosses(object):
         # ax2.set_ylabel('S&P500 ($)')
         plt.show()
 
+    def onChange(self, data):
+        pass
+
+    def onContinue(self, data):
+        pass
+
+    def onDone(self, data):
+        pass
+
+    def onHalt(self, data):
+        pass
+
+    def onOpen(self, data):
+        pass
+
+    def onReceived(self, data):
+        pass
+
     def slippage(self, data):
         slog.critical(data)
         return data
@@ -127,31 +156,3 @@ class SMACrosses(object):
     def transactionCost(self, data):
         slog.critical(data)
         return data
-
-
-class SMACrossesStrategy(TradingStrategy):
-    def __init__(self, size_short: int, size_long: int):
-        super(SMACrossesStrategy, self).__init__()
-        # TODO autobind?
-        self.initialize = SMACrosses.initialize.__get__(self)
-        self.onBuy = SMACrosses.onBuy.__get__(self)
-        self.onSell = SMACrosses.onSell.__get__(self)
-        self.onMatch = SMACrosses.onMatch.__get__(self)
-        self.onError = SMACrosses.onError.__get__(self)
-        self.onAnalyze = SMACrosses.onAnalyze.__get__(self)
-        self.initialize(size_short, size_long)
-
-
-class SMACrossesBacktest(BacktestTradingStrategy):
-    def __init__(self, size_short: int, size_long: int):
-        super(SMACrossesBacktest, self).__init__()
-        # TODO autobind?
-        self.initialize = SMACrosses.initialize.__get__(self)
-        self.onBuy = SMACrosses.onBuy.__get__(self)
-        self.onSell = SMACrosses.onSell.__get__(self)
-        self.onMatch = SMACrosses.onMatch.__get__(self)
-        self.onError = SMACrosses.onError.__get__(self)
-        self.onAnalyze = SMACrosses.onAnalyze.__get__(self)
-        self.slippage = SMACrosses.slippage.__get__(self)
-        self.transactionCost = SMACrosses.transactionCost.__get__(self)
-        self.initialize(size_short, size_long)

@@ -32,6 +32,7 @@ class TestCustomStragies:
         from ..lib.utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
+        s._te = MagicMock()
 
         data = [MarketData(type=TickType.MATCH,
                            time=parse_date('1479272400'),
@@ -54,6 +55,16 @@ class TestCustomStragies:
         from ..lib.utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
+
+        s._te = MagicMock()
+        s._te.requestBuy = MagicMock()
+        s._te.requestSell = MagicMock()
+
+        def ret(callback, req, callback_failure):
+            callback(req)
+
+        s._te.requestBuy.side_effect = ret
+        s._te.requestSell.side_effect = ret
 
         data = [MarketData(type=TickType.MATCH,
                            time=parse_date('1479272400'),

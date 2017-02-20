@@ -1,7 +1,6 @@
 class TestRisk:
     def setup(self):
         from ..lib.config import RiskConfig
-        from ..lib.structs import RiskRequest, RiskResponse, ExecutionReport
         from ..risk import Risk
 
         rc = RiskConfig()
@@ -31,50 +30,59 @@ class TestRisk:
         pass
 
     def test_request(self):
-        from ..lib.structs import RiskRequest
-        from ..lib.enums import Side
+        from ..lib.structs import TradeRequest, MarketData
+        from ..lib.enums import TickType, Side
+        from ..lib.utils import parse_date
 
-        req = RiskRequest(side=Side.BUY, volume=100.0, price=1.0)
+        data = MarketData(type=TickType.MATCH,
+                          time=parse_date('1479272400'),
+                          price=float(1),
+                          volume=float(100))
+        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
-        assert resp.success == True
+        assert resp.risk_check == True
         assert resp.volume == 100.0
         assert self.risk.outstanding == 100.0
         assert self.risk.max_running_outstanding == 100.0
         assert self.risk.max_running_outstanding_incr == [100.0]
 
-        req = RiskRequest(side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
-        assert resp.success == False
+        assert resp.risk_check == False
 
     def test_request2(self):
-        from ..lib.structs import RiskRequest
-        from ..lib.enums import Side
+        from ..lib.structs import TradeRequest, MarketData
+        from ..lib.enums import TickType, Side
+        from ..lib.utils import parse_date
 
-        req = RiskRequest(side=Side.BUY, volume=50.0, price=1.0)
+        data = MarketData(type=TickType.MATCH,
+                          time=parse_date('1479272400'),
+                          price=float(1),
+                          volume=float(100))
+        req = TradeRequest(data=data, side=Side.BUY, volume=50.0, price=1.0)
         resp = self.risk.request(req)
 
-        assert resp.success == True
+        assert resp.risk_check == True
         assert resp.volume == 50.0
         assert self.risk.outstanding == 50.0
         assert self.risk.max_running_outstanding == 50.0
         assert self.risk.max_running_outstanding_incr == [50.0]
 
-        req = RiskRequest(side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
-        assert resp.success == True
+        assert resp.risk_check == True
         assert resp.volume == 50.0
         assert self.risk.outstanding == 100.0
         assert self.risk.max_running_outstanding == 100.0
         assert self.risk.max_running_outstanding_incr == [50.0, 100.0]
 
-        req = RiskRequest(side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
-        assert resp.success == False
+        assert resp.risk_check == False
 
     def test_update(self):
-        from ..lib.structs import ExecutionReport
         pass

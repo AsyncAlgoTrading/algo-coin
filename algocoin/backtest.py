@@ -15,15 +15,15 @@ class Backtest(StreamingDataSource):
         log.info('Starting....')
         with open(self._file, 'r') as fp:
             for line in fp:
-                self._receive(line)
+                self.receive(line)
                 engine.tick()
         log.info('Backtest done, running analysis.')
 
-        self._callback(TickType.ANALYZE, None)
+        self.callback(TickType.ANALYZE, None)
 
         log.info('Analysis completed.')
 
-    def _receive(self, line: str):
+    def receive(self, line: str):
         res = line.strip().split(',')
 
         # TODO allow if market data for bid/ask
@@ -34,8 +34,17 @@ class Backtest(StreamingDataSource):
                          currency=CurrencyType.BTC)
 
         if res.type == TickType.MATCH:
-            self._callback(TickType.MATCH, res)
+            self.callback(TickType.MATCH, res)
             dlog.info(res)
 
         else:
-            self._callback(TickType.ERROR, res)
+            self.callback(TickType.ERROR, res)
+
+    def close(self):
+        pass
+
+    def seqnum(self, num):
+        pass
+
+    def tickToData(self, tick):
+        pass

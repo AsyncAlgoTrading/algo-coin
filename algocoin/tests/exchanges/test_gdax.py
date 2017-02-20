@@ -27,6 +27,7 @@ class TestExchange:
         with patch('os.environ'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
+            e._running = True
             assert e
 
     def test_receive(self):
@@ -37,6 +38,7 @@ class TestExchange:
         with patch('os.environ'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
+            e._running = True
             assert e
 
             e.ws = MagicMock()
@@ -48,8 +50,11 @@ class TestExchange:
                                          TickType.DONE,
                                          TickType.CHANGE,
                                          TickType.ERROR]):
-                    m1.return_value = {'type': val, 'sequence': i}
-                    e._receive()
+                    m1.return_value = {'type': val,
+                                       'sequence': i,
+                                       'time': '2017-02-19T18:52:17.088000Z',
+                                       'product_id': 'BTC'}
+                    e.receive()
 
     def test_seqnum_fix(self):
         from ...lib.config import ExchangeConfig
@@ -59,21 +64,28 @@ class TestExchange:
         with patch('os.environ'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
+            e._running = True
             assert e
 
             e.ws = MagicMock()
 
             with patch('json.loads') as m1:
-                m1.return_value = {'type': TickType.MATCH, 'sequence': 0}
-                e._receive()
+                m1.return_value = {'type': TickType.MATCH,
+                                   'sequence': 0,
+                                   'time': '2017-02-19T18:52:17.088000Z',
+                                   'product_id': 'BTC'}
+                e.receive()
                 for i, val in enumerate([TickType.MATCH,
                                          TickType.RECEIVED,
                                          TickType.OPEN,
                                          TickType.DONE,
                                          TickType.CHANGE,
                                          TickType.ERROR]):
-                    m1.return_value = {'type': val, 'sequence': 6-i}
+                    m1.return_value = {'type': val,
+                                       'sequence': 6-i,
+                                       'time': '2017-02-19T18:52:17.088000Z',
+                                       'product_id': 'BTC'}
                     if i != 0:
                         assert e._missingseqnum
-                    e._receive()
+                    e.receive()
                 assert e._missingseqnum == set()

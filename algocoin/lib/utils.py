@@ -1,7 +1,8 @@
 import pytz
+import os
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType
-from .logging import LOG as log
+from .logging import WARN as log
 
 
 def create_pair(key, typ, default=None):
@@ -13,7 +14,7 @@ def create_pair(key, typ, default=None):
         raise TypeError("%s is unset" % key)
 
     def set(self, val):
-        if not isinstance(val, typ):
+        if not isinstance(val, typ) and not type(val) == typ:
             raise TypeError("%s attribute must be set to an instance of %s"
                             % (key, typ))
         setattr(self, '__' + str(key), val)
@@ -53,6 +54,8 @@ def __repr__(self):
 def struct(cls):
     new_cls_dict = {}
     vars = []
+    if len(cls.__bases__) > 1:
+        raise Exception("Structs only support single inheritance")
     for k, v in cls.__dict__.items():
         if isinstance(v, type):
             v = create_pair(k, v)
@@ -61,7 +64,9 @@ def struct(cls):
                 isinstance(v[0], type) and \
                 isinstance(v[1], v[0]):
             log.warn('WARNING: no defaults in structs')
-            v = create_pair(k, v[0])
+            v = create_pair(k, v[0], v[1])
+            vars.append(k)
+            # v = create_pair(k, v[0])
 
         new_cls_dict[k] = v
     new_cls_dict['__init__'] = __init__
@@ -110,3 +115,10 @@ def trade_req_to_params_gdax(req):
     elif req.order_sub_type == OrderSubType.POST_ONLY:
         p['post_only'] = '1'
     return p
+
+
+def get_keys_from_environment(prefix: str):
+    key = os.environ[prefix + '_API_KEY']
+    secret = os.environ[prefix + '_API_SECRET']
+    passphrase = os.environ[prefix + '_API_PASS']
+    return key, secret, passphrase

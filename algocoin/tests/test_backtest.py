@@ -73,5 +73,5 @@ class TestBacktest:
         cb = self.demo_callback()
 
         b.registerCallback(cb)
-        b._receive(self.test_line)
+        b.receive(self.test_line)
         assert cb._onMatch
