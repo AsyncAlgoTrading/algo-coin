@@ -13,10 +13,11 @@ tests: clean ## Clean and Make unit tests
 test: ## run the tests for travis CI
 	@ python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
  
-
 test_verbose: ## run the tests with full output
 	python3 -m nose -vv -s algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
- 
+
+annotate: ## MyPy type annotation check
+	mypy -s algocoin 
 
 clean: ## clean the repository
 	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ .coverage cover htmlcov

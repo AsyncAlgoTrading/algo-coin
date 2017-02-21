@@ -1,29 +1,30 @@
 from .lib.config import RiskConfig
-from .lib.structs import TradeRequest, TradeResponse
+from .lib.structs import TradeRequest, TradeResponse, MarketData
+from .lib.enums import Side
 
 
 class Risk(object):
-    def __init__(self, options: RiskConfig):
+    def __init__(self, options: RiskConfig) -> None:
         self.max_drawdown = options.max_drawdown
         self.max_risk = options.max_risk
         self.total_funds = options.total_funds
         self.outstanding = 0.0
 
         self.max_running_outstanding = 0.0
-        self.max_running_outstanding_incr = []
+        self.max_running_outstanding_incr = []  # type: List
 
         self.max_running_drawdown = 0.0
-        self.max_running_drawdown_incr = []
+        self.max_running_drawdown_incr = []  # type: List
 
         self.max_running_risk = 0.0
-        self.max_running_risk_incr = []
+        self.max_running_risk_incr = []  # type: List
 
     def _constructResp(self,
-                       data,
-                       side,
+                       data: MarketData,
+                       side: Side,
                        vol: float,
                        price: float,
-                       success: bool):
+                       success: bool) -> TradeRequest:
         resp = TradeRequest()
 
         resp.data = data
@@ -45,7 +46,7 @@ class Risk(object):
             # TODO self.max_running_drawdown =
         return resp
 
-    def request(self, req: TradeRequest):
+    def request(self, req: TradeRequest) -> TradeRequest:
         total = req.volume * req.price
         max = self.max_risk/100.0 * self.total_funds
         if (total + self.outstanding) <= max:

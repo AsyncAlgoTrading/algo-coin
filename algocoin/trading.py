@@ -12,13 +12,13 @@ from .lib.logging import LOG as log
 
 
 class TradingEngine(object):
-    def __init__(self, options: TradingEngineConfig):
+    def __init__(self, options: TradingEngineConfig) -> None:
         self._live = options.type == TradingType.LIVE
         self._sandbox = options.type == TradingType.SANDBOX
         self._backtest = options.type == TradingType.BACKTEST
         self._print = options.print
 
-        self._strats = []
+        self._strats = []  # type: List[Strategy]
 
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
 
@@ -45,7 +45,7 @@ class TradingEngine(object):
             if self._backtest:
                 self._bt.registerCallback(Print())
 
-        self._ticked = []
+        self._ticked = []  # type: List
 
     def registerStrategy(self, strat: Strategy):
         if self._live or self._sandbox:

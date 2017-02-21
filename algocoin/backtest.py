@@ -7,11 +7,11 @@ from .lib.enums import CurrencyType, TickType
 
 
 class Backtest(StreamingDataSource):
-    def __init__(self, options: BacktestConfig):
+    def __init__(self, options: BacktestConfig) -> None:
         super(Backtest, self).__init__()
         self._file = options.file
 
-    def run(self, engine):
+    def run(self, engine) -> None:
         log.info('Starting....')
         with open(self._file, 'r') as fp:
             for line in fp:
@@ -23,22 +23,22 @@ class Backtest(StreamingDataSource):
 
         log.info('Analysis completed.')
 
-    def receive(self, line: str):
+    def receive(self, line: str) -> None:
         res = line.strip().split(',')
 
         # TODO allow if market data for bid/ask
-        res = MarketData(time=parse_date(res[0]),
-                         price=float(res[1]),
-                         volume=float(res[2]),
-                         type=TickType.MATCH,
-                         currency=CurrencyType.BTC)
+        data = MarketData(time=parse_date(res[0]),
+                          price=float(res[1]),
+                          volume=float(res[2]),
+                          type=TickType.MATCH,
+                          currency=CurrencyType.BTC)
 
-        if res.type == TickType.MATCH:
-            self.callback(TickType.MATCH, res)
-            dlog.info(res)
+        if data.type == TickType.MATCH:
+            self.callback(TickType.MATCH, data)
+            dlog.info(data)
 
         else:
-            self.callback(TickType.ERROR, res)
+            self.callback(TickType.ERROR, data)
 
     def close(self):
         pass

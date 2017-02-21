@@ -5,7 +5,7 @@ from .lib.structs import TradeRequest, TradeResponse
 
 
 class Execution(object):
-    def __init__(self, options: ExecutionConfig, exchange: Exchange):
+    def __init__(self, options: ExecutionConfig, exchange: Exchange) -> None:
         self._ex = exchange
 
     def _constructResp(self, side, vol: float, price: float, success: bool)-> TradeResponse:
