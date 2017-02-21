@@ -75,13 +75,13 @@ def struct(cls):
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
-def parse_date(date: str):
+def parse_date(indate: str):
     try:
-        date = datetime.utcfromtimestamp(float(date))
+        date = datetime.utcfromtimestamp(float(indate))
         date = pytz.utc.localize(date).astimezone(
             pytz.timezone('EST')).replace(tzinfo=None)
     except ValueError:
-        date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+        date = datetime.strptime(indate, "%Y-%m-%dT%H:%M:%S.%fZ")
     return date
 
 

@@ -100,22 +100,22 @@ class Print(Callback):
             setattr(self, 'onError', False)
 
     def onMatch(self, data: MarketData):
-        dlog.info(data)
+        dlog.info(str(data))
 
     def onReceived(self, data: MarketData):
-        dlog.info(data)
+        dlog.info(str(data))
 
     def onOpen(self, data: MarketData):
-        dlog.info(data)
+        dlog.info(str(data))
 
     def onDone(self, data: MarketData):
-        dlog.info(data)
+        dlog.info(str(data))
 
     def onChange(self, data: MarketData):
-        dlog.info(data)
+        dlog.info(str(data))
 
     def onError(self, data: MarketData):
-        elog.info(data)
+        dlog.info(str(data))
 
     def onAnalyze(self, data):
         log.info('Analysis')

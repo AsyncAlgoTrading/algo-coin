@@ -9,11 +9,7 @@ class Execution(object):
         self._ex = exchange
 
     def _constructResp(self, side, vol: float, price: float, success: bool)-> TradeResponse:
-        resp = TradeResponse()
-        resp.side = side
-        resp.volume = vol
-        resp.price = price
-        resp.success = success
+        resp = TradeResponse(side=side, volume=vol, price=price, success=success)
         return resp
 
     def requestBuy(self, req: TradeRequest) -> TradeResponse:

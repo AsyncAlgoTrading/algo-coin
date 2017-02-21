@@ -8,15 +8,15 @@ class Risk(object):
         self.max_drawdown = options.max_drawdown
         self.max_risk = options.max_risk
         self.total_funds = options.total_funds
-        self.outstanding = 0.0
+        self.outstanding = 0.0  # type: float
 
         self.max_running_outstanding = 0.0
         self.max_running_outstanding_incr = []  # type: List
 
-        self.max_running_drawdown = 0.0
+        self.max_running_drawdown = 0.0  # type: float
         self.max_running_drawdown_incr = []  # type: List
 
-        self.max_running_risk = 0.0
+        self.max_running_risk = 0.0  # type: float
         self.max_running_risk_incr = []  # type: List
 
     def _constructResp(self,
@@ -25,13 +25,7 @@ class Risk(object):
                        vol: float,
                        price: float,
                        success: bool) -> TradeRequest:
-        resp = TradeRequest()
-
-        resp.data = data
-        resp.side = side
-        resp.volume = vol
-        resp.price = price
-        resp.risk_check = success
+        resp = TradeRequest(data=data, side=side, volume=vol, price=price, risk_check=success)
 
         if success:
             # don't care about side for now

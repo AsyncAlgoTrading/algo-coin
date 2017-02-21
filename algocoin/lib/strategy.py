@@ -1,3 +1,4 @@
+from typing import Callable
 from abc import ABCMeta, abstractmethod
 from .callback import Callback, NullCallback
 from .structs import MarketData, TradeRequest
@@ -22,6 +23,9 @@ class Strategy(metaclass=ABCMeta):
     def reset(self):
         self._tick = False
 
+    def setEngine(self, engine):
+        self._te = engine
+
     @abstractmethod
     def requestBuy(self,
                    callback: Callback,
@@ -41,13 +45,13 @@ class Strategy(metaclass=ABCMeta):
 
 class TradingStrategy(Strategy, Callback):
     def requestBuy(self,
-                   callback: Callback,
+                   callback: Callable,
                    req: TradeRequest,
                    callback_failure=None):
         self._te.requestBuy(callback, req, callback_failure)
 
     def requestSell(self,
-                    callback: Callback,
+                    callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
         self._te.requestSell(callback, req, callback_failure)
@@ -55,19 +59,19 @@ class TradingStrategy(Strategy, Callback):
 
 class NullTradingStrategy(Strategy, NullCallback):
     def requestBuy(self,
-                   callback: Callback,
+                   callback: Callable,
                    req: TradeRequest,
                    callback_failure=None):
         # let them do whatever
-        self.registerAction(req.time, Side.BUY, req.price)
+        self.registerAction(req.data.time, Side.BUY, req.price)
         callback(req)
 
     def requestSell(self,
-                    callback: Callback,
+                    callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
         # let them do whatever
-        self.registerAction(req.time, Side.SELL, req.price)
+        self.registerAction(req.data.time, Side.SELL, req.price)
         callback(req)
 
 
@@ -83,7 +87,7 @@ class BacktestTradingStrategy(NullTradingStrategy):
         return data
 
     def requestBuy(self,
-                   callback: Callback,
+                   callback: Callable,
                    req: TradeRequest,
                    callback_failure=None):
         # let them do whatever
@@ -92,7 +96,7 @@ class BacktestTradingStrategy(NullTradingStrategy):
         callback(data)
 
     def requestSell(self,
-                    callback: Callback,
+                    callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
         # let them do whatever

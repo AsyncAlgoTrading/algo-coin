@@ -1,10 +1,11 @@
+from typing import Callable
 from .backtest import Backtest
 from .lib.callback import Callback, Print
 from .lib.config import TradingEngineConfig
 from .lib.enums import TradingType
 from .execution import Execution
 from .risk import Risk
-from .lib.strategy import Strategy
+from .lib.strategy import TradingStrategy
 from .lib.structs import TradeRequest
 from .lib.utils import ex_type_to_ex
 from .lib.logging import LOG as log
@@ -18,7 +19,7 @@ class TradingEngine(object):
         self._backtest = options.type == TradingType.BACKTEST
         self._print = options.print
 
-        self._strats = []  # type: List[Strategy]
+        self._strats = []  # type: List[TradingStrategy]
 
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
 
@@ -47,7 +48,7 @@ class TradingEngine(object):
 
         self._ticked = []  # type: List
 
-    def registerStrategy(self, strat: Strategy):
+    def registerStrategy(self, strat: TradingStrategy):
         if self._live or self._sandbox:
             # register for exchange data
             self._ex.registerCallback(strat.callback())
@@ -60,7 +61,7 @@ class TradingEngine(object):
         self._strats.append(strat)  # add to tickables
 
         # give self to strat so it can request trading actions
-        strat._te = self
+        strat.setEngine(self)
 
     def run(self):
         if self._live or self._sandbox:
@@ -87,7 +88,7 @@ class TradingEngine(object):
             # print('Strat ticked', strat, time.time())
 
     def requestBuy(self,
-                   callback: Callback,
+                   callback: Callable,
                    req: TradeRequest,
                    callback_failure=None):
 
@@ -101,7 +102,7 @@ class TradingEngine(object):
         callback_failure(resp) if callback_failure else callback(resp)
 
     def requestSell(self,
-                    callback: Callback,
+                    callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
 

@@ -19,6 +19,9 @@ test_verbose: ## run the tests with full output
 annotate: ## MyPy type annotation check
 	mypy -s algocoin 
 
+annotate_l: ## MyPy type annotation check - count only
+	mypy -s algocoin | wc -l 
+
 clean: ## clean the repository
 	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ .coverage cover htmlcov
 

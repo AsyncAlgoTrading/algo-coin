@@ -9,7 +9,7 @@ class Exchange(StreamingDataSource):
     def __init__(self, options: ExchangeConfig):
         super(Exchange, self).__init__(options)
         self._lastseqnum = -1
-        self._missingseqnum = set()
+        self._missingseqnum = set()  # type: Set
         self._seqnum_enabled = False
         self._ws_url = ''
 
