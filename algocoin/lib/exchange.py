@@ -1,8 +1,10 @@
 import json
+from abc import abstractmethod
 from .config import ExchangeConfig
 from .data_source import StreamingDataSource
 from .logging import LOG as log
 from .enums import TickType
+from .define import EXCHANGE_MARKET_DATA_ENDPOINT, EXCHANGE_ORDER_ENDPOINT
 
 
 class Exchange(StreamingDataSource):
@@ -11,7 +13,9 @@ class Exchange(StreamingDataSource):
         self._lastseqnum = -1
         self._missingseqnum = set()  # type: Set
         self._seqnum_enabled = False
-        self._ws_url = ''
+        self._md_url = EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type)
+        self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
+        self._manual = False
 
     def close(self):
         log.critical('Closing....')
@@ -44,8 +48,9 @@ class Exchange(StreamingDataSource):
             self.seqnum(res.sequence)
 
         if not self._running:
-            raise Exception('Not running!')
-            return
+            log.debug('Not running!')
+            # raise Exception('Not running!')
+            # return
 
         if res.type == TickType.MATCH:
             self._last = res
@@ -63,3 +68,7 @@ class Exchange(StreamingDataSource):
             pass
         else:
             self.callback(TickType.ERROR, res)
+
+    @abstractmethod
+    def accounts(self):
+        '''account info'''

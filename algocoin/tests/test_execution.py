@@ -25,7 +25,7 @@ class TestExecution:
         from ..lib.exchanges.gdax import GDAXExchange
         from ..lib.config import ExecutionConfig, ExchangeConfig
 
-        with patch('os.environ'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             exc = ExchangeConfig()
             ex = GDAXExchange(exc)
 
@@ -41,7 +41,7 @@ class TestExecution:
         from ..lib.config import ExecutionConfig, ExchangeConfig
         from ..lib.structs import TradeRequest
 
-        with patch('os.environ'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             exc = ExchangeConfig()
             ex = GDAXExchange(exc)
 

@@ -1,53 +1,74 @@
+import sys
+import select
+import queue
 from .lib.enums import Side, CurrencyType, OrderType, OrderSubType
 from .lib.structs import TradeRequest
 from .lib.logging import LOG as log
 
 
-def manual(exchange):
+def manual(exchange, inqueue, outqueue):
     log.info('')
     log.critical('Entering manual mode')
     print(commands())
     while True:
         try:
-            c = input('')
-            x = c.split(' ')
-            if x[0] == 'stats':
-                print('Stats:')
-                print(exchange._last)
-                print('')
-            elif x[0] == 'b':
-                print('Buy')
+
+            i, o, e = select.select([sys.stdin], [], [], 1)
+
+            if (i):
+                c = sys.stdin.readline().strip()
+                x = c.split(' ')
+                if x[0] == 'stats':
+                    print('Stats:')
+                    print(exchange._last)
+                elif x[0] == 'b':
+                    print('Buy')
+                    try:
+                        d = parse_buy(x, exchange._type)
+                        outqueue.put(('b', d))
+                        log.critical('manual buy!')
+                        # exchange.buy(d)
+                    except IndexError:
+                        print('Usage: b <volume> <price>'
+                              " <l,m : limit or market order>"
+                              " <p,f,a : post only,"
+                              " fill or kill, or all or nothing>")
+                        continue
+                elif x[0] == 's':
+                    print('Sell')
+                    try:
+                        d = parse_sell(x, exchange._type)
+                        outqueue.put(('s', d))
+                        log.critical('manual sell!')
+                        # exchange.sell(d)
+                    except IndexError:
+                        print('Usage: s <volume> <price>'
+                              " <l,m : limit or market order>"
+                              " <p,f,a : post only,"
+                              " fill or kill, or all or nothing>")
+                        continue
+                elif x[0] == 'q':
+                    outqueue.put(('q'))
+                    return 0
+                elif x[0] == 'c':
+                    outqueue.put(('c'))
+                elif x[0] == 'h':
+                    outqueue.put(('h'))
+            else:
                 try:
-                    d = parse_buy(x, exchange._type)
-                    exchange.buy(d)
-                except IndexError:
-                    print('Usage: b <volume> <price>'
-                          " <l,m : limit or market order>"
-                          " <p,f,a : post only,"
-                          " fill or kill, or all or nothing>")
+                    x = outqueue.get(block=False)
+                    if x:
+                        return 0
+                except queue.Empty:
                     continue
-            elif x[0] == 's':
-                print('Sell')
-                try:
-                    d = parse_sell(x, exchange._type)
-                    exchange.sell(d)
-                except IndexError:
-                    print('Usage: s <volume> <price>'
-                          " <l,m : limit or market order>"
-                          " <p,f,a : post only,"
-                          " fill or kill, or all or nothing>")
-                    continue
-            elif x[0] == 'q':
-                return 0
-            elif x[0] == 'c':
-                return 1
-            elif x[0] == 'h':
-                return 2
-        except:
-            print("")
-            print("Invalid command")
-            print("")
-            continue
+        except KeyboardInterrupt:
+            outqueue.put(('q'))
+            return 0
+        # except:
+        #     print("")
+        #     print("Invalid command")
+        #     print("")
+        #     continue
 
 
 def parse_buy(x, typ):
@@ -130,12 +151,3 @@ def commands():
     print("    Halt: h")
     print("        Halt automated trading")
     print("")
-
-
-def Manual(pipe, exchange):
-    while True:
-        try:
-            if pipe.recv():
-                pipe.send(manual(exchange))
-        except:
-            continue

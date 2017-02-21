@@ -40,7 +40,7 @@ class TestDefine:
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.SANDBOX) \
             == 'wss://ws-feed-public.sandbox.gdax.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.LIVE) \
-            == 'wss://ws-feed.exchange.coinbase.com'
+            == 'wss://ws-feed.gdax.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.LIVE) \

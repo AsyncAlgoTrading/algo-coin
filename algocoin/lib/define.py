@@ -11,7 +11,7 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): 'wss://ws.cex.io/ws/',
     (ExchangeType.GDAX, TradingType.SANDBOX): 'wss://ws-feed-public.sandbox.gdax.com',
-    (ExchangeType.GDAX, TradingType.LIVE): 'wss://ws-feed.exchange.coinbase.com',
+    (ExchangeType.GDAX, TradingType.LIVE): 'wss://ws-feed.gdax.com',
     (ExchangeType.GEMINI, TradingType.SANDBOX): '',
     (ExchangeType.GEMINI, TradingType.LIVE): 'wss://api.gemini.com/v1/marketdata/:symbol',
     (ExchangeType.HITBTC, TradingType.SANDBOX): 'wss://demo-api.hitbtc.com:8080',
@@ -57,4 +57,3 @@ ACCOUNTS = lambda name, typ: {
     (ExchangeType.POLONIEX, TradingType.SANDBOX): '',
     (ExchangeType.POLONIEX, TradingType.LIVE): '',
 }.get((name, typ), None)
-

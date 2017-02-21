@@ -24,7 +24,7 @@ class TestExchange:
         from ...lib.config import ExchangeConfig
         from ...lib.exchanges.gdax import GDAXExchange
 
-        with patch('os.environ'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
             e._running = True
@@ -35,7 +35,7 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import TickType
 
-        with patch('os.environ'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
             e._running = True
@@ -61,7 +61,7 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import TickType
 
-        with patch('os.environ'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
             e = GDAXExchange(ec)
             e._running = True

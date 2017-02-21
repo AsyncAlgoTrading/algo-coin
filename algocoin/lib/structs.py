@@ -51,3 +51,14 @@ class TradeResponse:
     order_type = OrderType, OrderType.MARKET
     order_sub_type = OrderSubType, OrderSubType.NONE
     success = bool
+
+
+@struct
+class Account:
+    currency = CurrencyType
+    balance = float
+    id = str
+
+    def __repr__(self):
+        return "<" + self.id + " - " + \
+              str(self.currency) + " - " + str(self.balance) + ">"

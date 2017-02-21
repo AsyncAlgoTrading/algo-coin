@@ -3,14 +3,15 @@ import json
 import os
 import pprint
 import websocket
-# import thread
+import threading
+import queue
 # import time
 from ..callback import Callback
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType
 from ..exchange import Exchange
 from ...manual import manual
-from ..structs import TradeRequest, TradeResponse, MarketData
+from ..structs import TradeRequest, TradeResponse, MarketData, Account
 from websocket import create_connection
 from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
 from ..logging import LOG as log, TXN as tlog, OTHER as olog
@@ -33,10 +34,18 @@ class GDAXExchange(Exchange):
             self._client = GDAX.AuthenticatedClient(self._key,
                                                     self._secret,
                                                     self._passphrase,
-                                                    api_url="https://api-public.sandbox.gdax.com"
+                                                    api_url=self._oe_url
                                                     )
 
-        self._ws_url = 'wss://ws-feed-public.sandbox.gdax.com'
+        self._accounts = []
+        val = self._client.getAccounts() if hasattr(self, '_client') else ['BACKTEST']
+        for jsn in val:
+            currency = strToCurrencyType(jsn.get('currency'))
+            balance = float(jsn.get('balance', 'inf'))
+            id = jsn.get('id', 'id')
+            account = Account(id=id, currency=currency, balance=balance)
+            self._accounts.append(account)
+
         self._subscription = json.dumps({"type": "subscribe",
                                          "product_id": "BTC-USD"})
         self._heartbeat = json.dumps({"type": "heartbeat",
@@ -50,8 +59,9 @@ class GDAXExchange(Exchange):
 
         while True:
             if not self._running:
+                # startup and redundancy
                 log.info('Starting....')
-                self.ws = create_connection(self._ws_url)
+                self.ws = create_connection(self._md_url)
                 log.info('Connected!')
 
                 self.ws.send(self._subscription)
@@ -61,6 +71,8 @@ class GDAXExchange(Exchange):
 
                 self._running = True
 
+                t, inqueue, outqueue = None, None, None
+
             log.info('')
             log.info('Starting algo trading')
             try:
@@ -68,21 +80,57 @@ class GDAXExchange(Exchange):
                     self.receive()
                     engine.tick()
 
+                    if self._manual and t and t.is_alive():
+                        try:
+                            x = outqueue.get(block=False)
+                            if x:
+                                if x[0] == 'c':
+                                    if not self._running:
+                                        log.warn('Continuing algo trading')
+                                    self._running = True
+                                    engine.continueTrading()
+                                elif x[0] == 'h':
+                                    if self._running:
+                                        log.warn('Halting algo trading')
+                                    self._running = False
+                                    engine.haltTrading()
+                                elif x[0] == 'q':
+                                    log.info('')
+                                    log.critical('Terminating program')
+                                    self.close()
+                                    inqueue.put(1)
+                                    t.join()
+                                    return
+                                elif x[0] == 'r':
+                                    log.critical('leaving manual')
+                                    inqueue.put(1)
+                                    t.join()
+                                    self._manual = False
+                                elif x[0] == 'b':
+                                    self.buy(x[1])
+                                elif x[0] == 's':
+                                    self.sell(x[1])
+                                else:
+                                    log.critical('manual override error')
+                        except queue.Empty:
+                            pass
+                    elif t:
+                        t.join(timeout=0.1)
+
             except KeyboardInterrupt:
-                x = manual(self)
-                if x:
-                    if x == 1:
-                        log.warn('')
-                        self._running = True
-                    elif x == 2:
-                        log.warn('')
-                        log.warn('Halting algo trading')
-                        self._running = False
+                # x = manual(self)
+                if not self._manual:
+                    self._manual = True
+                    inqueue = queue.Queue()
+                    outqueue = queue.Queue()
+                    t = threading.Thread(target=manual, args=(self, inqueue, outqueue,))
+                    t.start()
                 else:
-                    log.info('')
                     log.critical('Terminating program')
-                    self.close()
+                    inqueue.put(1)
+                    t.join()
                     return
+
             # except Exception as e:
             #     log.critical(e)
 
@@ -91,8 +139,9 @@ class GDAXExchange(Exchange):
 
             #     return
 
-    def accountInfo(self):
-        return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
+    def accounts(self):
+        # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
+        return self._accounts
 
     def sendOrder(self, callback: Callback):
         '''send order to exchange'''

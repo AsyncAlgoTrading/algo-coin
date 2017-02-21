@@ -6,7 +6,7 @@ from .lib.enums import TradingType
 from .execution import Execution
 from .risk import Risk
 from .lib.strategy import TradingStrategy
-from .lib.structs import TradeRequest
+from .lib.structs import TradeRequest, TradeResponse
 from .lib.utils import ex_type_to_ex
 from .lib.logging import LOG as log
 # import time
@@ -23,7 +23,7 @@ class TradingEngine(object):
 
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
 
-        log.info(self._ex.accountInfo())
+        log.info(self._ex.accounts())
 
         self._bt = Backtest(options.backtest_options) if self._backtest else None
 
@@ -47,6 +47,25 @@ class TradingEngine(object):
                 self._bt.registerCallback(Print())
 
         self._ticked = []  # type: List
+        self._trading = True  # type: bool
+
+    def exchange(self):
+        return self._ex
+
+    def backtest(self):
+        return self._bt
+
+    def risk(self):
+        return self._rk
+
+    def execution(self):
+        return self._ec
+
+    def haltTrading(self):
+        self._trading = False
+
+    def continueTrading(self):
+        self._trading = True
 
     def registerStrategy(self, strat: TradingStrategy):
         if self._live or self._sandbox:
@@ -92,25 +111,31 @@ class TradingEngine(object):
                    req: TradeRequest,
                    callback_failure=None):
 
-        resp = self._rk.requestBuy(req)
+        if not self._trading:
+            resp = TradeResponse(success=False)
 
-        if resp.risk_check:
-            res = self._ec.requestBuy(resp)
-            self._rk.update(res)
-            callback(res)
+        else:
+            resp = self._rk.requestBuy(req)
 
-        callback_failure(resp) if callback_failure else callback(resp)
+            if resp.risk_check:
+                resp = self._ec.requestBuy(resp)
+                self._rk.update(resp)
+
+        callback_failure(resp) if callback_failure and not resp.success else callback(resp)
 
     def requestSell(self,
                     callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
 
-        resp = self._rk.requestSell(req)
+        if not self._trading:
+            resp = TradeResponse(success=False)
 
-        if resp.risk_check:
-            res = self._ec.requestSell(resp)
-            self._rk.update(res)
-            callback(res)
+        else:
+            resp = self._rk.requestSell(req)
 
-        callback_failure(resp) if callback_failure else callback(resp)
+            if resp.risk_check:
+                resp = self._ec.requestSell(resp)
+                self._rk.update(resp)
+
+        callback_failure(resp) if callback_failure and not resp.success else callback(resp)
