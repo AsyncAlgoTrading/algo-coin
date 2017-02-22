@@ -16,59 +16,57 @@ def manual(exchange, inqueue, outqueue):
             i, o, e = select.select([sys.stdin], [], [], 1)
 
             if (i):
+
                 c = sys.stdin.readline().strip()
                 x = c.split(' ')
+
                 if x[0] == 'stats':
-                    print('Stats:')
-                    print(exchange._last)
+                    log.critical('stats: %s', exchange._last)
                 elif x[0] == 'b':
-                    print('Buy')
                     try:
                         d = parse_buy(x, exchange._type)
                         outqueue.put(('b', d))
                         log.critical('manual buy!')
                         # exchange.buy(d)
                     except IndexError:
-                        print('Usage: b <volume> <price>'
-                              " <l,m : limit or market order>"
-                              " <p,f,a : post only,"
-                              " fill or kill, or all or nothing>")
+                        log.critical("Usage: b <volume> <price>"
+                                     " <l,m : limit or market order>"
+                                     " <p,f,a : post only,"
+                                     " fill or kill, or all or nothing>")
                         continue
                 elif x[0] == 's':
-                    print('Sell')
                     try:
                         d = parse_sell(x, exchange._type)
                         outqueue.put(('s', d))
                         log.critical('manual sell!')
                         # exchange.sell(d)
                     except IndexError:
-                        print('Usage: s <volume> <price>'
-                              " <l,m : limit or market order>"
-                              " <p,f,a : post only,"
-                              " fill or kill, or all or nothing>")
+                        log.critical("Usage: s <volume> <price>"
+                                     " <l,m : limit or market order>"
+                                     " <p,f,a : post only,"
+                                     " fill or kill, or all or nothing>")
                         continue
                 elif x[0] == 'q':
                     outqueue.put(('q'))
-                    return 0
                 elif x[0] == 'c':
                     outqueue.put(('c'))
                 elif x[0] == 'h':
                     outqueue.put(('h'))
+                elif x[0] == 'r':
+                    outqueue.put(('r'))
             else:
                 try:
-                    x = outqueue.get(block=False)
+                    x = inqueue.get(block=False)
                     if x:
+                        log.critical('manual thread exiting')
                         return 0
                 except queue.Empty:
                     continue
         except KeyboardInterrupt:
             outqueue.put(('q'))
-            return 0
-        # except:
-        #     print("")
-        #     print("Invalid command")
-        #     print("")
-        #     continue
+        except:
+            log.critical("Invalid command")
+            continue
 
 
 def parse_buy(x, typ):
@@ -124,30 +122,25 @@ def symbol_to_order_sub_type(s):
 
 
 def commands():
-    print("")
-    print("")
-    print("")
-    print("    Stats: stats")
-    print("        Print current trade price, bid/ask, etc")
-    print("")
-    print("    Buy: b <volume> <price>"
-          "<l,m : limit or market order>"
-          "<p,f,a : post only,"
-          "fill or kill, or all or nothing>")
-    print("        Manually buy BTC")
-    print("")
-    print("    Sell: s <volume> <price>"
-          "<l,m : limit or market order>"
-          "<p,f,a : post only,"
-          "fill or kill, or all or nothing>")
-    print("        Manually sell BTC")
-    print("")
-    print("    Quit: q")
-    print("        Quit the application")
-    print("")
-    print("    Continue: c")
-    print("        Continue automated trading")
-    print("")
-    print("    Halt: h")
-    print("        Halt automated trading")
-    print("")
+    return '''
+    Stats: stats
+        Print current trade price, bid/ask, etc
+
+    Buy: b <volume> <price> <l,m : limit or market order> <p,f,a : post only, fill or kill, or all or nothing>
+        Manually buy BTC
+
+    Sell: s <volume> <price>  <l,m : limit or market order> <p,f,a : post only, fill or kill, or all or nothing>
+        Manually sell BTC
+
+    Quit: q
+        Quit the application
+
+    Continue: c
+        Continue automated trading
+
+    Halt: h
+        Halt automated trading
+
+    Return: r
+        Exit manual mode
+    '''

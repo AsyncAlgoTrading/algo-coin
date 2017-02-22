@@ -48,9 +48,7 @@ class Exchange(StreamingDataSource):
             self.seqnum(res.sequence)
 
         if not self._running:
-            log.debug('Not running!')
-            # raise Exception('Not running!')
-            # return
+            pass
 
         if res.type == TickType.MATCH:
             self._last = res

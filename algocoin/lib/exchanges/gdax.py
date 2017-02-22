@@ -58,7 +58,7 @@ class GDAXExchange(Exchange):
         # websocket.enableTrace(True)
 
         while True:
-            if not self._running:
+            if not self._running and not self._manual:
                 # startup and redundancy
                 log.info('Starting....')
                 self.ws = create_connection(self._md_url)
@@ -73,13 +73,12 @@ class GDAXExchange(Exchange):
 
                 t, inqueue, outqueue = None, None, None
 
-            log.info('')
-            log.info('Starting algo trading')
+                log.info('')
+                log.info('Starting algo trading')
             try:
                 while True:
                     self.receive()
                     engine.tick()
-
                     if self._manual and t and t.is_alive():
                         try:
                             x = outqueue.get(block=False)
@@ -87,25 +86,38 @@ class GDAXExchange(Exchange):
                                 if x[0] == 'c':
                                     if not self._running:
                                         log.warn('Continuing algo trading')
+
                                     self._running = True
                                     engine.continueTrading()
+
                                 elif x[0] == 'h':
                                     if self._running:
                                         log.warn('Halting algo trading')
+
                                     self._running = False
                                     engine.haltTrading()
+
                                 elif x[0] == 'q':
-                                    log.info('')
                                     log.critical('Terminating program')
+
                                     self.close()
                                     inqueue.put(1)
+
+                                    self._manual = False
+
                                     t.join()
+                                    t = None
                                     return
+
                                 elif x[0] == 'r':
                                     log.critical('leaving manual')
+
                                     inqueue.put(1)
-                                    t.join()
+
                                     self._manual = False
+
+                                    t.join()
+                                    t = None
                                 elif x[0] == 'b':
                                     self.buy(x[1])
                                 elif x[0] == 's':
@@ -114,8 +126,13 @@ class GDAXExchange(Exchange):
                                     log.critical('manual override error')
                         except queue.Empty:
                             pass
-                    elif t:
-                        t.join(timeout=0.1)
+
+                    elif self._manual and t:
+                        log.critical('leaving manual')
+                        self._manual = False
+
+                        t.join()
+                        t = None
 
             except KeyboardInterrupt:
                 # x = manual(self)
