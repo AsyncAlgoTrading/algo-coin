@@ -43,6 +43,7 @@ class Risk(object):
     def request(self, req: TradeRequest) -> TradeRequest:
         total = req.volume * req.price
         max = self.max_risk/100.0 * self.total_funds
+
         if (total + self.outstanding) <= max:
             # room for full volume
             return self._constructResp(req.data, req.side, req.volume, req.price, True)

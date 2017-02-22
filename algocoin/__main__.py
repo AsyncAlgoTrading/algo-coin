@@ -22,11 +22,17 @@ def parse_command_line(argv: list):
         log.critical("WARNING: Live trading. money will be lost ;^)")
         config.type = TradingType.LIVE
         config.exchange_options.trading_type = TradingType.LIVE
+        config.risk_options.trading_type = TradingType.LIVE
+        config.execution_options.trading_type = TradingType.LIVE
+
     elif 'sandbox' in argv:
         # Trade against sandbox
         log.info("Sandbox trading")
         config.type = TradingType.SANDBOX
         config.exchange_options.trading_type = TradingType.SANDBOX
+        config.risk_options.trading_type = TradingType.SANDBOX
+        config.execution_options.trading_type = TradingType.SANDBOX
+
     elif 'backtest' in argv:
         # Backtest against trade data
         log.info("Backtesting")
@@ -36,6 +42,8 @@ def parse_command_line(argv: list):
         # TODO specify exchange data as input
         config.backtest_options.file = "./data/exchange/krakenUSD.csv"
         config.exchange_options.trading_type = TradingType.BACKTEST
+        config.risk_options.trading_type = TradingType.BACKTEST
+        config.execution_options.trading_type = TradingType.BACKTEST
 
     if 'verbose' in argv:
         # Print/log extra info

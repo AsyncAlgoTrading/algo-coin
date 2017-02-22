@@ -1,9 +1,7 @@
-# import json
 from abc import ABCMeta, abstractmethod
 from .callback import Callback
 from .structs import TradeRequest, TradeResponse
 from .enums import TickType
-# from structs import MarketData
 
 
 class DataSource(metaclass=ABCMeta):

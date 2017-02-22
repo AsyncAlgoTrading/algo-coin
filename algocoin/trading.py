@@ -2,7 +2,7 @@ from typing import Callable
 from .backtest import Backtest
 from .lib.callback import Callback, Print
 from .lib.config import TradingEngineConfig
-from .lib.enums import TradingType
+from .lib.enums import TradingType, Side
 from .execution import Execution
 from .risk import Risk
 from .lib.strategy import TradingStrategy
@@ -21,9 +21,10 @@ class TradingEngine(object):
 
         self._strats = []  # type: List[TradingStrategy]
 
-        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
+        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
 
-        log.info(self._ex.accounts())
+        if self._live or self._sandbox:
+            log.info(self._ex.accounts())
 
         self._bt = Backtest(options.backtest_options) if self._backtest else None
 
@@ -84,9 +85,11 @@ class TradingEngine(object):
 
     def run(self):
         if self._live or self._sandbox:
+            # run on exchange
             self._ex.run(self)
 
         elif self._backtest:
+            # let backtester run
             self._bt.run(self)
 
         else:
@@ -94,10 +97,10 @@ class TradingEngine(object):
 
     def tick(self):
         for strat in self._strats:
+            # only if strat ticked
             if strat.ticked():
                 self._ticked.append(strat)
                 strat.reset()
-
         self.ticked()
 
     def ticked(self):
@@ -106,36 +109,48 @@ class TradingEngine(object):
             # strat = self._ticked.pop()
             # print('Strat ticked', strat, time.time())
 
-    def requestBuy(self,
-                   callback: Callable,
-                   req: TradeRequest,
-                   callback_failure=None):
-
+    def _request(self,
+                 side: Side,
+                 callback: Callable,
+                 req: TradeRequest,
+                 callback_failure=None,
+                 strat=None):
         if not self._trading:
+            # not allowed to trade right now
             resp = TradeResponse(success=False)
 
         else:
-            resp = self._rk.requestBuy(req)
+            # get risk report
+            resp = self._rk.request(req)
 
             if resp.risk_check:
-                resp = self._ec.requestBuy(resp)
+                # if risk passes, let execution execute
+                resp = self._ec.request(resp)
+
+                # let risk update according to execution details
                 self._rk.update(resp)
 
+        if self._backtest and strat:
+            # register the initial request
+            strat.registerDesire(req.data.time, req.side, req.price)
+
+            # adjust response with slippage and transaction cost modeling
+            resp = strat.transactionCost(strat.slippage(resp))
+
+            # register the response
+            strat.registerAction(resp.data.time, resp.side, resp.price)
         callback_failure(resp) if callback_failure and not resp.success else callback(resp)
+
+    def requestBuy(self,
+                   callback: Callable,
+                   req: TradeRequest,
+                   callback_failure=None,
+                   strat=None):
+        self._request(Side.BUY, callback, req, callback_failure, strat)
 
     def requestSell(self,
                     callback: Callable,
                     req: TradeRequest,
-                    callback_failure=None):
-
-        if not self._trading:
-            resp = TradeResponse(success=False)
-
-        else:
-            resp = self._rk.requestSell(req)
-
-            if resp.risk_check:
-                resp = self._ec.requestSell(resp)
-                self._rk.update(resp)
-
-        callback_failure(resp) if callback_failure and not resp.success else callback(resp)
+                    callback_failure=None,
+                    strat=None):
+        self._request(Side.SELL, callback, req, callback_failure, strat)

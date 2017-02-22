@@ -60,7 +60,7 @@ class TestCustomStragies:
         s._te.requestBuy = MagicMock()
         s._te.requestSell = MagicMock()
 
-        def ret(callback, req, callback_failure):
+        def ret(callback, req, callback_failure=None, strat=None):
             callback(req)
 
         s._te.requestBuy.side_effect = ret

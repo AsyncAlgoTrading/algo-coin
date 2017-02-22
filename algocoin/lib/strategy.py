@@ -1,8 +1,7 @@
 from typing import Callable
 from abc import ABCMeta, abstractmethod
-from .callback import Callback, NullCallback
-from .structs import MarketData, TradeRequest
-from .enums import Side
+from .callback import Callback
+from .structs import MarketData, TradeRequest, TradeResponse
 
 
 def ticks(f):
@@ -16,6 +15,7 @@ class Strategy(metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         self._tick = False
         self._actions = []
+        self._requests = []
 
     def ticked(self):
         return self._tick
@@ -42,64 +42,28 @@ class Strategy(metaclass=ABCMeta):
         '''add action to log'''
         self._actions.append((time, actionType, data))
 
+    def registerDesire(self, time, actionType, data):
+        '''add action to log'''
+        self._requests.append((time, actionType, data))
+
 
 class TradingStrategy(Strategy, Callback):
     def requestBuy(self,
                    callback: Callable,
                    req: TradeRequest,
                    callback_failure=None):
-        self._te.requestBuy(callback, req, callback_failure)
+        self._te.requestBuy(callback, req, callback_failure, self)
 
     def requestSell(self,
                     callback: Callable,
                     req: TradeRequest,
                     callback_failure=None):
-        self._te.requestSell(callback, req, callback_failure)
+        self._te.requestSell(callback, req, callback_failure, self)
 
-
-class NullTradingStrategy(Strategy, NullCallback):
-    def requestBuy(self,
-                   callback: Callable,
-                   req: TradeRequest,
-                   callback_failure=None):
-        # let them do whatever
-        self.registerAction(req.data.time, Side.BUY, req.price)
-        callback(req)
-
-    def requestSell(self,
-                    callback: Callable,
-                    req: TradeRequest,
-                    callback_failure=None):
-        # let them do whatever
-        self.registerAction(req.data.time, Side.SELL, req.price)
-        callback(req)
-
-
-class BacktestTradingStrategy(NullTradingStrategy):
-    # TODO data should be txn req not dict
-    def slippage(self, data):
+    def slippage(self, data: TradeResponse):
         '''slippage model. default is pass through'''
         return data
 
-    # TODO data should be txn req not dict
-    def transactionCost(self, data):
+    def transactionCost(self, data: TradeResponse):
         '''txns cost model. default is pass through'''
         return data
-
-    def requestBuy(self,
-                   callback: Callable,
-                   req: TradeRequest,
-                   callback_failure=None):
-        # let them do whatever
-        data = self.transactionCost(self.slippage(req))
-        self.registerAction(data.time, Side.BUY, data.price)
-        callback(data)
-
-    def requestSell(self,
-                    callback: Callable,
-                    req: TradeRequest,
-                    callback_failure=None):
-        # let them do whatever
-        data = self.transactionCost(self.slippage(req))
-        self.registerAction(data.time, Side.SELL, data.price)
-        callback(data)
