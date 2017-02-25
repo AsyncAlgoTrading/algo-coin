@@ -77,7 +77,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought == 0.0:  # watch for floating point error
             req = TradeRequest(data=data,
                                side=Side.BUY,
-                               volume=data.volume,
+                               volume=1.0,
                                currency=data.currency,
                                price=data.price)
             self.requestBuy(self.onBuy, req)
@@ -87,7 +87,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(data=data,
                                side=Side.SELL,
-                               volume=data.volume,
+                               volume=1.0,
                                currency=data.currency,
                                price=data.price)
             self.requestSell(self.onSell, req)
