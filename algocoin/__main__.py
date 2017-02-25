@@ -40,7 +40,21 @@ def parse_command_line(argv: list):
         config.backtest_options = BacktestConfig()
 
         # TODO specify exchange data as input
-        config.backtest_options.file = "./data/exchange/krakenUSD.csv"
+        if 'bitfinex' in argv:
+            config.backtest_options.file = "./data/exchange/bitfinexUSD.csv"
+        elif 'bitstamp' in argv:
+            config.backtest_options.file = "./data/exchange/bitstampUSD.csv"
+        elif 'itbit' in argv:
+            config.backtest_options.file = "./data/exchange/itbitUSD.csv"
+        elif 'kraken' in argv:
+            config.backtest_options.file = "./data/exchange/itbitUSD.csv"
+        elif 'hitbtc' in argv:
+            config.backtest_options.file = "./data/exchange/hitbtcUSD.csv"
+        elif 'lake' in argv:
+            config.backtest_options.file = "./data/exchange/lakeUSD.csv"
+        else:
+            config.backtest_options.file = "./data/exchange/coinbaseUSD.csv"
+
         config.exchange_options.trading_type = TradingType.BACKTEST
         config.risk_options.trading_type = TradingType.BACKTEST
         config.execution_options.trading_type = TradingType.BACKTEST
