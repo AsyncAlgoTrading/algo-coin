@@ -32,20 +32,21 @@ class SMACrossesStrategy(TradingStrategy):
 
         if self._intitialvalue is None:
             date = res.data.time
-            self._intitialvalue = (date, res.price)
+            self._intitialvalue = (date, res.volume*res.price)
             self._portfolio_value.append(self._intitialvalue)
 
-        self.bought = res.price
-        slog.info('d->g:bought at %d' % self.bought)
+        self.bought = res.volume*res.price
+        slog.info('d->g:bought %d @ %d for %d' % (res.volume, res.price, self.bought))
 
     def onSell(self, res: TradeResponse):
         if not res.success:
             slog.info('order failure: %s' % res)
             return
 
-        profit = res.price - self.bought
+        sold = res.volume*res.price
+        profit = sold - self.bought
         self.profits += profit
-        slog.info('g->d:sold at %d - %d - %d' % (res.price, profit, self.profits))
+        slog.info('g->d:sold at %d @ %d for %d - %d - %d' % (res.volume, res.price, sold, profit, self.profits))
         self.bought = 0.0
 
         date = res.data.time
@@ -85,7 +86,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought == 0.0:  # watch for floating point error
             req = TradeRequest(data=data,
                                side=Side.BUY,
-                               volume=data.volume,
+                               volume=1.0,
                                currency=data.currency,
                                price=data.price)
             slog.critical("requesting buy : %s", req)
@@ -96,7 +97,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(data=data,
                                side=Side.SELL,
-                               volume=data.volume,
+                               volume=1.0,
                                currency=data.currency,
                                price=data.price)
             slog.critical("requesting sell : %s", req)
