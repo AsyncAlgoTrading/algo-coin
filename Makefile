@@ -4,6 +4,9 @@ run: clean  ## clean and make target, run target
 sandbox: clean  ## clean and make target, run target
 	python3 -m algocoin sandbox $(VERBOSE)
 
+fetch_data: clean ## fetch data
+	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
+
 backtest: clean  ## clean and make target, run target
 	python3 -m algocoin backtest $(VERBOSE)
 
