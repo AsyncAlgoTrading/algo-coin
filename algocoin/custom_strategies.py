@@ -20,6 +20,7 @@ class SMACrossesStrategy(TradingStrategy):
         self.state = ''
 
         self.bought = 0.0
+        self.bought_qty = 0.0
         self.profits = 0.0
 
         self._intitialvalue = None
@@ -27,7 +28,7 @@ class SMACrossesStrategy(TradingStrategy):
 
     def onBuy(self, res: TradeResponse):
         if not res.success:
-            slog.info('order failure: %s' % res)
+            slog.critical('order failure: %s' % res)
             return
 
         if self._intitialvalue is None:
@@ -36,7 +37,8 @@ class SMACrossesStrategy(TradingStrategy):
             self._portfolio_value.append(self._intitialvalue)
 
         self.bought = res.volume*res.price
-        slog.info('d->g:bought %d @ %d for %d' % (res.volume, res.price, self.bought))
+        self.bought_qty = res.volume
+        slog.critical('d->g:bought %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
 
     def onSell(self, res: TradeResponse):
         if not res.success:
@@ -46,8 +48,9 @@ class SMACrossesStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.info('g->d:sold at %d @ %d for %d - %d - %d' % (res.volume, res.price, sold, profit, self.profits))
+        slog.critical('g->d:sold at %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
         self.bought = 0.0
+        self.bought_qty = 0.0
 
         date = res.data.time
         self._portfolio_value.append((
@@ -86,7 +89,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought == 0.0:  # watch for floating point error
             req = TradeRequest(data=data,
                                side=Side.BUY,
-                               volume=1.0,
+                               volume=min(1.0, data.volume),
                                currency=data.currency,
                                price=data.price)
             slog.critical("requesting buy : %s", req)
@@ -97,7 +100,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(data=data,
                                side=Side.SELL,
-                               volume=1.0,
+                               volume=self.bought_qty,
                                currency=data.currency,
                                price=data.price)
             slog.critical("requesting sell : %s", req)
