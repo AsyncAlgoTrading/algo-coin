@@ -24,12 +24,12 @@ class Risk(object):
                        side: Side,
                        vol: float,
                        price: float,
-                       success: bool) -> TradeRequest:
-        resp = TradeRequest(data=data, side=side, volume=vol, price=price, risk_check=success)
+                       success: bool,
+                       reason: str) -> TradeRequest:
+        resp = TradeRequest(data=data, side=side, volume=vol, price=price, risk_check=success, risk_reason=reason)
 
         if success:
-            # don't care about side for now
-            self.outstanding += abs(vol * price)
+            self.outstanding += abs(vol * price) * (1 if side == Side.BUY else -1)
 
             self.max_running_outstanding = max(self.max_running_outstanding,
                                                self.outstanding)
@@ -46,15 +46,15 @@ class Risk(object):
 
         if (total + self.outstanding) <= max:
             # room for full volume
-            return self._constructResp(req.data, req.side, req.volume, req.price, True)
+            return self._constructResp(req.data, req.side, req.volume, req.price, True, '')
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
-            return self._constructResp(req.data, req.side, volume, req.price, True)
+            return self._constructResp(req.data, req.side, volume, req.price, True, '')
 
         # no room for volume
-        return self._constructResp(req.data, req.side, req.volume, req.price, False)
+        return self._constructResp(req.data, req.side, req.volume, req.price, False, 'test')
 
     def requestBuy(self, req: TradeRequest):
         '''precheck for risk compliance'''

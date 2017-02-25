@@ -1,4 +1,5 @@
 from mock import patch
+from datetime import datetime
 
 
 class TestExecution:
@@ -36,10 +37,10 @@ class TestExecution:
     def test_request(self):
         from ..execution import Execution
         from ..lib.exchanges.gdax import GDAXExchange
-        from ..lib.enums import Side, ExchangeType, CurrencyType, \
-            OrderType, OrderSubType
+        from ..lib.enums import Side, ExchangeType, \
+            OrderType, OrderSubType, TickType
         from ..lib.config import ExecutionConfig, ExchangeConfig
-        from ..lib.structs import TradeRequest
+        from ..lib.structs import TradeRequest, MarketData
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             exc = ExchangeConfig()
@@ -48,12 +49,14 @@ class TestExecution:
             ec = ExecutionConfig()
             e = Execution(ec, ex)
 
-            req = TradeRequest(side=Side.BUY,
+            data = MarketData(time=datetime.now(),
+                              volume=1.0,
+                              price=1.0,
+                              type=TickType.MATCH)
+            req = TradeRequest(data=data,
+                               side=Side.BUY,
                                volume=1.0,
                                price=1.0,
-                               exchange=ExchangeType.GDAX,
-                               currency=CurrencyType.BTC,
-                               order_type=OrderType.LIMIT,
-                               order_sub_type=OrderSubType.NONE)
+                               exchange=ExchangeType.GDAX)
 
             resp = e.request(req)

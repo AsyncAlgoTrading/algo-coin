@@ -23,14 +23,19 @@ def create_pair(key, typ, default=None):
 
 def config(cls):
     new_cls_dict = {}
+    vars = []
     for k, v in cls.__dict__.items():
         if isinstance(v, type):
             v = create_pair(k, v)
+            vars.append(k)
         elif isinstance(v, tuple) and \
                 isinstance(v[0], type) and \
                 isinstance(v[1], v[0]):
             v = create_pair(k, v[0], v[1])
+            vars.append(k)
         new_cls_dict[k] = v
+    new_cls_dict['__repr__'] = __repr__
+    new_cls_dict['_vars'] = vars
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
@@ -41,13 +46,13 @@ def __init__(self, **kwargs):
         else:
             setattr(self, item, kwargs.get(item))
 
+        getattr(self, item)  # make sure all are set.
+
 
 def __repr__(self):
     # log.warn(str(self.__class__))
     return '<' + ', '.join([x + '-' +
-                           str(getattr(self, x))
-                           if hasattr(self, '__' + x)
-                           else x + '-' + 'UNSET'
+                           str(getattr(self, x, "UNSET"))
                            for x in self._vars]) + '>'
 
 

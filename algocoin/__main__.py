@@ -41,23 +41,34 @@ def parse_command_line(argv: list):
 
         # TODO specify exchange data as input
         if 'bitfinex' in argv:
+            log.critical('Backtesting against bitfinex data')
             config.backtest_options.file = "./data/exchange/bitfinexUSD.csv"
         elif 'bitstamp' in argv:
+            log.critical('Backtesting against bitstamp data')
             config.backtest_options.file = "./data/exchange/bitstampUSD.csv"
         elif 'itbit' in argv:
+            log.critical('Backtesting against itbit data')
             config.backtest_options.file = "./data/exchange/itbitUSD.csv"
         elif 'kraken' in argv:
-            config.backtest_options.file = "./data/exchange/itbitUSD.csv"
+            log.critical('Backtesting against kraken data')
+            config.backtest_options.file = "./data/exchange/krakenUSD.csv"
         elif 'hitbtc' in argv:
+            log.critical('Backtesting against hitbtc  data')
             config.backtest_options.file = "./data/exchange/hitbtcUSD.csv"
         elif 'lake' in argv:
+            log.critical('Backtesting against lake data')
             config.backtest_options.file = "./data/exchange/lakeUSD.csv"
         else:
+            log.critical('Backtesting against coinbase data')
             config.backtest_options.file = "./data/exchange/coinbaseUSD.csv"
 
         config.exchange_options.trading_type = TradingType.BACKTEST
         config.risk_options.trading_type = TradingType.BACKTEST
         config.execution_options.trading_type = TradingType.BACKTEST
+
+        config.risk_options.total_funds = 10000000000.0
+
+        log.critical("Config : %s", config)
 
     if 'verbose' in argv:
         # Print/log extra info

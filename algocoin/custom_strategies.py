@@ -26,6 +26,10 @@ class SMACrossesStrategy(TradingStrategy):
         self._portfolio_value = []
 
     def onBuy(self, res: TradeResponse):
+        if not res.success:
+            slog.info('order failure: %s' % res)
+            return
+
         if self._intitialvalue is None:
             date = res.data.time
             self._intitialvalue = (date, res.price)
@@ -35,6 +39,10 @@ class SMACrossesStrategy(TradingStrategy):
         slog.info('d->g:bought at %d' % self.bought)
 
     def onSell(self, res: TradeResponse):
+        if not res.success:
+            slog.info('order failure: %s' % res)
+            return
+
         profit = res.price - self.bought
         self.profits += profit
         slog.info('g->d:sold at %d - %d - %d' % (res.price, profit, self.profits))
@@ -77,9 +85,10 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought == 0.0:  # watch for floating point error
             req = TradeRequest(data=data,
                                side=Side.BUY,
-                               volume=1.0,
+                               volume=data.volume,
                                currency=data.currency,
                                price=data.price)
+            slog.critical("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
             return True
 
@@ -87,9 +96,10 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(data=data,
                                side=Side.SELL,
-                               volume=1.0,
+                               volume=data.volume,
                                currency=data.currency,
                                price=data.price)
+            slog.critical("requesting sell : %s", req)
             self.requestSell(self.onSell, req)
             return True
 
@@ -150,9 +160,9 @@ class SMACrossesStrategy(TradingStrategy):
         pass
 
     def slippage(self, data):
-        slog.critical(data)
+        # slog.critical(data)
         return data
 
     def transactionCost(self, data):
-        slog.critical(data)
+        # slog.critical(data)
         return data

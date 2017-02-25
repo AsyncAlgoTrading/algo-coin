@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class TestStructs:
     def setup(self):
         pass
@@ -19,13 +22,25 @@ class TestStructs:
 
     def test_MarketData(self):
         from ..lib.structs import MarketData
-        m = MarketData()
+        from ..lib.enums import TickType
+        m = MarketData(time=datetime.now(),
+                       volume=1.0,
+                       price=1.0,
+                       type=TickType.MATCH)
         # TODO no fields yet
         assert m
 
     def test_TradeRequest(self):
-        from ..lib.structs import TradeRequest
-        t = TradeRequest()
+        from ..lib.structs import TradeRequest, MarketData
+        from ..lib.enums import TickType, Side
+        data = MarketData(time=datetime.now(),
+                          volume=1.0,
+                          price=1.0,
+                          type=TickType.MATCH)
+        t = TradeRequest(data=data,
+                         side=Side.BUY,
+                         volume=1.0,
+                         price=1.0)
         assert t
         # side = Side
         # volume = float
@@ -36,8 +51,22 @@ class TestStructs:
         # order_sub_type = OrderSubType
 
     def test_TradeResponse(self):
-        from ..lib.structs import TradeResponse
-        t = TradeResponse()
+        from ..lib.structs import TradeRequest, TradeResponse, MarketData
+        from ..lib.enums import TickType, Side
+        data = MarketData(time=datetime.now(),
+                          volume=1.0,
+                          price=1.0,
+                          type=TickType.MATCH)
+        req = TradeRequest(data=data,
+                           side=Side.BUY,
+                           volume=1.0,
+                           price=1.0)
+        t = TradeResponse(data=data,
+                          request=req,
+                          side=Side.BUY,
+                          volume=0.0,
+                          price=0.0,
+                          success=False)
         assert t
         # side = Side
         # volume = float

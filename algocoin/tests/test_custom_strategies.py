@@ -51,7 +51,7 @@ class TestCustomStragies:
     def test_sma_buy(self):
         from ..custom_strategies import SMACrossesStrategy
         from ..lib.enums import TickType
-        from ..lib.structs import MarketData
+        from ..lib.structs import MarketData, TradeResponse
         from ..lib.utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
@@ -61,7 +61,13 @@ class TestCustomStragies:
         s._te.requestSell = MagicMock()
 
         def ret(callback, req, callback_failure=None, strat=None):
-            callback(req)
+            res = TradeResponse(data=req.data,
+                                request=req,
+                                side=req.side,
+                                price=req.price,
+                                volume=req.volume,
+                                success=True)
+            callback(res)
 
         s._te.requestBuy.side_effect = ret
         s._te.requestSell.side_effect = ret

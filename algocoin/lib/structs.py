@@ -32,24 +32,24 @@ class TradeRequest:
     price = float
     currency = CurrencyType, CurrencyType.BTC
 
-    order_type = OrderType
-    order_sub_type = OrderSubType
+    order_type = OrderType, OrderType.MARKET
+    order_sub_type = OrderSubType, OrderSubType.NONE
     # exchange = ExchangeType
 
-    risk_check = bool
+    risk_check = bool, False
+    risk_reason = str, ''
 
 
 @struct
 class TradeResponse:
     data = MarketData
+    request = TradeRequest
     side = Side
 
     volume = float
     price = float
     currency = CurrencyType, CurrencyType.BTC
 
-    order_type = OrderType, OrderType.MARKET
-    order_sub_type = OrderSubType, OrderSubType.NONE
     success = bool
 
 

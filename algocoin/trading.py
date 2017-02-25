@@ -117,7 +117,13 @@ class TradingEngine(object):
                  strat=None):
         if not self._trading:
             # not allowed to trade right now
-            resp = TradeResponse(success=False)
+            resp = TradeResponse(data=req.data,
+                                 request=req,
+                                 side=req.side,
+                                 volume=0.0,
+                                 price=0.0,
+                                 currency=req.currency,
+                                 success=False)
 
         else:
             # get risk report
@@ -129,6 +135,14 @@ class TradingEngine(object):
 
                 # let risk update according to execution details
                 self._rk.update(resp)
+            else:
+                resp = TradeResponse(data=resp.data,
+                                     request=resp,
+                                     side=resp.side,
+                                     volume=0.0,
+                                     price=0.0,
+                                     currency=req.currency,
+                                     success=False)
 
         if self._backtest and strat:
             # register the initial request
@@ -139,6 +153,7 @@ class TradingEngine(object):
 
             # register the response
             strat.registerAction(resp.data.time, resp.side, resp.price)
+
         callback_failure(resp) if callback_failure and not resp.success else callback(resp)
 
     def requestBuy(self,
