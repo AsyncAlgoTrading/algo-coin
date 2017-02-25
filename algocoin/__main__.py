@@ -53,7 +53,7 @@ def parse_command_line(argv: list):
             log.critical('Backtesting against kraken data')
             config.backtest_options.file = "./data/exchange/krakenUSD.csv"
         elif 'hitbtc' in argv:
-            log.critical('Backtesting against hitbtc  data')
+            log.critical('Backtesting against hitbtc data')
             config.backtest_options.file = "./data/exchange/hitbtcUSD.csv"
         elif 'lake' in argv:
             log.critical('Backtesting against lake data')
