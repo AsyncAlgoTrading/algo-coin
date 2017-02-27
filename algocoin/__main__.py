@@ -66,7 +66,7 @@ def parse_command_line(argv: list):
         config.risk_options.trading_type = TradingType.BACKTEST
         config.execution_options.trading_type = TradingType.BACKTEST
 
-        config.risk_options.total_funds = 10000000000.0
+        config.risk_options.total_funds = 20000.0
 
         log.critical("Config : %s", config)
 
@@ -104,7 +104,7 @@ def main(argv: list):
     te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
-    ts = SMACrossesStrategy(10, 5)
+    ts = SMACrossesStrategy(100, 50)
 
     # Register the strategy with the Trading engine
     te.registerStrategy(ts)

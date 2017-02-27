@@ -1,7 +1,7 @@
 from .lib.strategy import ticks, \
                           TradingStrategy
 from .lib.structs import MarketData, TradeRequest, TradeResponse
-from .lib.enums   import Side
+from .lib.enums import Side
 from .lib.logging import STRAT as slog, ERROR as elog
 
 
@@ -38,7 +38,7 @@ class SMACrossesStrategy(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
+        slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %s' % (res.volume, res.price, self.bought, res))
 
     def onSell(self, res: TradeResponse):
         if not res.success:
@@ -48,7 +48,7 @@ class SMACrossesStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold at %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
+        slog.critical('g->d:sold at %.2f @ %.2f for %.2f - %.2f - %.2f ---- %s' % (res.volume, res.price, sold, profit, self.profits, res))
         self.bought = 0.0
         self.bought_qty = 0.0
 
@@ -163,10 +163,26 @@ class SMACrossesStrategy(TradingStrategy):
     def onReceived(self, data):
         pass
 
-    def slippage(self, data):
-        # slog.critical(data)
-        return data
+    def slippage(self, resp: TradeResponse) -> TradeResponse:
+        slippage = resp.price * .0005  # .05% price impact
+        if resp.side == Side.BUY:
+            # price moves against (up)
+            resp.slippage = slippage
+            resp.price += slippage
+        else:
+            # price moves against (down)
+            resp.slippage = -slippage
+            resp.price -= slippage
+        return resp
 
-    def transactionCost(self, data):
-        # slog.critical(data)
-        return data
+    def transactionCost(self, resp: TradeResponse) -> TradeResponse:
+        txncost = resp.price * resp.volume * .0025  # gdax is 0.0025 max fee
+        if resp.side == Side.BUY:
+            # price moves against (up)
+            resp.transaction_cost = txncost
+            resp.price += txncost
+        else:
+            # price moves against (down)
+            resp.transaction_cost = -txncost
+            resp.price -= txncost
+        return resp

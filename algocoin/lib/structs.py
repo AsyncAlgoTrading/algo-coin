@@ -50,6 +50,9 @@ class TradeResponse:
     price = float
     currency = CurrencyType, CurrencyType.BTC
 
+    slippage = float, 0.0
+    transaction_cost = float, 0.0
+
     success = bool
 
 
