@@ -7,8 +7,11 @@ sandbox: clean  ## clean and make target, run target
 fetch_data: clean ## fetch data
 	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
 
-backtest: clean  ## clean and make target, run target
+backtest: clean  ## clean and make target, run backtest
 	python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)
+
+backtest_inline: clean ## clean and make target, run backtest, plot in terminal
+	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"
 
 tests: clean ## Clean and Make unit tests
 	python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`ls ./algocoin/*.py ./algocoin/lib/exchanges/*.py ./algocoin/lib/*.py | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
@@ -26,7 +29,7 @@ annotate_l: ## MyPy type annotation check - count only
 	mypy -s algocoin | wc -l 
 
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ .coverage cover htmlcov
+	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ .coverage cover htmlcov logs
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help

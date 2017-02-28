@@ -1,6 +1,7 @@
 from .lib.config import RiskConfig
 from .lib.structs import TradeRequest, TradeResponse, MarketData
 from .lib.enums import Side
+from .lib.logging import RISK as rlog
 
 
 class Risk(object):
@@ -46,14 +47,17 @@ class Risk(object):
 
         if (total + self.outstanding) <= max:
             # room for full volume
+            rlog.info('Order: %s' % req)
             return self._constructResp(req.data, req.side, req.volume, req.price, True, '')
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
+            rlog.info('Partial Order: %s' % req)
             return self._constructResp(req.data, req.side, volume, req.price, True, '')
 
         # no room for volume
+        rlog.info('Order rejected: %s' % req)
         return self._constructResp(req.data, req.side, req.volume, req.price, False, 'test')
 
     def requestBuy(self, req: TradeRequest):

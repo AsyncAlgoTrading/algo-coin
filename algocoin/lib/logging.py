@@ -7,7 +7,7 @@ if not os.path.isdir('./logs'):
 
 LOGGING_CONFIG = {
     'version': 1,  # required
-    'disable_existing_loggers': True,  # this config overrides all other loggers
+    'disable_existing_loggers': False,
     'formatters': {
         'simple': {
             'format': '%(asctime)s %(levelname)s -- %(message)s'
@@ -38,14 +38,7 @@ LOGGING_CONFIG = {
             'mode': 'w',
             'encoding': 'utf-8'
         },
-        'file_errors': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'formatter': 'whenAndWhere',
-            'filename': 'logs/errors.log',
-            'mode': 'w',
-            'encoding': 'utf-8'
-        },
+
         'file_data': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
@@ -54,7 +47,31 @@ LOGGING_CONFIG = {
             'mode': 'w',
             'encoding': 'utf-8'
         },
-        'file_transaction': {
+        'file_risk': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'whenAndWhere',
+            'filename': 'logs/risk.log',
+            'mode': 'w',
+            'encoding': 'utf-8'
+        },
+        'file_execution': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'whenAndWhere',
+            'filename': 'logs/exec.log',
+            'mode': 'w',
+            'encoding': 'utf-8'
+        },
+        'file_slippage': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'whenAndWhere',
+            'filename': 'logs/slip.log',
+            'mode': 'w',
+            'encoding': 'utf-8'
+        },
+        'file_transaction_costs': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
@@ -69,62 +86,82 @@ LOGGING_CONFIG = {
             'filename': 'logs/manual.log',
             'mode': 'w',
             'encoding': 'utf-8'
-        }
+        },
+        'file_errors': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'whenAndWhere',
+            'filename': 'logs/errors.log',
+            'mode': 'w',
+            'encoding': 'utf-8'
+        },
     },
     'loggers': {
         '': {  # 'root' logger
             'level': 'CRITICAL',
             'handlers': ['console', 'file']
         },
-        'other': {
-            'level': 'CRITICAL',
-            'handlers': ['file']
-        },
         'strat': {
             'level': 'CRITICAL',
             'handlers': ['file_strat']
-        },
-        'errors': {
-            'level': 'CRITICAL',
-            'handlers': ['file_errors']
         },
         'data': {
             'level': 'CRITICAL',
             'handlers': ['file_data']
         },
-        'transaction': {
+        'risk': {
             'level': 'CRITICAL',
-            'handlers': ['file_transaction']
+            'handlers': ['file_risk']
+        },
+        'execution': {
+            'level': 'CRITICAL',
+            'handlers': ['file_execution']
+        },
+        'slippage': {
+            'level': 'CRITICAL',
+            'handlers': ['file_slippage']
+        },
+        'transactionCost': {
+            'level': 'CRITICAL',
+            'handlers': ['file_transaction_costs']
         },
         'manual': {
             'level': 'CRITICAL',
             'handlers': ['file_manual']
-        }
+        },
+        'errors': {
+            'level': 'CRITICAL',
+            'handlers': ['file_errors']
+        },
+
     }
 }
 
 logging.config.dictConfig(LOGGING_CONFIG)
 LOG = logging.getLogger('')  # factory method
-OTHER = logging.getLogger('other')
 STRAT = logging.getLogger('strat')
-WARN = logging.getLogger('errors')
-ERROR = logging.getLogger('errors')
 DATA = logging.getLogger('data')
-TXN = logging.getLogger('transaction')
+RISK = logging.getLogger('risk')
+EXEC = logging.getLogger('execution')
+SLIP = logging.getLogger('slippage')
+TXNS = logging.getLogger('transactionCost')
 MANUAL = logging.getLogger('manual')
+ERROR = logging.getLogger('errors')
 
-OTHER.propagate = False
 STRAT.propagate = False
-WARN.propagate = False
-ERROR.propagate = False
 DATA.propagate = False
-TXN.propagate = False
+RISK.propagate = False
+EXEC.propagate = False
+SLIP.propagate = False
+TXNS.propagate = False
 MANUAL.propagate = False
+ERROR.propagate = False
 
-OTHER.setLevel(logging.CRITICAL)
 STRAT.setLevel(logging.CRITICAL)
-WARN.setLevel(logging.CRITICAL)
-ERROR.setLevel(logging.CRITICAL)
 DATA.setLevel(logging.CRITICAL)
-TXN.setLevel(logging.CRITICAL)
+RISK.setLevel(logging.CRITICAL)
+EXEC.setLevel(logging.CRITICAL)
+SLIP.setLevel(logging.CRITICAL)
+TXNS.setLevel(logging.CRITICAL)
 MANUAL.setLevel(logging.CRITICAL)
+ERROR.setLevel(logging.CRITICAL)

@@ -5,13 +5,13 @@ from .enums import Side, \
                    OrderSubType, \
                    ExchangeType, \
                    TickType
-from .utils import struct
+from .utils import struct, NOPRINT
 
 
 @struct
 class MarketData:
     # common
-    time = datetime.datetime
+    time = datetime.datetime, NOPRINT
     volume = float
     price = float
     type = TickType
@@ -25,12 +25,12 @@ class MarketData:
 
 @struct
 class TradeRequest:
-    data = MarketData
+    data = MarketData, NOPRINT
     side = Side
 
     volume = float
     price = float
-    currency = CurrencyType, CurrencyType.BTC
+    currency = CurrencyType, CurrencyType.BTC, NOPRINT
 
     order_type = OrderType, OrderType.MARKET
     order_sub_type = OrderSubType, OrderSubType.NONE
@@ -42,7 +42,7 @@ class TradeRequest:
 
 @struct
 class TradeResponse:
-    data = MarketData
+    data = MarketData, NOPRINT
     request = TradeRequest
     side = Side
 

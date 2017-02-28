@@ -2,7 +2,9 @@ import pytz
 import os
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType
-from .logging import WARN as log
+from .logging import ERROR as log
+
+NOPRINT = True
 
 
 def create_pair(key, typ, default=None):
@@ -36,6 +38,7 @@ def config(cls):
         new_cls_dict[k] = v
     new_cls_dict['__repr__'] = __repr__
     new_cls_dict['_vars'] = vars
+    new_cls_dict['_excludes'] = []
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
@@ -51,14 +54,17 @@ def __init__(self, **kwargs):
 
 def __repr__(self):
     # log.warn(str(self.__class__))
-    return '<' + ', '.join([x + '-' +
-                           str(getattr(self, x, "UNSET"))
-                           for x in self._vars]) + '>'
+    return '<' + ', '.join([x + '-' + str(getattr(self, x))
+                           for x in self._vars if hasattr(self, x) and
+                           x not in self._excludes]) + '>'
 
 
 def struct(cls):
     new_cls_dict = {}
+
     vars = []
+    excludes = []
+
     if len(cls.__bases__) > 1:
         raise Exception("Structs only support single inheritance")
     for k, v in cls.__dict__.items():
@@ -68,8 +74,19 @@ def struct(cls):
         elif isinstance(v, tuple) and \
                 isinstance(v[0], type) and \
                 isinstance(v[1], v[0]):
-            log.warn('WARNING: no defaults in structs')
+            if len(v) == 3:
+                if v[2] == NOPRINT:
+                    excludes.append(k)
             v = create_pair(k, v[0], v[1])
+            vars.append(k)
+        elif isinstance(v, tuple) and \
+                isinstance(v[0], type) and \
+                v[1] == NOPRINT:
+            if v == bool:
+                log.warn('WARNING - bool value ambiguitiy, interpretting '
+                         'as PRINT -- If you meant default, '
+                         'please be explicit')
+            v = create_pair(k, v[0])
             vars.append(k)
             # v = create_pair(k, v[0])
 
@@ -77,6 +94,7 @@ def struct(cls):
     new_cls_dict['__init__'] = __init__
     new_cls_dict['__repr__'] = __repr__
     new_cls_dict['_vars'] = vars
+    new_cls_dict['_excludes'] = excludes
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 

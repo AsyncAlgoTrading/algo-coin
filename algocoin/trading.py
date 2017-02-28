@@ -8,7 +8,7 @@ from .risk import Risk
 from .lib.strategy import TradingStrategy
 from .lib.structs import TradeRequest, TradeResponse
 from .lib.utils import ex_type_to_ex
-from .lib.logging import LOG as log
+from .lib.logging import SLIP as sllog, TXNS as tlog
 # import time
 
 
@@ -133,6 +133,8 @@ class TradingEngine(object):
                 # if risk passes, let execution execute
                 resp = self._ec.request(resp)
 
+                sllog.info("Slippage - %s" % resp)
+                tlog.info("TXN cost - %s" % resp)
                 # let risk update according to execution details
                 self._rk.update(resp)
             else:
@@ -149,7 +151,11 @@ class TradingEngine(object):
             strat.registerDesire(req.data.time, req.side, req.price)
 
             # adjust response with slippage and transaction cost modeling
-            resp = strat.transactionCost(strat.slippage(resp))
+            resp = strat.slippage(resp)
+            sllog.info("Slippage - %s" % resp)
+
+            resp = strat.transactionCost(resp)
+            tlog.info("TXN cost - %s" % resp)
 
             # register the response
             strat.registerAction(resp.data.time, resp.side, resp.price)

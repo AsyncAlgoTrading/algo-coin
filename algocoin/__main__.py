@@ -5,13 +5,14 @@ from .lib.config import TradingEngineConfig, BacktestConfig
 from .lib.enums import TradingType
 from .trading import TradingEngine
 from .lib.logging import LOG as log, \
-                         OTHER as olog, \
                          STRAT as slog, \
-                         WARN as wlog, \
-                         ERROR as elog, \
                          DATA as dlog, \
-                         TXN as tlog, \
-                         MANUAL as mlog
+                         RISK as rlog, \
+                         EXEC as exlog, \
+                         SLIP as sllog, \
+                         TXNS as tlog, \
+                         MANUAL as mlog, \
+                         ERROR as elog
 
 
 def parse_command_line(argv: list):
@@ -79,13 +80,14 @@ def parse_command_line(argv: list):
         # tlog.propagate = True
         # mlog.propagate = True
         log.setLevel(logging.DEBUG)
-        olog.setLevel(logging.DEBUG)
         slog.setLevel(logging.DEBUG)
-        wlog.setLevel(logging.DEBUG)
-        elog.setLevel(logging.DEBUG)
         dlog.setLevel(logging.DEBUG)
+        rlog.setLevel(logging.DEBUG)
+        exlog.setLevel(logging.DEBUG)
+        sllog.setLevel(logging.DEBUG)
         tlog.setLevel(logging.DEBUG)
         mlog.setLevel(logging.DEBUG)
+        elog.setLevel(logging.DEBUG)
         log.info('running in verbose mode!')
 
     if 'print' in argv:
@@ -104,7 +106,7 @@ def main(argv: list):
     te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
-    ts = SMACrossesStrategy(100, 50)
+    ts = SMACrossesStrategy(10, 25)
 
     # Register the strategy with the Trading engine
     te.registerStrategy(ts)

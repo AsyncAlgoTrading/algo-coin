@@ -3,7 +3,7 @@ import select
 import queue
 from .lib.enums import Side, CurrencyType, OrderType, OrderSubType
 from .lib.structs import TradeRequest
-from .lib.logging import LOG as log
+from .lib.logging import MANUAL as log
 
 
 def manual(exchange, inqueue, outqueue):

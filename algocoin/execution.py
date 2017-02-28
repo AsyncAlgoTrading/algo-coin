@@ -2,6 +2,7 @@ from .lib.config import ExecutionConfig
 from .lib.exchange import Exchange
 from .lib.enums import Side, CurrencyType
 from .lib.structs import TradeRequest, TradeResponse
+from .lib.logging import EXEC as exlog
 
 
 class Execution(object):
@@ -28,11 +29,15 @@ class Execution(object):
     def requestBuy(self, req: TradeRequest) -> TradeResponse:
         # TODO
         # res = self._ex.buy(req)
-        return self._constructResp(req.data, req, req.side, req.volume, req.price, req.currency, True)
+        resp = self._constructResp(req.data, req, req.side, req.volume, req.price, req.currency, True)
+        exlog.info('Order executed: %s' % resp)
+        return resp
 
     def requestSell(self, req: TradeRequest) -> TradeResponse:
         # TODO
-        return self._constructResp(req.data, req, req.side, req.volume, req.price, req.currency, True)
+        resp = self._constructResp(req.data, req, req.side, req.volume, req.price, req.currency, True)
+        exlog.info('Order executed: %s' % resp)
+        return resp
 
     def request(self, req: TradeRequest) -> TradeResponse:
         if req.side == Side.BUY:

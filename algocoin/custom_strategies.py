@@ -6,7 +6,7 @@ from .lib.logging import STRAT as slog, ERROR as elog
 
 
 class SMACrossesStrategy(TradingStrategy):
-    def __init__(self, size_short, size_long):
+    def __init__(self, size_short: int, size_long: int) -> None:
         super(SMACrossesStrategy, self).__init__()
         self.short = size_short
         self.shorts = []
@@ -26,7 +26,7 @@ class SMACrossesStrategy(TradingStrategy):
         self._intitialvalue = None
         self._portfolio_value = []
 
-    def onBuy(self, res: TradeResponse):
+    def onBuy(self, res: TradeResponse) -> None:
         if not res.success:
             slog.critical('order failure: %s' % res)
             return
@@ -38,9 +38,9 @@ class SMACrossesStrategy(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %s' % (res.volume, res.price, self.bought, res))
+        # slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %s' % (res.volume, res.price, self.bought, res))
 
-    def onSell(self, res: TradeResponse):
+    def onSell(self, res: TradeResponse) -> None:
         if not res.success:
             slog.info('order failure: %s' % res)
             return
@@ -48,7 +48,7 @@ class SMACrossesStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold at %.2f @ %.2f for %.2f - %.2f - %.2f ---- %s' % (res.volume, res.price, sold, profit, self.profits, res))
+        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %s' % (res.volume, res.price, sold, profit, self.profits, res))
         self.bought = 0.0
         self.bought_qty = 0.0
 
@@ -92,7 +92,7 @@ class SMACrossesStrategy(TradingStrategy):
                                volume=min(1.0, data.volume),
                                currency=data.currency,
                                price=data.price)
-            slog.critical("requesting buy : %s", req)
+            # slog.critical("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
             return True
 
@@ -103,7 +103,7 @@ class SMACrossesStrategy(TradingStrategy):
                                volume=self.bought_qty,
                                currency=data.currency,
                                price=data.price)
-            slog.critical("requesting sell : %s", req)
+            # slog.critical("requesting sell : %s", req)
             self.requestSell(self.onSell, req)
             return True
 
@@ -132,7 +132,7 @@ class SMACrossesStrategy(TradingStrategy):
         sns.set_style('darkgrid')
         fig, ax1 = plt.subplots()
 
-        plt.title('BTC mean-rev algo 1 performance')
+        plt.title('BTC algo 1 performance - %d-%d Momentum ' % (self.short, self.long))
         ax1.plot(pd)
 
         ax1.set_ylabel('Portfolio value($)')

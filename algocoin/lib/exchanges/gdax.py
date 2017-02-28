@@ -14,7 +14,7 @@ from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
 from websocket import create_connection
 from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
-from ..logging import LOG as log, TXN as tlog, OTHER as olog
+from ..logging import LOG as log
 
 
 class GDAXExchange(Exchange):
