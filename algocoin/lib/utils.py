@@ -145,3 +145,46 @@ def get_keys_from_environment(prefix: str):
     secret = os.environ[prefix + '_API_SECRET']
     passphrase = os.environ[prefix + '_API_PASS']
     return key, secret, passphrase
+
+
+def exchange_str_to_exchange(exchange: str) -> ExchangeType:
+        if 'bitfinex' in exchange:
+            return ExchangeType.BITFINEX
+        elif 'bitstamp' in exchange:
+            return ExchangeType.BITSTAMP
+        elif 'gemini' in exchange:
+            return ExchangeType.GEMINI
+        elif 'hitbtc' in exchange:
+            return ExchangeType.HITBTC
+        elif 'itbit' in exchange:
+            return ExchangeType.ITBIT
+        elif 'kraken' in exchange:
+            return ExchangeType.KRAKEN
+        elif 'lake' in exchange:
+            return ExchangeType.LAKE
+        else:
+            return ExchangeType.GDAX
+
+
+def exchange_to_file(exchange: ExchangeType):
+    if exchange == ExchangeType.BITSTAMP:
+        log.critical('Backtesting against bitstamp data')
+        return "./data/exchange/bitstampUSD.csv"
+    elif exchange == ExchangeType.BITFINEX:
+        log.critical('Backtesting against bitfinex data')
+        return "./data/exchange/bitfinexUSD.csv"
+    elif exchange == ExchangeType.ITBIT:
+        log.critical('Backtesting against itbit data')
+        return "./data/exchange/itbitUSD.csv"
+    elif exchange == ExchangeType.KRAKEN:
+        log.critical('Backtesting against kraken data')
+        return "./data/exchange/krakenUSD.csv"
+    elif exchange == ExchangeType.HITBTC:
+        log.critical('Backtesting against hitbtc data')
+        return "./data/exchange/hitbtcUSD.csv"
+    elif exchange == ExchangeType.LAKE:
+        log.critical('Backtesting against lake data')
+        return "./data/exchange/lakeUSD.csv"
+    else:
+        log.critical('Backtesting against coinbase data')
+        return "./data/exchange/coinbaseUSD.csv"

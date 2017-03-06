@@ -23,12 +23,14 @@ class TradingType(Enum):
 class ExchangeType(Enum):
     BITSTAMP = 0
     BITFINEX = 1
-    BTCC = 2
-    CEX = 3
-    GDAX = 4
-    GEMINI = 5
-    HITBTC = 6
-    POLONIEX = 7
+    CEX = 2
+    GDAX = 3
+    GEMINI = 4
+    HITBTC = 5
+    ITBIT = 6
+    KRAKEN = 7
+    LAKE = 8
+    POLONIEX = 9
 
 
 class CurrencyType(Enum):

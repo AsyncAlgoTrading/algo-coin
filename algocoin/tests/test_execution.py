@@ -25,9 +25,11 @@ class TestExecution:
         from ..execution import Execution
         from ..lib.exchanges.gdax import GDAXExchange
         from ..lib.config import ExecutionConfig, ExchangeConfig
+        from ..lib.enums import ExchangeType
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             exc = ExchangeConfig()
+            exc.exchange_type = ExchangeType.GDAX
             ex = GDAXExchange(exc)
 
             ec = ExecutionConfig()
@@ -38,12 +40,13 @@ class TestExecution:
         from ..execution import Execution
         from ..lib.exchanges.gdax import GDAXExchange
         from ..lib.enums import Side, ExchangeType, \
-            OrderType, OrderSubType, TickType
+            TickType
         from ..lib.config import ExecutionConfig, ExchangeConfig
         from ..lib.structs import TradeRequest, MarketData
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             exc = ExchangeConfig()
+            exc.exchange_type = ExchangeType.GDAX
             ex = GDAXExchange(exc)
 
             ec = ExecutionConfig()

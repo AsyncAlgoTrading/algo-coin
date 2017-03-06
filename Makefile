@@ -1,8 +1,8 @@
 run: clean  ## clean and make target, run target
-	python3 -m algocoin live $(VERBOSE)
+	python3 -m algocoin live $(VERBOSE) $(EXCHANGE)
 
 sandbox: clean  ## clean and make target, run target
-	python3 -m algocoin sandbox $(VERBOSE)
+	python3 -m algocoin sandbox $(VERBOSE) $(EXCHANGE)
 
 fetch_data: clean ## fetch data
 	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)

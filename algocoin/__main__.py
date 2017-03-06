@@ -13,6 +13,7 @@ from .lib.logging import LOG as log, \
                          TXNS as tlog, \
                          MANUAL as mlog, \
                          ERROR as elog
+from .lib.utils import exchange_str_to_exchange, exchange_to_file
 
 
 def parse_command_line(argv: list):
@@ -25,6 +26,7 @@ def parse_command_line(argv: list):
         config.exchange_options.trading_type = TradingType.LIVE
         config.risk_options.trading_type = TradingType.LIVE
         config.execution_options.trading_type = TradingType.LIVE
+        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
 
     elif 'sandbox' in argv:
         # Trade against sandbox
@@ -33,6 +35,7 @@ def parse_command_line(argv: list):
         config.exchange_options.trading_type = TradingType.SANDBOX
         config.risk_options.trading_type = TradingType.SANDBOX
         config.execution_options.trading_type = TradingType.SANDBOX
+        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
 
     elif 'backtest' in argv:
         # Backtest against trade data
@@ -40,36 +43,14 @@ def parse_command_line(argv: list):
         config.type = TradingType.BACKTEST
         config.backtest_options = BacktestConfig()
 
-        # TODO specify exchange data as input
-        if 'bitfinex' in argv:
-            log.critical('Backtesting against bitfinex data')
-            config.backtest_options.file = "./data/exchange/bitfinexUSD.csv"
-        elif 'bitstamp' in argv:
-            log.critical('Backtesting against bitstamp data')
-            config.backtest_options.file = "./data/exchange/bitstampUSD.csv"
-        elif 'itbit' in argv:
-            log.critical('Backtesting against itbit data')
-            config.backtest_options.file = "./data/exchange/itbitUSD.csv"
-        elif 'kraken' in argv:
-            log.critical('Backtesting against kraken data')
-            config.backtest_options.file = "./data/exchange/krakenUSD.csv"
-        elif 'hitbtc' in argv:
-            log.critical('Backtesting against hitbtc data')
-            config.backtest_options.file = "./data/exchange/hitbtcUSD.csv"
-        elif 'lake' in argv:
-            log.critical('Backtesting against lake data')
-            config.backtest_options.file = "./data/exchange/lakeUSD.csv"
-        else:
-            log.critical('Backtesting against coinbase data')
-            config.backtest_options.file = "./data/exchange/coinbaseUSD.csv"
-
+        config.backtest_options.file = exchange_to_file(exchange_str_to_exchange(argv))
         config.exchange_options.trading_type = TradingType.BACKTEST
+        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
         config.risk_options.trading_type = TradingType.BACKTEST
         config.execution_options.trading_type = TradingType.BACKTEST
-
         config.risk_options.total_funds = 20000.0
 
-        log.critical("Config : %s", config)
+        log.critical("Config : %s", str(config))
 
     if 'verbose' in argv:
         # Print/log extra info

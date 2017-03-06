@@ -29,10 +29,6 @@ class TestDefine:
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BITFINEX, TradingType.LIVE) \
             == 'wss://api2.bitfinex.com:3000/ws'
-        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BTCC, TradingType.SANDBOX) \
-            == ''
-        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BTCC, TradingType.LIVE) \
-            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.CEX, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.CEX, TradingType.LIVE) \
@@ -49,6 +45,18 @@ class TestDefine:
             == 'wss://demo-api.hitbtc.com:8080'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.HITBTC, TradingType.LIVE) \
             == 'wss://api.hitbtc.com:8080'
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.ITBIT, TradingType.SANDBOX) \
+            == ''
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.ITBIT, TradingType.LIVE) \
+            == ''
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.KRAKEN, TradingType.SANDBOX) \
+            == ''
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.KRAKEN, TradingType.LIVE) \
+            == ''
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.LAKE, TradingType.SANDBOX) \
+            == ''
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.LAKE, TradingType.LIVE) \
+            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.POLONIEX, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.POLONIEX, TradingType.LIVE) \

@@ -23,9 +23,11 @@ class TestExchange:
     def test_init(self):
         from ...lib.config import ExchangeConfig
         from ...lib.exchanges.gdax import GDAXExchange
+        from ...lib.enums import ExchangeType
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
+            ec.exchange_type = ExchangeType.GDAX
             e = GDAXExchange(ec)
             e._running = True
             assert e
@@ -33,10 +35,11 @@ class TestExchange:
     def test_receive(self):
         from ...lib.config import ExchangeConfig
         from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import TickType
+        from ...lib.enums import TickType, ExchangeType
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
+            ec.exchange_type = ExchangeType.GDAX
             e = GDAXExchange(ec)
             e._running = True
             assert e
@@ -59,10 +62,11 @@ class TestExchange:
     def test_seqnum_fix(self):
         from ...lib.config import ExchangeConfig
         from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import TickType
+        from ...lib.enums import TickType, ExchangeType
 
         with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
             ec = ExchangeConfig()
+            ec.exchange_type = ExchangeType.GDAX
             e = GDAXExchange(ec)
             e._running = True
             assert e
