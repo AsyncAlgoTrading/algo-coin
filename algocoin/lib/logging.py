@@ -127,7 +127,7 @@ LOGGING_CONFIG = {
         },
         'manual': {
             'level': 'CRITICAL',
-            'handlers': ['file_manual']
+            'handlers': ['console', 'file_manual']
         },
         'errors': {
             'level': 'CRITICAL',

@@ -8,7 +8,7 @@ from .risk import Risk
 from .lib.strategy import TradingStrategy
 from .lib.structs import TradeRequest, TradeResponse
 from .lib.utils import ex_type_to_ex
-from .lib.logging import SLIP as sllog, TXNS as tlog
+from .lib.logging import LOG as log, SLIP as sllog, TXNS as tlog
 # import time
 
 
