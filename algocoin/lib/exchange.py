@@ -50,9 +50,9 @@ class Exchange(StreamingDataSource):
         if not self._running:
             pass
 
-        if res.type == TickType.MATCH:
+        if res.type == TickType.TRADE:
             self._last = res
-            self.callback(TickType.MATCH, res)
+            self.callback(TickType.TRADE, res)
         elif res.type == TickType.RECEIVED:
             self.callback(TickType.RECEIVED, res)
         elif res.type == TickType.OPEN:

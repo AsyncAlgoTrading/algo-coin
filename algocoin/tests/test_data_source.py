@@ -42,7 +42,7 @@ class TestDataSource:
                 pass
 
         class TestCB(Callback):
-            def onMatch(self):
+            def onTrade(self):
                 pass
 
             def onReceived(self):

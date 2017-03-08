@@ -55,7 +55,8 @@ class TestExecution:
             data = MarketData(time=datetime.now(),
                               volume=1.0,
                               price=1.0,
-                              type=TickType.MATCH)
+                              type=TickType.TRADE,
+                              side=Side.BUY)
             req = TradeRequest(data=data,
                                side=Side.BUY,
                                volume=1.0,

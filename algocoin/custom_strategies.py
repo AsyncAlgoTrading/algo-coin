@@ -58,7 +58,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self._portfolio_value[-1][1] + profit))
 
     @ticks
-    def onMatch(self, data: MarketData):
+    def onTrade(self, data: MarketData):
         # add data to arrays
         self.shorts.append(data.price)
         self.longs.append(data.price)

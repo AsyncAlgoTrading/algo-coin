@@ -2,15 +2,18 @@ from enum import Enum
 
 
 class TickType(Enum):
-    MATCH = 0
+    TRADE = 0
     RECEIVED = 1
-    ERROR = 2
-    OPEN = 3
-    DONE = 4
-    CHANGE = 5
+    OPEN = 2
+    DONE = 3
+    CHANGE = 4
+    ERROR = 5
+
     ANALYZE = 6
+
     HALT = 7
     CONTINUE = 8
+
     HEARTBEAT = 9
 
 
@@ -40,7 +43,7 @@ class CurrencyType(Enum):
     LTC = 3
 
 
-def strToCurrencyType(s):
+def strToCurrencyType(s: str) -> CurrencyType:
     s = s.upper()
     if 'BTC' in s:
         return CurrencyType.BTC
@@ -52,13 +55,33 @@ def strToCurrencyType(s):
 
 
 class Side(Enum):
-    BUY = 0
-    SELL = 1
+    NONE = 0
+    BUY = 1
+    SELL = 2
+
+
+def strToSide(s: str) -> Side:
+    s = s.upper()
+    if 'BUY' in s or 'BID' in s:
+        return Side.BUY
+    if 'SELL' in s or 'ASK' in s:
+        return Side.SELL
+    return Side.NONE
 
 
 class OrderType(Enum):
-    MARKET = 0
-    LIMIT = 1
+    NONE = 0
+    MARKET = 1
+    LIMIT = 2
+
+
+def strToOrderType(s: str) -> OrderType:
+    s = s.upper()
+    if 'MARKET' in s:
+        return OrderType.MARKET
+    if 'LIMIT' in s:
+        return OrderType.LIMIT
+    return OrderType.NONE
 
 
 class OrderSubType(Enum):

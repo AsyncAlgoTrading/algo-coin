@@ -6,8 +6,8 @@ from .logging import LOG as log, DATA as dlog, ERROR as elog
 class Callback(metaclass=ABCMeta):
     '''callback interface'''
     @abstractmethod
-    def onMatch(self, data: MarketData):
-        '''onMatch'''
+    def onTrade(self, data: MarketData):
+        '''onTrade'''
 
     @abstractmethod
     def onReceived(self, data: MarketData):
@@ -49,7 +49,7 @@ class NullCallback(Callback):
     def __init__(self):
         pass
 
-    def onMatch(self, data: MarketData):
+    def onTrade(self, data: MarketData):
         pass
 
     def onReceived(self, data: MarketData):
@@ -79,15 +79,15 @@ class NullCallback(Callback):
 
 class Print(Callback):
     def __init__(self,
-                 onMatch=True,
+                 onTrade=True,
                  onReceived=True,
                  onOpen=True,
                  onDone=True,
                  onChange=True,
                  onError=True):
 
-        if not onMatch:
-            setattr(self, 'onMatch', False)
+        if not onTrade:
+            setattr(self, 'onTrade', False)
         if not onReceived:
             setattr(self, 'onReceived', False)
         if not onOpen:
@@ -99,7 +99,7 @@ class Print(Callback):
         if not onError:
             setattr(self, 'onError', False)
 
-    def onMatch(self, data: MarketData):
+    def onTrade(self, data: MarketData):
         dlog.info(str(data))
 
     def onReceived(self, data: MarketData):

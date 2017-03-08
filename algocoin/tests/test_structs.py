@@ -22,11 +22,12 @@ class TestStructs:
 
     def test_MarketData(self):
         from ..lib.structs import MarketData
-        from ..lib.enums import TickType
+        from ..lib.enums import TickType, Side
         m = MarketData(time=datetime.now(),
                        volume=1.0,
                        price=1.0,
-                       type=TickType.MATCH)
+                       type=TickType.TRADE,
+                       side=Side.BUY)
         # TODO no fields yet
         assert m
 
@@ -36,7 +37,8 @@ class TestStructs:
         data = MarketData(time=datetime.now(),
                           volume=1.0,
                           price=1.0,
-                          type=TickType.MATCH)
+                          type=TickType.TRADE,
+                          side=Side.BUY)
         t = TradeRequest(data=data,
                          side=Side.BUY,
                          volume=1.0,
@@ -56,7 +58,8 @@ class TestStructs:
         data = MarketData(time=datetime.now(),
                           volume=1.0,
                           price=1.0,
-                          type=TickType.MATCH)
+                          type=TickType.TRADE,
+                          side=Side.BUY)
         req = TradeRequest(data=data,
                            side=Side.BUY,
                            volume=1.0,

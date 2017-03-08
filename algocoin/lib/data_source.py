@@ -37,7 +37,7 @@ class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs):
         self._running = False
 
-        self._callbacks = {TickType.MATCH: [],
+        self._callbacks = {TickType.TRADE: [],
                            TickType.RECEIVED: [],
                            TickType.ERROR: [],
                            TickType.OPEN: [],
@@ -73,8 +73,8 @@ class StreamingDataSource(DataSource):
     def tickToData(self, data):
         '''convert json to market data based on fields'''
 
-    def onMatch(self, callback: Callback):
-        self._callbacks[TickType.MATCH].append(callback)
+    def onTrade(self, callback: Callback):
+        self._callbacks[TickType.TRADE].append(callback)
 
     def onReceived(self, callback: Callback):
         self._callbacks[TickType.RECEIVED].append(callback)
@@ -105,8 +105,8 @@ class StreamingDataSource(DataSource):
             raise Exception('%s is not an instance of class '
                             'Callback' % callback)
 
-        if callback.onMatch:
-            self.onMatch(callback.onMatch)
+        if callback.onTrade:
+            self.onTrade(callback.onTrade)
         if callback.onReceived:
             self.onReceived(callback.onReceived)
         if callback.onOpen:

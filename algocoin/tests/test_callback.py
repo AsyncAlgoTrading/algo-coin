@@ -21,7 +21,7 @@ class TestCallback:
         from ..lib.callback import NullCallback
 
         nc = NullCallback()
-        assert nc.onMatch(None) is None
+        assert nc.onTrade(None) is None
         assert nc.onReceived(None) is None
         assert nc.onOpen(None) is None
         assert nc.onDone(None) is None
@@ -35,4 +35,4 @@ class TestCallback:
         from ..lib.callback import Print
         pc = Print(onError=False)
         assert pc.onError == False
-        assert pc.onMatch('test-print_onMatch') == None
+        assert pc.onTrade('test-print_onTrade') == None

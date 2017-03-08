@@ -79,21 +79,27 @@ class TestEnums:
 
     def test_side(self):
         from ..lib.enums import Side
-        t0 = Side.BUY
-        t1 = Side.SELL
-        assert t0 == Side.BUY
-        assert t1 == Side.SELL
+        t0 = Side.NONE
+        t1 = Side.BUY
+        t2 = Side.SELL
+        assert t0 == Side.NONE
+        assert t1 == Side.BUY
+        assert t2 == Side.SELL
         assert t0 == Side(0)
         assert t1 == Side(1)
+        assert t2 == Side(2)
 
     def test_order_type(self):
         from ..lib.enums import OrderType
-        t0 = OrderType.MARKET
-        t1 = OrderType.LIMIT
-        assert t0 == OrderType.MARKET
-        assert t1 == OrderType.LIMIT
+        t0 = OrderType.NONE
+        t1 = OrderType.MARKET
+        t2 = OrderType.LIMIT
+        assert t0 == OrderType.NONE
+        assert t1 == OrderType.MARKET
+        assert t2 == OrderType.LIMIT
         assert t0 == OrderType(0)
         assert t1 == OrderType(1)
+        assert t2 == OrderType(2)
 
     def test_order_sub_type(self):
         from ..lib.enums import OrderSubType

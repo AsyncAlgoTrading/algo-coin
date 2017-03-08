@@ -16,7 +16,7 @@ class TestBacktest:
 
         class CallbackTester(Callback):
             def __init__(self):
-                self._onMatch = False
+                self._onTrade = False
                 self._onReceived = False
                 self._onOpen = False
                 self._onDone = False
@@ -26,8 +26,8 @@ class TestBacktest:
                 self._onHalt = False
                 self._onContinue = False
 
-            def onMatch(self, data):
-                self._onMatch = True
+            def onTrade(self, data):
+                self._onTrade = True
 
             def onReceived(self, data):
                 self._onReceived = True
@@ -74,4 +74,4 @@ class TestBacktest:
 
         b.registerCallback(cb)
         b.receive(self.test_line)
-        assert cb._onMatch
+        assert cb._onTrade

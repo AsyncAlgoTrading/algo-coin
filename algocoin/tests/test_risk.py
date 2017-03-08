@@ -34,10 +34,11 @@ class TestRisk:
         from ..lib.enums import TickType, Side
         from ..lib.utils import parse_date
 
-        data = MarketData(type=TickType.MATCH,
+        data = MarketData(type=TickType.TRADE,
                           time=parse_date('1479272400'),
                           price=float(1),
-                          volume=float(100))
+                          volume=float(100),
+                          side=Side.BUY)
         req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
@@ -57,10 +58,11 @@ class TestRisk:
         from ..lib.enums import TickType, Side
         from ..lib.utils import parse_date
 
-        data = MarketData(type=TickType.MATCH,
+        data = MarketData(type=TickType.TRADE,
                           time=parse_date('1479272400'),
                           price=float(1),
-                          volume=float(100))
+                          volume=float(100),
+                          side=Side.BUY)
         req = TradeRequest(data=data, side=Side.BUY, volume=50.0, price=1.0)
         resp = self.risk.request(req)
 

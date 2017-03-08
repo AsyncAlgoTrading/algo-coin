@@ -27,20 +27,21 @@ class TestCustomStragies:
 
     def test_sma_match(self):
         from ..custom_strategies import SMACrossesStrategy
-        from ..lib.enums import TickType
+        from ..lib.enums import TickType, Side
         from ..lib.structs import MarketData
         from ..lib.utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
         s._te = MagicMock()
 
-        data = [MarketData(type=TickType.MATCH,
+        data = [MarketData(type=TickType.TRADE,
                            time=parse_date('1479272400'),
                            price=float(x),
-                           volume=float(100)) for x in range(10)]
+                           volume=float(100),
+                           side=Side.BUY) for x in range(10)]
 
         for x in range(10):
-            s.onMatch(data[x])
+            s.onTrade(data[x])
 
         assert s.shorts == [9]
         assert s.longs == [5, 6, 7, 8, 9]
@@ -50,7 +51,7 @@ class TestCustomStragies:
 
     def test_sma_buy(self):
         from ..custom_strategies import SMACrossesStrategy
-        from ..lib.enums import TickType
+        from ..lib.enums import TickType, Side
         from ..lib.structs import MarketData, TradeResponse
         from ..lib.utils import parse_date
 
@@ -72,13 +73,14 @@ class TestCustomStragies:
         s._te.requestBuy.side_effect = ret
         s._te.requestSell.side_effect = ret
 
-        data = [MarketData(type=TickType.MATCH,
+        data = [MarketData(type=TickType.TRADE,
                            time=parse_date('1479272400'),
                            price=float(x),
-                           volume=float(100)) for x in range(10)]
+                           volume=float(100),
+                           side=Side.BUY) for x in range(10)]
 
         for x in range(1, 11):
-            s.onMatch(data[-x])
+            s.onTrade(data[-x])
 
         assert s.shorts == [0]
         assert s.longs == [4, 3, 2, 1, 0]
@@ -88,7 +90,7 @@ class TestCustomStragies:
         assert s._portfolio_value == []
         assert s.bought == 0
 
-        s.onMatch(data[5])  # short ticks up
+        s.onTrade(data[5])  # short ticks up
 
         assert s.shorts == [5]
         assert s.longs == [3, 2, 1, 0, 5]
@@ -103,17 +105,18 @@ class TestCustomStragies:
     def test_sma_sell(self):
         self.test_sma_buy()
 
-        from ..lib.enums import TickType
+        from ..lib.enums import TickType, Side
         from ..lib.structs import MarketData
         from ..lib.utils import parse_date
 
-        data = MarketData(type=TickType.MATCH,
+        data = MarketData(type=TickType.TRADE,
                           time=parse_date('1479272400'),
                           price=float(0),
-                          volume=float(100))
+                          volume=float(100),
+                          side=Side.BUY)
 
         s = self.s
-        s.onMatch(data)
+        s.onTrade(data)
 
         assert s.shorts == [0]
         assert s.longs == [2, 1, 0, 5, 0]

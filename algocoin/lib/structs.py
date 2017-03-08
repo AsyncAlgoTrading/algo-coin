@@ -16,11 +16,13 @@ class MarketData:
     price = float
     type = TickType
     currency = CurrencyType, CurrencyType.BTC
+    side = Side
 
     # maybe specific
     remaining = float, float('nan')
     reason = str, ''
     sequence = int, -1
+    order_type = OrderType, OrderType.NONE
 
 
 @struct

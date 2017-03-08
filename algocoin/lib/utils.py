@@ -112,6 +112,10 @@ def ex_type_to_ex(ex: ExchangeType):
     if ex == ExchangeType.GDAX:
         from .exchanges.gdax import GDAXExchange
         return GDAXExchange
+    elif ex == ExchangeType.GEMINI:
+        from .exchanges.gemini import GeminiExchange
+        return GeminiExchange
+    raise Exception('Exchange type not implemented : %s ' % ex)
 
 
 def currency_to_string_gdax(cur: CurrencyType):

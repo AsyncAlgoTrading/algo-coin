@@ -28,23 +28,23 @@ class TestDefine:
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BITFINEX, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BITFINEX, TradingType.LIVE) \
-            == 'wss://api2.bitfinex.com:3000/ws'
+            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.CEX, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.CEX, TradingType.LIVE) \
-            == 'wss://ws.cex.io/ws/'
+            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.SANDBOX) \
             == 'wss://ws-feed-public.sandbox.gdax.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.LIVE) \
             == 'wss://ws-feed.gdax.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.SANDBOX) \
-            == ''
+            == 'wss://api.sandbox.gemini.com/v1/marketdata/BTCUSD'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.LIVE) \
-            == 'wss://api.gemini.com/v1/marketdata/:symbol'
+            == 'wss://api.gemini.com/v1/marketdata/BTCUSD'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.HITBTC, TradingType.SANDBOX) \
-            == 'wss://demo-api.hitbtc.com:8080'
+            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.HITBTC, TradingType.LIVE) \
-            == 'wss://api.hitbtc.com:8080'
+            == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.ITBIT, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.ITBIT, TradingType.LIVE) \
@@ -60,4 +60,4 @@ class TestDefine:
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.POLONIEX, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.POLONIEX, TradingType.LIVE) \
-            == 'wss://api.poloniex.com'
+            == ''

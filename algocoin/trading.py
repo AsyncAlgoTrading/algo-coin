@@ -37,7 +37,7 @@ class TradingEngine(object):
 
             if self._live or self._sandbox:
                 self._ex.registerCallback(
-                    Print(onMatch=True,
+                    Print(onTrade=True,
                           onReceived=False,
                           onOpen=False,
                           onDone=False,

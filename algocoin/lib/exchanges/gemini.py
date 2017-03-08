@@ -5,9 +5,10 @@ import websocket
 import threading
 import queue
 # import time
+from datetime import datetime
 from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType
+from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
@@ -56,10 +57,10 @@ class GeminiExchange(Exchange):
                 self.ws = create_connection(self._md_url)
                 log.info('Connected!')
 
-                self.ws.send(self._subscription)
-                log.info('Sending Subscription %s' % self._subscription)
-                self.ws.send(self._heartbeat)
-                log.info('Sending Heartbeat %s' % self._subscription)
+                # self.ws.send(self._subscription)
+                # log.info('Sending Subscription %s' % self._subscription)
+                # self.ws.send(self._heartbeat)
+                # log.info('Sending Heartbeat %s' % self._subscription)
 
                 self._running = True
 
@@ -174,16 +175,24 @@ class GeminiExchange(Exchange):
         log.warn(str(params))
         # self._client.sell(params)
 
-    def tickToData(self, jsn):
-        time = parse_date(jsn.get('time'))
+    def tickToData(self, jsn: dict) -> MarketData:
+        print(jsn)
+        time = datetime.now()
         price = float(jsn.get('price', 'nan'))
-        volume = float(jsn.get('size', 'nan'))
-        typ = self.strToTradeType(jsn.get('type'))
-        currency = strToCurrencyType(jsn.get('product_id'))
-
-        remaining_volume = float(jsn.get('remaining_size', 'nan'))
         reason = jsn.get('reason', '')
-        sequence = int(jsn.get('sequence'))
+        volume = float(jsn.get('amount', 'nan'))
+        typ = self.strToTradeType(jsn.get('type'))
+
+        if typ == TickType.CHANGE and not volume:
+            delta = float(jsn.get('delta', 'nan'))
+            volume = delta
+            typ = self.reasonToTradeType(reason)
+
+        side = strToSide(jsn.get('side', ''))
+        remaining_volume = float(jsn.get('remaining', 'nan'))
+
+        sequence = -1
+        currency = strToCurrencyType('BTC')
 
         ret = MarketData(time=time,
                          volume=volume,
@@ -192,22 +201,56 @@ class GeminiExchange(Exchange):
                          currency=currency,
                          remaining=remaining_volume,
                          reason=reason,
+                         side=side,
                          sequence=sequence)
+        print(ret)
         return ret
 
+    def receive(self):
+        jsn = json.loads(self.ws.recv())
+        if jsn.get('type') == 'heartbeat':
+            pass
+        else:
+            for item in jsn.get('events'):
+                res = self.tickToData(item)
+
+                if not self._running:
+                    pass
+
+                if res.type == TickType.TRADE:
+                    self._last = res
+                    self.callback(TickType.TRADE, res)
+                elif res.type == TickType.RECEIVED:
+                    self.callback(TickType.RECEIVED, res)
+                elif res.type == TickType.OPEN:
+                    self.callback(TickType.OPEN, res)
+                elif res.type == TickType.DONE:
+                    self.callback(TickType.DONE, res)
+                elif res.type == TickType.CHANGE:
+                    self.callback(TickType.CHANGE, res)
+                elif res.type == TickType.HEARTBEAT:
+                    # TODO anything?
+                    pass
+                else:
+                    self.callback(TickType.ERROR, res)
+
     @staticmethod
-    def strToTradeType(s):
-        if s == 'match':
-            return TickType.MATCH
-        elif s == 'received':
-            return TickType.RECEIVED
-        elif s == 'open':
-            return TickType.OPEN
-        elif s == 'done':
-            return TickType.DONE
+    def strToTradeType(s: str) -> TickType:
+        if s == 'trade':
+            return TickType.TRADE
         elif s == 'change':
             return TickType.CHANGE
         elif s == 'heartbeat':
             return TickType.HEARTBEAT
         else:
             return TickType.ERROR
+
+    @staticmethod
+    def reasonToTradeType(s: str) -> TickType:
+        s = s.upper()
+        if 'CANCEL' in s:
+            return TickType.DONE
+        if 'PLACE' in s:
+            return TickType.OPEN
+        if 'INITIAL' in s:
+            return TickType.OPEN

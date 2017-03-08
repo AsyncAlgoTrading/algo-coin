@@ -8,7 +8,7 @@ import queue
 # import time
 from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType
+from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide, strToOrderType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
@@ -182,13 +182,15 @@ class GDAXExchange(Exchange):
         log.warn(str(params))
         # self._client.sell(params)
 
-    def tickToData(self, jsn):
+    def tickToData(self, jsn: dict) -> MarketData:
         time = parse_date(jsn.get('time'))
         price = float(jsn.get('price', 'nan'))
         volume = float(jsn.get('size', 'nan'))
         typ = self.strToTradeType(jsn.get('type'))
         currency = strToCurrencyType(jsn.get('product_id'))
 
+        order_type = strToOrderType(jsn.get('order_type', ''))
+        side = strToSide(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining_size', 'nan'))
         reason = jsn.get('reason', '')
         sequence = int(jsn.get('sequence'))
@@ -200,13 +202,15 @@ class GDAXExchange(Exchange):
                          currency=currency,
                          remaining=remaining_volume,
                          reason=reason,
+                         side=side,
+                         order_type=order_type,
                          sequence=sequence)
         return ret
 
     @staticmethod
-    def strToTradeType(s):
+    def strToTradeType(s: str) -> TickType:
         if s == 'match':
-            return TickType.MATCH
+            return TickType.TRADE
         elif s == 'received':
             return TickType.RECEIVED
         elif s == 'open':

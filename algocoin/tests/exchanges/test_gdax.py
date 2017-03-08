@@ -47,7 +47,7 @@ class TestExchange:
             e.ws = MagicMock()
 
             with patch('json.loads') as m1:
-                for i, val in enumerate([TickType.MATCH,
+                for i, val in enumerate([TickType.TRADE,
                                          TickType.RECEIVED,
                                          TickType.OPEN,
                                          TickType.DONE,
@@ -74,12 +74,12 @@ class TestExchange:
             e.ws = MagicMock()
 
             with patch('json.loads') as m1:
-                m1.return_value = {'type': TickType.MATCH,
+                m1.return_value = {'type': TickType.TRADE,
                                    'sequence': 0,
                                    'time': '2017-02-19T18:52:17.088000Z',
                                    'product_id': 'BTC'}
                 e.receive()
-                for i, val in enumerate([TickType.MATCH,
+                for i, val in enumerate([TickType.TRADE,
                                          TickType.RECEIVED,
                                          TickType.OPEN,
                                          TickType.DONE,
