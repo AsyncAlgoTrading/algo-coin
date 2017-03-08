@@ -1,18 +1,19 @@
 import json
-import os
-import pprint
-import websocket
+# import os
+# import pprint
+# import websocket
 import threading
 import queue
 # import time
+from websocket import create_connection
 from datetime import datetime
+from ..oe.gemini import GeminiSession
 from ..callback import Callback
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from websocket import create_connection
 from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
 from ..logging import LOG as log
 
@@ -25,19 +26,20 @@ class GeminiExchange(Exchange):
 
         if options.trading_type == TradingType.LIVE:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GEMINI')
-            # self._client = GDAX.AuthenticatedClient(self._key,
-            #                                         self._secret,
-            #                                         self._passphrase)
+            self._client = GeminiSession(api_key=self._key, api_secret=self._secret, sandbox=False)
+        elif options.trading_type == TradingType.SANDBOX:
+            self._key, self._secret, self._passphrase = get_keys_from_environment('GEMINI_SANDBOX')
+            self._client = GeminiSession(self._key, self._secret, sandbox=True)
+
+        val = self._client.get_balances() if hasattr(self, '_client') else ['BACKTEST']
 
         self._accounts = []
-
-        # val = self._client.getAccounts() if hasattr(self, '_client') else ['BACKTEST']
-        # for jsn in val:
-        #     currency = strToCurrencyType(jsn.get('currency'))
-        #     balance = float(jsn.get('balance', 'inf'))
-        #     id = jsn.get('id', 'id')
-        #     account = Account(id=id, currency=currency, balance=balance)
-        #     self._accounts.append(account)
+        for i, jsn in enumerate(val):
+            currency = strToCurrencyType(jsn.get('currency'))
+            balance = float(jsn.get('available', 'inf'))
+            id = str(i)
+            account = Account(id=id, currency=currency, balance=balance)
+            self._accounts.append(account)
 
         # self._subscription = json.dumps({"type": "subscribe",
         #                                  "product_id": "BTC-USD"})

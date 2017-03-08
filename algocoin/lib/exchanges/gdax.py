@@ -1,18 +1,18 @@
 import GDAX
 import json
-import os
-import pprint
-import websocket
+# import os
+# import pprint
+# import websocket
 import threading
 import queue
 # import time
+from websocket import create_connection
 from ..callback import Callback
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide, strToOrderType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from websocket import create_connection
 from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
 from ..logging import LOG as log
 
@@ -37,8 +37,9 @@ class GDAXExchange(Exchange):
                                                     api_url=self._oe_url
                                                     )
 
-        self._accounts = []
         val = self._client.getAccounts() if hasattr(self, '_client') else ['BACKTEST']
+
+        self._accounts = []
         for jsn in val:
             currency = strToCurrencyType(jsn.get('currency'))
             balance = float(jsn.get('balance', 'inf'))
