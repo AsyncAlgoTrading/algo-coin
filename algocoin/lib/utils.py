@@ -115,6 +115,9 @@ def ex_type_to_ex(ex: ExchangeType):
     elif ex == ExchangeType.GEMINI:
         from .exchanges.gemini import GeminiExchange
         return GeminiExchange
+    elif ex == ExchangeType.KRAKEN:
+        from .exchanges.kraken import KrakenExchange
+        return KrakenExchange
     raise Exception('Exchange type not implemented : %s ' % ex)
 
 
