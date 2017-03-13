@@ -178,7 +178,7 @@ class GeminiExchange(Exchange):
         # self._client.sell(params)
 
     def tickToData(self, jsn: dict) -> MarketData:
-        print(jsn)
+        # print(jsn)
         time = datetime.now()
         price = float(jsn.get('price', 'nan'))
         reason = jsn.get('reason', '')
@@ -205,7 +205,7 @@ class GeminiExchange(Exchange):
                          reason=reason,
                          side=side,
                          sequence=sequence)
-        print(ret)
+        # print(ret)
         return ret
 
     def receive(self):

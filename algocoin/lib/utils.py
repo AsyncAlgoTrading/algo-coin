@@ -45,7 +45,7 @@ def config(cls):
 def __init__(self, **kwargs):
     for item in self._vars:
         if item not in kwargs:
-            log.warn('WARNING %s unset!', item)
+            log.info('WARNING %s unset!', item)
         else:
             setattr(self, item, kwargs.get(item))
 
