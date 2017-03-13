@@ -30,7 +30,7 @@ def parse_command_line(argv: list):
 
     elif 'sandbox' in argv:
         # Trade against sandbox
-        log.info("Sandbox trading")
+        log.critical("Sandbox trading")
         config.type = TradingType.SANDBOX
         config.exchange_options.trading_type = TradingType.SANDBOX
         config.risk_options.trading_type = TradingType.SANDBOX
@@ -39,7 +39,7 @@ def parse_command_line(argv: list):
 
     elif 'backtest' in argv:
         # Backtest against trade data
-        log.info("Backtesting")
+        log.critical("Backtesting")
         config.type = TradingType.BACKTEST
         config.backtest_options = BacktestConfig()
 
@@ -87,10 +87,15 @@ def main(argv: list):
     te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
-    ts = SMACrossesStrategy(10, 25)
 
-    # Register the strategy with the Trading engine
-    te.registerStrategy(ts)
+    for i in range(5, 101, 5):
+        for j in range(10, 201, 10):
+            if j > i:
+                ts = SMACrossesStrategy(i, j)
+
+                # Register the strategy with the Trading engine
+                log.critical("registering %d - %d", i, j)
+                te.registerStrategy(ts)
 
     # Run the live trading engine
     te.run()
