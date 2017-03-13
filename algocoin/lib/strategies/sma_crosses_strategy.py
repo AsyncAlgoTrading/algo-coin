@@ -1,18 +1,21 @@
-import numpy
-from .lib.strategy import ticks, \
-                          TradingStrategy
-from .lib.structs import MarketData, TradeRequest, TradeResponse
-from .lib.enums import Side
-from .lib.logging import STRAT as slog, ERROR as elog
+from ..strategy import ticks, \
+                       TradingStrategy
+from ..structs import MarketData, TradeRequest, TradeResponse
+from ..enums import Side
+from ..logging import STRAT as slog, ERROR as elog
 
 
-class CustomStrategy(TradingStrategy):
-    def __init__(self, size: int) -> None:
-        super(CustomStrategy, self).__init__()
-        self.size = size
-        self.ticks = []
+class SMACrossesStrategy(TradingStrategy):
+    def __init__(self, size_short: int, size_long: int) -> None:
+        super(SMACrossesStrategy, self).__init__()
+        self.short = size_short
+        self.shorts = []
+        self.short_av = 0.0
 
-        self.x = numpy.arange(0, self.size)
+        self.long = size_long
+        self.longs = []
+        self.long_av = 0.0
+
         self.prev_state = ''
         self.state = ''
 
@@ -35,7 +38,7 @@ class CustomStrategy(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
+        slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
 
     def onSell(self, res: TradeResponse) -> None:
         if not res.success:
@@ -45,7 +48,7 @@ class CustomStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
+        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %.2f %.2f' % (res.volume, res.price, sold, profit, self.profits, self.short_av, self.long_av))
         self.bought = 0.0
         self.bought_qty = 0.0
 
@@ -57,40 +60,39 @@ class CustomStrategy(TradingStrategy):
     @ticks
     def onTrade(self, data: MarketData):
         # add data to arrays
-        self.ticks.append(data.price)
+        self.shorts.append(data.price)
+        self.longs.append(data.price)
 
         # check requirements
-        if len(self.ticks) > self.size:
-            self.ticks.pop(0)
+        if len(self.shorts) > self.short:
+            self.shorts.pop(0)
 
-        # ready?
-        if len(self.ticks) < self.size:
-            return False
+        if len(self.longs) > self.long:
+            self.longs.pop(0)
 
-        y = numpy.array(self.ticks)
-        z = numpy.polyfit(self.x, y, 1)  # linreg
+        # calc averages
+        self.short_av = float(sum(self.shorts)) / max(len(self.shorts), 1)
+        self.long_av = float(sum(self.longs)) / max(len(self.longs), 1)
 
-        # print(z)
-        shouldbuy = z[0] > .2
-        shouldsell = z[0] < .2
-
-        # slog.critical('%.2f %.2f', z[0], data.price)
-
+        slog.critical('%.2f %.2f', self.short_av, self.long_av)
         # sell out if losing too much
-        # stoploss = (self.bought - data.price*self.bought_qty) > 5
-        stoploss = False
+        stoploss = (self.bought - data.price*self.bought_qty) > 5
+        # stoploss = False
 
         self.prev_state = self.state
-        if shouldbuy:
+        if self.short_av > self.long_av:
             # buying
-            self.state = 'buy'
-        elif shouldsell or stoploss:
+            self.state = 'golden'
+        elif self.short_av < self.long_av or stoploss:
             # selling
-            self.state = 'sell'
+            self.state = 'death'
         else:
             self.state = ''
 
-        if self.state == 'buy' and self.prev_state != 'buy' and \
+        if len(self.longs) < self.long or len(self.shorts) < self.short:
+            return False
+
+        if self.state == 'golden' and self.prev_state != 'golden' and \
                 self.bought == 0.0:  # watch for floating point error
             req = TradeRequest(data=data,
                                side=Side.BUY,
@@ -102,7 +104,7 @@ class CustomStrategy(TradingStrategy):
             self.requestBuy(self.onBuy, req)
             return True
 
-        elif self.state == 'sell' and self.prev_state != 'sell' and \
+        elif self.state == 'death' and self.prev_state != 'death' and \
                 self.bought > 0.0:
             req = TradeRequest(data=data,
                                side=Side.SELL,
@@ -129,7 +131,7 @@ class CustomStrategy(TradingStrategy):
         pd = pandas.DataFrame(self._portfolio_value, columns=['time', 'value'])
         pd.set_index(['time'], inplace=True)
 
-        print(self.size, pd.iloc[1].value, pd.iloc[-1].value)
+        print(self.short, self.long, pd.iloc[1].value, pd.iloc[-1].value)
         ## sp500 = pandas.DataFrame()
         ## tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
         ## sp500['Date'] = pandas.to_datetime(tmp['Date'])

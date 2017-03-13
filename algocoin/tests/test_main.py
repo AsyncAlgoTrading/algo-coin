@@ -43,5 +43,5 @@ class TestMain:
     def test_main(self):
         from ..__main__ import main
         with patch('algocoin.__main__.TradingEngine'), \
-                patch('algocoin.__main__.SMACrossesStrategy'):
+                patch('algocoin.__main__.CustomStrategy'):
             main([])

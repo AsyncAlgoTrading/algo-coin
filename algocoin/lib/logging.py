@@ -1,9 +1,16 @@
 import os
 import os.path
 import logging.config
+import time
+
+moment = time.strftime("%Y%m%d_%H%M%S", time.localtime())
 
 if not os.path.isdir('./logs'):
     os.mkdir('./logs')
+
+if not os.path.isdir('./logs' + moment):
+    os.mkdir('./logs/' + moment)
+
 
 LOGGING_CONFIG = {
     'version': 1,  # required
@@ -26,7 +33,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/out.log',
+            'filename': 'logs/' + moment + '/out.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -34,7 +41,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/strat.log',
+            'filename': 'logs/' + moment + '/strat.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -43,7 +50,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/data.log',
+            'filename': 'logs/' + moment + '/data.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -51,7 +58,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/risk.log',
+            'filename': 'logs/' + moment + '/risk.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -59,7 +66,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/exec.log',
+            'filename': 'logs/' + moment + '/exec.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -67,7 +74,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/slip.log',
+            'filename': 'logs/' + moment + '/slip.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -75,7 +82,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/txns.log',
+            'filename': 'logs/' + moment + '/txns.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -83,7 +90,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/manual.log',
+            'filename': 'logs/' + moment + '/manual.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },
@@ -91,7 +98,7 @@ LOGGING_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'whenAndWhere',
-            'filename': 'logs/errors.log',
+            'filename': 'logs/' + moment + '/errors.log',
             'mode': 'w',
             'encoding': 'utf-8'
         },

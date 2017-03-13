@@ -1,6 +1,6 @@
 import logging
 import sys
-from .custom_strategies import SMACrossesStrategy
+from .custom_strategies import CustomStrategy
 from .lib.config import TradingEngineConfig, BacktestConfig
 from .lib.enums import TradingType
 from .trading import TradingEngine
@@ -87,15 +87,17 @@ def main(argv: list):
     te = TradingEngine(config)
 
     # A sample strategy that impelements the correct interface
+    ts = CustomStrategy(50)
+    te.registerStrategy(ts)
 
-    for i in range(5, 101, 5):
-        for j in range(10, 201, 10):
-            if j > i:
-                ts = SMACrossesStrategy(i, j)
+    # for i in [5, 10, 20, 25, 50, 100]:
+    #     for j in [10, 20, 25, 75, 100, 150, 200]:
+    #         if j > i:
+    #             ts = CustomStrategy(i, j)
 
-                # Register the strategy with the Trading engine
-                log.critical("registering %d - %d", i, j)
-                te.registerStrategy(ts)
+    #             # Register the strategy with the Trading engine
+    #             log.critical("registering %d - %d", i, j)
+    #             te.registerStrategy(ts)
 
     # Run the live trading engine
     te.run()
