@@ -1,8 +1,8 @@
 import sys
 import select
 import queue
-from .lib.enums import Side, CurrencyType, OrderType, OrderSubType
-from .lib.structs import TradeRequest
+from .lib.enums import Side, CurrencyType, OrderType, OrderSubType, ExchangeType
+from .lib.structs import TradeRequest, MarketData
 from .lib.logging import MANUAL as log
 
 
@@ -24,7 +24,7 @@ def manual(exchange, inqueue, outqueue):
                     log.critical('stats: %s', exchange._last)
                 elif x[0] == 'b':
                     try:
-                        d = parse_buy(x, exchange._type)
+                        d = parse_buy(x, exchange._type, exchange._last)
                         outqueue.put(('b', d))
                         log.critical('manual buy!')
                         # exchange.buy(d)
@@ -36,7 +36,7 @@ def manual(exchange, inqueue, outqueue):
                         continue
                 elif x[0] == 's':
                     try:
-                        d = parse_sell(x, exchange._type)
+                        d = parse_sell(x, exchange._type, exchange._last)
                         outqueue.put(('s', d))
                         log.critical('manual sell!')
                         # exchange.sell(d)
@@ -64,12 +64,13 @@ def manual(exchange, inqueue, outqueue):
                     continue
         except KeyboardInterrupt:
             outqueue.put(('q'))
-        except:
+        except Exception as e:
             log.critical("Invalid command")
+            log.critical(e)
             continue
 
 
-def parse_buy(x, typ):
+def parse_buy(x: list, typ: ExchangeType, last: MarketData):
     vol = x[1]
     price = x[2]
     extra = x[3]
@@ -81,12 +82,13 @@ def parse_buy(x, typ):
                        exchange=typ,
                        currency=CurrencyType.BTC,
                        order_type=symbol_to_order_type(extra),
-                       order_sub_type=symbol_to_order_sub_type(extra2))
+                       order_sub_type=symbol_to_order_sub_type(extra2),
+                       data=last)
 
     return ret
 
 
-def parse_sell(x, typ):
+def parse_sell(x: list, typ: ExchangeType, last: MarketData):
     vol = x[1]
     price = x[2]
     extra = x[3]
@@ -98,7 +100,8 @@ def parse_sell(x, typ):
                        exchange=typ,
                        currency=CurrencyType.BTC,
                        order_type=symbol_to_order_type(extra),
-                       order_sub_type=symbol_to_order_sub_type(extra2))
+                       order_sub_type=symbol_to_order_sub_type(extra2),
+                       data=last)
     return ret
 
 
