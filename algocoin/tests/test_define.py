@@ -38,9 +38,9 @@ class TestDefine:
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.LIVE) \
             == 'wss://ws-feed.gdax.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.SANDBOX) \
-            == 'wss://api.sandbox.gemini.com/v1/marketdata/BTCUSD'
+            == 'wss://api.sandbox.gemini.com/v1/marketdata/btcusd?heartbeat=true'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.LIVE) \
-            == 'wss://api.gemini.com/v1/marketdata/BTCUSD'
+            == 'wss://api.gemini.com/v1/marketdata/btcusd?heartbeat=true'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.HITBTC, TradingType.SANDBOX) \
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.HITBTC, TradingType.LIVE) \

@@ -58,7 +58,7 @@ class Risk(object):
 
         # no room for volume
         rlog.info('Order rejected: %s' % req)
-        return self._constructResp(req.data, req.side, req.volume, req.price, False, 'test')
+        return self._constructResp(req.data, req.side, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
 
     def requestBuy(self, req: TradeRequest):
         '''precheck for risk compliance'''

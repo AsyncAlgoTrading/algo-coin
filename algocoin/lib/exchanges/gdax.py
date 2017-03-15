@@ -37,7 +37,7 @@ class GDAXExchange(Exchange):
                                                     api_url=self._oe_url
                                                     )
 
-        val = self._client.getAccounts() if hasattr(self, '_client') else ['BACKTEST']
+        val = self._client.getAccounts() if hasattr(self, '_client') else []
 
         self._accounts = []
         for jsn in val:
@@ -68,7 +68,7 @@ class GDAXExchange(Exchange):
                 self.ws.send(self._subscription)
                 log.info('Sending Subscription %s' % self._subscription)
                 self.ws.send(self._heartbeat)
-                log.info('Sending Heartbeat %s' % self._subscription)
+                log.info('Sending Heartbeat %s' % self._heartbeat)
 
                 self._running = True
 

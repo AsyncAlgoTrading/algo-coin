@@ -19,38 +19,43 @@ class TestEnums:
 
     def test_trading_type(self):
         from ..lib.enums import TradingType
-        t0 = TradingType.SANDBOX
-        t1 = TradingType.LIVE
-        t2 = TradingType.BACKTEST
-        assert t0 == TradingType.SANDBOX
-        assert t1 == TradingType.LIVE
-        assert t2 == TradingType.BACKTEST
+        t0 = TradingType.NONE
+        t1 = TradingType.SANDBOX
+        t2 = TradingType.LIVE
+        t3 = TradingType.BACKTEST
+        assert t0 == TradingType.NONE
+        assert t1 == TradingType.SANDBOX
+        assert t2 == TradingType.LIVE
+        assert t3 == TradingType.BACKTEST
         assert t0 == TradingType(0)
         assert t1 == TradingType(1)
         assert t2 == TradingType(2)
+        assert t3 == TradingType(3)
 
     def test_exchange_type(self):
         from ..lib.enums import ExchangeType
-        t0 = ExchangeType.BITSTAMP
-        t1 = ExchangeType.BITFINEX
-        t2 = ExchangeType.CEX
-        t3 = ExchangeType.GDAX
-        t4 = ExchangeType.GEMINI
-        t5 = ExchangeType.HITBTC
-        t6 = ExchangeType.ITBIT
-        t7 = ExchangeType.KRAKEN
-        t8 = ExchangeType.LAKE
-        t9 = ExchangeType.POLONIEX
-        assert t0 == ExchangeType.BITSTAMP
-        assert t1 == ExchangeType.BITFINEX
-        assert t2 == ExchangeType.CEX
-        assert t3 == ExchangeType.GDAX
-        assert t4 == ExchangeType.GEMINI
-        assert t5 == ExchangeType.HITBTC
-        assert t6 == ExchangeType.ITBIT
-        assert t7 == ExchangeType.KRAKEN
-        assert t8 == ExchangeType.LAKE
-        assert t9 == ExchangeType.POLONIEX
+        t0 = ExchangeType.NONE
+        t1 = ExchangeType.BITSTAMP
+        t2 = ExchangeType.BITFINEX
+        t3 = ExchangeType.CEX
+        t4 = ExchangeType.GDAX
+        t5 = ExchangeType.GEMINI
+        t6 = ExchangeType.HITBTC
+        t7 = ExchangeType.ITBIT
+        t8 = ExchangeType.KRAKEN
+        t9 = ExchangeType.LAKE
+        t10 = ExchangeType.POLONIEX
+        assert t0 == ExchangeType.NONE
+        assert t1 == ExchangeType.BITSTAMP
+        assert t2 == ExchangeType.BITFINEX
+        assert t3 == ExchangeType.CEX
+        assert t4 == ExchangeType.GDAX
+        assert t5 == ExchangeType.GEMINI
+        assert t6 == ExchangeType.HITBTC
+        assert t7 == ExchangeType.ITBIT
+        assert t8 == ExchangeType.KRAKEN
+        assert t9 == ExchangeType.LAKE
+        assert t10 == ExchangeType.POLONIEX
         assert t0 == ExchangeType(0)
         assert t1 == ExchangeType(1)
         assert t2 == ExchangeType(2)
@@ -61,6 +66,7 @@ class TestEnums:
         assert t7 == ExchangeType(7)
         assert t8 == ExchangeType(8)
         assert t9 == ExchangeType(9)
+        assert t10 == ExchangeType(10)
 
     def test_currency_type(self):
         from ..lib.enums import CurrencyType

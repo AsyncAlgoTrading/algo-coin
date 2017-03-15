@@ -18,22 +18,24 @@ class TickType(Enum):
 
 
 class TradingType(Enum):
-    SANDBOX = 0
-    LIVE = 1
-    BACKTEST = 2
+    NONE = 0
+    SANDBOX = 1
+    LIVE = 2
+    BACKTEST = 3
 
 
 class ExchangeType(Enum):
-    BITSTAMP = 0
-    BITFINEX = 1
-    CEX = 2
-    GDAX = 3
-    GEMINI = 4
-    HITBTC = 5
-    ITBIT = 6
-    KRAKEN = 7
-    LAKE = 8
-    POLONIEX = 9
+    NONE = 0
+    BITSTAMP = 1
+    BITFINEX = 2
+    CEX = 3
+    GDAX = 4
+    GEMINI = 5
+    HITBTC = 6
+    ITBIT = 7
+    KRAKEN = 8
+    LAKE = 9
+    POLONIEX = 10
 
 
 class CurrencyType(Enum):

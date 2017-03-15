@@ -2,7 +2,7 @@ from typing import Callable
 from .backtest import Backtest
 from .lib.callback import Callback, Print
 from .lib.config import TradingEngineConfig
-from .lib.enums import TradingType, Side
+from .lib.enums import TradingType, Side, CurrencyType
 from .execution import Execution
 from .risk import Risk
 from .lib.strategy import TradingStrategy
@@ -24,7 +24,16 @@ class TradingEngine(object):
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
 
         if self._live or self._sandbox:
-            log.info(self._ex.accounts())
+            accounts = self._ex.accounts()
+
+            # extract max funds info
+            for account in accounts:
+                if account.currency == CurrencyType.USD:
+                    options.risk_options.total_funds = account.balance
+
+            log.info(accounts)
+            log.info("Running with %.2f USD" % options.risk_options.total_funds)
+
 
         self._bt = Backtest(options.backtest_options) if self._backtest else None
 

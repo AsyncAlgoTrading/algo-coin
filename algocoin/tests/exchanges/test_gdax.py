@@ -25,9 +25,10 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import ExchangeType
 
-        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
+        with patch('os.environ'), patch('GDAX.AuthenticatedClient') as m:
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GDAX
+            m.getAccounts.return_value = []
             e = GDAXExchange(ec)
             e._running = True
             assert e

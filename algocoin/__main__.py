@@ -1,6 +1,7 @@
 import logging
 import sys
 from .custom_strategies import CustomStrategy
+from .lib.strategies.sma_crosses_strategy import SMACrossesStrategy
 from .lib.config import TradingEngineConfig, BacktestConfig
 from .lib.enums import TradingType
 from .trading import TradingEngine
@@ -50,7 +51,7 @@ def parse_command_line(argv: list):
         config.execution_options.trading_type = TradingType.BACKTEST
         config.risk_options.total_funds = 20000.0
 
-        log.critical("Config : %s", str(config))
+    log.critical("Config : %s", str(config))
 
     if 'verbose' in argv:
         # Print/log extra info
@@ -88,7 +89,9 @@ def main(argv: list):
 
     # A sample strategy that impelements the correct interface
     ts = CustomStrategy(50)
+    ts2 = SMACrossesStrategy(5, 10)
     te.registerStrategy(ts)
+    te.registerStrategy(ts2)
 
     # for i in [5, 10, 20, 25, 50, 100]:
     #     for j in [10, 20, 25, 75, 100, 150, 200]:

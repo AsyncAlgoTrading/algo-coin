@@ -29,7 +29,7 @@ annotate_l: ## MyPy type annotation check - count only
 	mypy -s algocoin | wc -l 
 
 clean: ## clean the repository
-	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ algocoin/lib/strategies/__pycache__ algocoin/lib/strategies/*.pyc  algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/tests/exchanges/__pycache__ algocoin/tests/exchanges/*.pyc algocoin/tests/strategies/__pycache__ algocoin/tests/strategies/*.pyc  .coverage cover htmlcov logs
+	rm -rf *.pyc __pycache__ algocoin/__pycache__ algocoin/*.pyc algocoin/lib/__pycache__ algocoin/lib/*.pyc algocoin/lib/exchanges/*.pyc algocoin/lib/exchanges/__pycache__ algocoin/lib/strategies/__pycache__ algocoin/lib/strategies/*.pyc algocoin/lib/oe/__pycache__ algocoin/lib/oe/*.pyc algocoin/tests/__pycache__ algocoin/tests/*.pyc algocoin/tests/exchanges/__pycache__ algocoin/tests/exchanges/*.pyc algocoin/tests/strategies/__pycache__ algocoin/tests/strategies/*.pyc  .coverage cover htmlcov logs
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
