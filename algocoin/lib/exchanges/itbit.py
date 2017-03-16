@@ -18,7 +18,7 @@ from ..logging import LOG as log
 
 
 class ItBitExchange(Exchange):
-    def __init__(self, options: ExchangeConfig):
+    def __init__(self, options: ExchangeConfig) -> None:
         super(ItBitExchange, self).__init__(options)
         self._type = ExchangeType.ITBIT
         self._last = None
@@ -44,7 +44,7 @@ class ItBitExchange(Exchange):
 
         self._seqnum_enabled = False
 
-    def run(self, engine):
+    def run(self, engine) -> None:
         # DEBUG
         # websocket.enableTrace(True)
 
@@ -147,7 +147,7 @@ class ItBitExchange(Exchange):
 
             #     return
 
-    def accounts(self):
+    def accounts(self) -> list:
         # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
 

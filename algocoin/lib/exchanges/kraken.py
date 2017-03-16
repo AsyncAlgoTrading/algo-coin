@@ -19,7 +19,7 @@ from ..logging import LOG as log
 
 
 class KrakenExchange(Exchange):
-    def __init__(self, options: ExchangeConfig):
+    def __init__(self, options: ExchangeConfig) -> None:
         super(KrakenExchange, self).__init__(options)
         self._type = ExchangeType.KRAKEN
         self._last = None
@@ -45,7 +45,7 @@ class KrakenExchange(Exchange):
 
         self._seqnum_enabled = False
 
-    def run(self, engine):
+    def run(self, engine) -> None:
         # DEBUG
         # websocket.enableTrace(True)
 
@@ -148,7 +148,7 @@ class KrakenExchange(Exchange):
 
             #     return
 
-    def accounts(self):
+    def accounts(self) -> list:
         # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
 

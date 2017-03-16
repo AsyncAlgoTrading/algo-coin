@@ -58,7 +58,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self._portfolio_value[-1][1] + profit))
 
     @ticks
-    def onTrade(self, data: MarketData):
+    def onTrade(self, data: MarketData) -> bool:
         # add data to arrays
         self.shorts.append(data.price)
         self.longs.append(data.price)
@@ -117,10 +117,10 @@ class SMACrossesStrategy(TradingStrategy):
 
         return False
 
-    def onError(self, e):
+    def onError(self, e) -> None:
         elog.critical(e)
 
-    def onAnalyze(self, _):
+    def onAnalyze(self, _) -> None:
         import pandas
         # import matplotlib.pyplot as plt
         # import seaborn as sns
@@ -156,22 +156,22 @@ class SMACrossesStrategy(TradingStrategy):
 
         # plt.show()
 
-    def onChange(self, data):
+    def onChange(self, data: MarketData) -> None:
         pass
 
-    def onContinue(self, data):
+    def onContinue(self, data: MarketData) -> None:
         pass
 
-    def onDone(self, data):
+    def onDone(self, data: MarketData) -> None:
         pass
 
-    def onHalt(self, data):
+    def onHalt(self, data: MarketData) -> None:
         pass
 
-    def onOpen(self, data):
+    def onOpen(self, data: MarketData) -> None:
         pass
 
-    def onReceived(self, data):
+    def onReceived(self, data: MarketData) -> None:
         pass
 
     def slippage(self, resp: TradeResponse) -> TradeResponse:

@@ -3,11 +3,12 @@ import os
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType
 from .logging import ERROR as log
+from .exchange import Exchange
 
 NOPRINT = True
 
 
-def create_pair(key, typ, default=None):
+def create_pair(key: str, typ: type, default=None) -> property:
     def get(self):
         if hasattr(self, '__' + str(key)):
             return getattr(self, '__' + str(key))
@@ -42,7 +43,7 @@ def config(cls):
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
-def __init__(self, **kwargs):
+def __init__(self, **kwargs) -> None:
     for item in self._vars:
         if item not in kwargs:
             log.info('WARNING %s unset!', item)
@@ -52,7 +53,7 @@ def __init__(self, **kwargs):
         getattr(self, item)  # make sure all are set.
 
 
-def __repr__(self):
+def __repr__(self) -> str:
     # log.warn(str(self.__class__))
     return '<' + ', '.join([x + '-' + str(getattr(self, x))
                            for x in self._vars if hasattr(self, x) and
@@ -98,7 +99,7 @@ def struct(cls):
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
-def parse_date(indate: str):
+def parse_date(indate: str) -> datetime:
     try:
         date = datetime.utcfromtimestamp(float(indate))
         date = pytz.utc.localize(date).astimezone(
@@ -108,7 +109,7 @@ def parse_date(indate: str):
     return date
 
 
-def ex_type_to_ex(ex: ExchangeType):
+def ex_type_to_ex(ex: ExchangeType) -> Exchange:
     if ex == ExchangeType.GDAX:
         from .exchanges.gdax import GDAXExchange
         return GDAXExchange
@@ -121,19 +122,19 @@ def ex_type_to_ex(ex: ExchangeType):
     raise Exception('Exchange type not implemented : %s ' % ex)
 
 
-def currency_to_string_gdax(cur: CurrencyType):
+def currency_to_string_gdax(cur: CurrencyType) -> str:
     if cur == CurrencyType.BTC:
         return 'BTC-USD'
 
 
-def order_type_to_string_gdax(typ: OrderType):
+def order_type_to_string_gdax(typ: OrderType) -> str:
     if typ == OrderType.LIMIT:
         return 'limit'
     elif typ == OrderType.MARKET:
         return 'market'
 
 
-def trade_req_to_params_gdax(req):
+def trade_req_to_params_gdax(req) -> dict:
     p = {}
     p['price'] = str(req.price)
     p['size'] = str(req.volume)
@@ -147,7 +148,7 @@ def trade_req_to_params_gdax(req):
     return p
 
 
-def get_keys_from_environment(prefix: str):
+def get_keys_from_environment(prefix: str) -> tuple:
     key = os.environ[prefix + '_API_KEY']
     secret = os.environ[prefix + '_API_SECRET']
     passphrase = os.environ[prefix + '_API_PASS']
@@ -173,7 +174,7 @@ def exchange_str_to_exchange(exchange: str) -> ExchangeType:
             return ExchangeType.GDAX
 
 
-def exchange_to_file(exchange: ExchangeType):
+def exchange_to_file(exchange: ExchangeType) -> str:
     if exchange == ExchangeType.BITSTAMP:
         log.critical('Backtesting against bitstamp data')
         return "./data/exchange/bitstampUSD.csv"

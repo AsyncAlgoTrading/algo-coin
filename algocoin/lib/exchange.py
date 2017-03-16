@@ -8,7 +8,7 @@ from .define import EXCHANGE_MARKET_DATA_ENDPOINT, EXCHANGE_ORDER_ENDPOINT
 
 
 class Exchange(StreamingDataSource):
-    def __init__(self, options: ExchangeConfig):
+    def __init__(self, options: ExchangeConfig) -> None:
         super(Exchange, self).__init__(options)
         self._lastseqnum = -1
         self._missingseqnum = set()  # type: Set
@@ -17,11 +17,11 @@ class Exchange(StreamingDataSource):
         self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
         self._manual = False
 
-    def close(self):
+    def close(self) -> None:
         log.critical('Closing....')
         self.ws.close()
 
-    def seqnum(self, number: int):
+    def seqnum(self, number: int) -> None:
         if self._lastseqnum == -1:
             # first seen
             self._lastseqnum = number
@@ -41,7 +41,7 @@ class Exchange(StreamingDataSource):
         else:
             self._lastseqnum = number
 
-    def receive(self):
+    def receive(self) -> None:
         res = self.tickToData(json.loads(self.ws.recv()))
 
         if self._seqnum_enabled and res.type != TickType.HEARTBEAT:

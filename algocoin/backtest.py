@@ -41,11 +41,11 @@ class Backtest(StreamingDataSource):
         else:
             self.callback(TickType.ERROR, data)
 
-    def close(self):
+    def close(self) -> None:
         pass
 
-    def seqnum(self, num):
+    def seqnum(self, num: int) -> None:
         pass
 
-    def tickToData(self, tick):
+    def tickToData(self, tick: str) -> None:
         pass

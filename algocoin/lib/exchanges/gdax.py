@@ -18,7 +18,7 @@ from ..logging import LOG as log
 
 
 class GDAXExchange(Exchange):
-    def __init__(self, options: ExchangeConfig):
+    def __init__(self, options: ExchangeConfig) -> None:
         super(GDAXExchange, self).__init__(options)
         self._type = ExchangeType.GDAX
         self._last = None
@@ -54,7 +54,7 @@ class GDAXExchange(Exchange):
 
         self._seqnum_enabled = True
 
-    def run(self, engine):
+    def run(self, engine) -> None:
         # DEBUG
         # websocket.enableTrace(True)
 
@@ -157,7 +157,7 @@ class GDAXExchange(Exchange):
 
             #     return
 
-    def accounts(self):
+    def accounts(self) -> list:
         # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
 

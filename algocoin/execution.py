@@ -1,7 +1,7 @@
 from .lib.config import ExecutionConfig
 from .lib.exchange import Exchange
 from .lib.enums import Side, CurrencyType
-from .lib.structs import TradeRequest, TradeResponse
+from .lib.structs import TradeRequest, TradeResponse, MarketData
 from .lib.logging import EXEC as exlog
 
 
@@ -10,9 +10,9 @@ class Execution(object):
         self._ex = exchange
 
     def _constructResp(self,
-                       data,
-                       request,
-                       side,
+                       data: MarketData,
+                       request: TradeRequest,
+                       side: Side,
                        vol: float,
                        price: float,
                        currency: CurrencyType,

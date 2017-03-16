@@ -19,7 +19,7 @@ from ..logging import LOG as log
 
 
 class GeminiExchange(Exchange):
-    def __init__(self, options: ExchangeConfig):
+    def __init__(self, options: ExchangeConfig) -> None:
         super(GeminiExchange, self).__init__(options)
         self._type = ExchangeType.GEMINI
         self._last = None
@@ -48,7 +48,7 @@ class GeminiExchange(Exchange):
 
         self._seqnum_enabled = False
 
-    def run(self, engine):
+    def run(self, engine) -> None:
         # DEBUG
         # websocket.enableTrace(True)
 
@@ -151,7 +151,7 @@ class GeminiExchange(Exchange):
 
             #     return
 
-    def accounts(self):
+    def accounts(self) -> list:
         # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
 
@@ -208,7 +208,7 @@ class GeminiExchange(Exchange):
         # print(ret)
         return ret
 
-    def receive(self):
+    def receive(self) -> None:
         jsn = json.loads(self.ws.recv())
         if jsn.get('type') == 'heartbeat':
             pass

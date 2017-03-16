@@ -3,7 +3,6 @@ from .enums import Side, \
                    CurrencyType, \
                    OrderType, \
                    OrderSubType, \
-                   ExchangeType, \
                    TickType
 from .utils import struct, NOPRINT
 
@@ -64,6 +63,6 @@ class Account:
     balance = float
     id = str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<" + self.id + " - " + \
               str(self.currency) + " - " + str(self.balance) + ">"

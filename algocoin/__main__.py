@@ -17,7 +17,7 @@ from .lib.logging import LOG as log, \
 from .lib.utils import exchange_str_to_exchange, exchange_to_file
 
 
-def parse_command_line(argv: list):
+def parse_command_line(argv: list) -> TradingEngineConfig:
     # Every engine run requires a static config object
     config = TradingEngineConfig()
     if 'live' in argv:
@@ -78,7 +78,7 @@ def parse_command_line(argv: list):
     return config
 
 
-def main(argv: list):
+def main(argv: list) -> None:
     config = parse_command_line(argv)
     # Instantiate trading engine
     #

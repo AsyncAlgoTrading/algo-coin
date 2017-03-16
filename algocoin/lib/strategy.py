@@ -12,18 +12,18 @@ def ticks(f):
 
 class Strategy(metaclass=ABCMeta):
     '''Strategy interface'''
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self._tick = False
         self._actions = []
         self._requests = []
 
-    def ticked(self):
+    def ticked(self) -> bool:
         return self._tick
 
-    def reset(self):
+    def reset(self) -> None:
         self._tick = False
 
-    def setEngine(self, engine):
+    def setEngine(self, engine) -> None:
         self._te = engine
 
     @abstractmethod
@@ -38,11 +38,11 @@ class Strategy(metaclass=ABCMeta):
                     data: MarketData):
         '''requestSell'''
 
-    def registerAction(self, time, actionType, data):
+    def registerAction(self, time, actionType, data) -> None:
         '''add action to log'''
         self._actions.append((time, actionType, data))
 
-    def registerDesire(self, time, actionType, data):
+    def registerDesire(self, time, actionType, data) -> None:
         '''add action to log'''
         self._requests.append((time, actionType, data))
 
@@ -51,19 +51,19 @@ class TradingStrategy(Strategy, Callback):
     def requestBuy(self,
                    callback: Callable,
                    req: TradeRequest,
-                   callback_failure=None):
+                   callback_failure=None) -> None:
         self._te.requestBuy(callback, req, callback_failure, self)
 
     def requestSell(self,
                     callback: Callable,
                     req: TradeRequest,
-                    callback_failure=None):
+                    callback_failure=None) -> None:
         self._te.requestSell(callback, req, callback_failure, self)
 
-    def slippage(self, data: TradeResponse):
+    def slippage(self, data: TradeResponse) -> TradeResponse:
         '''slippage model. default is pass through'''
         return data
 
-    def transactionCost(self, data: TradeResponse):
+    def transactionCost(self, data: TradeResponse) -> TradeResponse:
         '''txns cost model. default is pass through'''
         return data

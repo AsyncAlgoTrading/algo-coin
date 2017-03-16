@@ -1,12 +1,19 @@
 import sys
 import select
 import queue
-from .lib.enums import Side, CurrencyType, OrderType, OrderSubType, ExchangeType
+from .lib.enums import Side, \
+                       CurrencyType, \
+                       OrderType, \
+                       OrderSubType, \
+                       ExchangeType
 from .lib.structs import TradeRequest, MarketData
 from .lib.logging import MANUAL as log
+from .lib.exchange import Exchange
 
 
-def manual(exchange, inqueue, outqueue):
+def manual(exchange: Exchange,
+           inqueue: queue.Queue,
+           outqueue: queue.Queue) -> int:
     log.info('')
     log.critical('Entering manual mode')
     print(commands())
@@ -70,7 +77,7 @@ def manual(exchange, inqueue, outqueue):
             continue
 
 
-def parse_buy(x: list, typ: ExchangeType, last: MarketData):
+def parse_buy(x: list, typ: ExchangeType, last: MarketData) -> TradeRequest:
     vol = x[1]
     price = x[2]
     extra = x[3]
@@ -88,7 +95,7 @@ def parse_buy(x: list, typ: ExchangeType, last: MarketData):
     return ret
 
 
-def parse_sell(x: list, typ: ExchangeType, last: MarketData):
+def parse_sell(x: list, typ: ExchangeType, last: MarketData) -> TradeRequest:
     vol = x[1]
     price = x[2]
     extra = x[3]
@@ -105,7 +112,7 @@ def parse_sell(x: list, typ: ExchangeType, last: MarketData):
     return ret
 
 
-def symbol_to_order_type(s):
+def symbol_to_order_type(s: str) -> OrderType:
     if s == 'l':
         return OrderType.LIMIT
     elif s == 'm':
@@ -113,7 +120,7 @@ def symbol_to_order_type(s):
     raise Exception('Order Type not recognized %s' % s)
 
 
-def symbol_to_order_sub_type(s):
+def symbol_to_order_sub_type(s: str) -> OrderSubType:
     if s == 'p':
         return OrderSubType.POST_ONLY
     elif s == 'f':
@@ -124,7 +131,7 @@ def symbol_to_order_sub_type(s):
         return OrderSubType.NONE
 
 
-def commands():
+def commands() -> str:
     return '''
     Stats: stats
         Print current trade price, bid/ask, etc

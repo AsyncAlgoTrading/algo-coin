@@ -9,7 +9,7 @@ class DataSource(metaclass=ABCMeta):
 
 
 class RestAPIDataSource(DataSource):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         pass
 
     @abstractmethod
@@ -34,7 +34,7 @@ class RestAPIDataSource(DataSource):
 
 
 class StreamingDataSource(DataSource):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self._running = False
 
         self._callbacks = {TickType.TRADE: [],
@@ -64,7 +64,7 @@ class StreamingDataSource(DataSource):
     def receive(self):
         '''receive data and call callbacks'''
 
-    def callback(self, field: str, data):
+    def callback(self, field: str, data) -> None:
         for cb in self._callbacks[field]:
             cb(data)
 
@@ -73,34 +73,34 @@ class StreamingDataSource(DataSource):
     def tickToData(self, data):
         '''convert json to market data based on fields'''
 
-    def onTrade(self, callback: Callback):
+    def onTrade(self, callback: Callback) -> None:
         self._callbacks[TickType.TRADE].append(callback)
 
-    def onReceived(self, callback: Callback):
+    def onReceived(self, callback: Callback) -> None:
         self._callbacks[TickType.RECEIVED].append(callback)
 
-    def onOpen(self, callback: Callback):
+    def onOpen(self, callback: Callback) -> None:
         self._callbacks[TickType.OPEN].append(callback)
 
-    def onDone(self, callback: Callback):
+    def onDone(self, callback: Callback) -> None:
         self._callbacks[TickType.DONE].append(callback)
 
-    def onChange(self, callback: Callback):
+    def onChange(self, callback: Callback) -> None:
         self._callbacks[TickType.CHANGE].append(callback)
 
-    def onError(self, callback: Callback):
+    def onError(self, callback: Callback) -> None:
         self._callbacks[TickType.ERROR].append(callback)
 
-    def onAnalyze(self, callback: Callback):
+    def onAnalyze(self, callback: Callback) -> None:
         self._callbacks[TickType.ANALYZE].append(callback)
 
-    def onHalt(self, callback: Callback):
+    def onHalt(self, callback: Callback) -> None:
         self._callbacks[TickType.HALT].append(callback)
 
-    def onContinue(self, callback: Callback):
+    def onContinue(self, callback: Callback) -> None:
         self._callbacks[TickType.CONTINUE].append(callback)
 
-    def registerCallback(self, callback: Callback):
+    def registerCallback(self, callback: Callback) -> None:
         if not isinstance(callback, Callback):
             raise Exception('%s is not an instance of class '
                             'Callback' % callback)

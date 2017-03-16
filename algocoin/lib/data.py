@@ -1,5 +1,5 @@
 class DataBase(object):
-    def __init__(self,  **data):
+    def __init__(self,  **data) -> None:
         for k, v in data:
             setattr(self, k, v)
 
