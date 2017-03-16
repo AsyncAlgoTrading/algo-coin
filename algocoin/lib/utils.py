@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType
 from .logging import ERROR as log
-from .exchange import Exchange
 
 NOPRINT = True
 
@@ -109,7 +108,7 @@ def parse_date(indate: str) -> datetime:
     return date
 
 
-def ex_type_to_ex(ex: ExchangeType) -> Exchange:
+def ex_type_to_ex(ex: ExchangeType):
     if ex == ExchangeType.GDAX:
         from .exchanges.gdax import GDAXExchange
         return GDAXExchange
