@@ -45,45 +45,16 @@ class CurrencyType(Enum):
     LTC = 3
 
 
-def strToCurrencyType(s: str) -> CurrencyType:
-    s = s.upper()
-    if 'BTC' in s:
-        return CurrencyType.BTC
-    if 'ETH' in s:
-        return CurrencyType.ETH
-    if 'LTC' in s:
-        return CurrencyType.LTC
-    return CurrencyType.USD
-
-
 class Side(Enum):
     NONE = 0
     BUY = 1
     SELL = 2
 
 
-def strToSide(s: str) -> Side:
-    s = s.upper()
-    if 'BUY' in s or 'BID' in s:
-        return Side.BUY
-    if 'SELL' in s or 'ASK' in s:
-        return Side.SELL
-    return Side.NONE
-
-
 class OrderType(Enum):
     NONE = 0
     MARKET = 1
     LIMIT = 2
-
-
-def strToOrderType(s: str) -> OrderType:
-    s = s.upper()
-    if 'MARKET' in s:
-        return OrderType.MARKET
-    if 'LIMIT' in s:
-        return OrderType.LIMIT
-    return OrderType.NONE
 
 
 class OrderSubType(Enum):

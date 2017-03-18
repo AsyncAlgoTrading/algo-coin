@@ -10,11 +10,11 @@ from datetime import datetime
 from ..oe.gemini import GeminiSession
 from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide
+from ..enums import TradingType, ExchangeType, TickType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
+from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
 from ..logging import LOG as log
 
 
@@ -35,7 +35,7 @@ class GeminiExchange(Exchange):
 
         self._accounts = []
         for i, jsn in enumerate(val):
-            currency = strToCurrencyType(jsn.get('currency'))
+            currency = str_to_currency_type(jsn.get('currency'))
             balance = float(jsn.get('available', 'inf'))
             id = str(i)
             account = Account(id=id, currency=currency, balance=balance)
@@ -190,11 +190,11 @@ class GeminiExchange(Exchange):
             volume = delta
             typ = self.reasonToTradeType(reason)
 
-        side = strToSide(jsn.get('side', ''))
+        side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining', 'nan'))
 
         sequence = -1
-        currency = strToCurrencyType('BTC')
+        currency = str_to_currency_type('BTC')
 
         ret = MarketData(time=time,
                          volume=volume,

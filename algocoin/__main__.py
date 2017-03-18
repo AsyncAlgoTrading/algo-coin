@@ -14,7 +14,7 @@ from .lib.logging import LOG as log, \
                          TXNS as tlog, \
                          MANUAL as mlog, \
                          ERROR as elog
-from .lib.utils import exchange_str_to_exchange, exchange_to_file
+from .lib.utils import str_to_exchange, exchange_to_file
 
 
 def parse_command_line(argv: list) -> TradingEngineConfig:
@@ -27,7 +27,7 @@ def parse_command_line(argv: list) -> TradingEngineConfig:
         config.exchange_options.trading_type = TradingType.LIVE
         config.risk_options.trading_type = TradingType.LIVE
         config.execution_options.trading_type = TradingType.LIVE
-        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
+        config.exchange_options.exchange_type = str_to_exchange(argv)
 
     elif 'sandbox' in argv:
         # Trade against sandbox
@@ -36,7 +36,7 @@ def parse_command_line(argv: list) -> TradingEngineConfig:
         config.exchange_options.trading_type = TradingType.SANDBOX
         config.risk_options.trading_type = TradingType.SANDBOX
         config.execution_options.trading_type = TradingType.SANDBOX
-        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
+        config.exchange_options.exchange_type = str_to_exchange(argv)
 
     elif 'backtest' in argv:
         # Backtest against trade data
@@ -44,9 +44,9 @@ def parse_command_line(argv: list) -> TradingEngineConfig:
         config.type = TradingType.BACKTEST
         config.backtest_options = BacktestConfig()
 
-        config.backtest_options.file = exchange_to_file(exchange_str_to_exchange(argv))
+        config.backtest_options.file = exchange_to_file(str_to_exchange(argv))
         config.exchange_options.trading_type = TradingType.BACKTEST
-        config.exchange_options.exchange_type = exchange_str_to_exchange(argv)
+        config.exchange_options.exchange_type = str_to_exchange(argv)
         config.risk_options.trading_type = TradingType.BACKTEST
         config.execution_options.trading_type = TradingType.BACKTEST
         config.risk_options.total_funds = 20000.0

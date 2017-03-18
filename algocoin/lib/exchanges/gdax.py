@@ -9,11 +9,11 @@ import queue
 from websocket import create_connection
 from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType, strToCurrencyType, strToSide, strToOrderType
+from ..enums import TradingType, ExchangeType, TickType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment
+from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
 from ..logging import LOG as log
 
 
@@ -41,7 +41,7 @@ class GDAXExchange(Exchange):
 
         self._accounts = []
         for jsn in val:
-            currency = strToCurrencyType(jsn.get('currency'))
+            currency = str_to_currency_type(jsn.get('currency'))
             balance = float(jsn.get('balance', 'inf'))
             id = jsn.get('id', 'id')
             account = Account(id=id, currency=currency, balance=balance)
@@ -188,10 +188,10 @@ class GDAXExchange(Exchange):
         price = float(jsn.get('price', 'nan'))
         volume = float(jsn.get('size', 'nan'))
         typ = self.strToTradeType(jsn.get('type'))
-        currency = strToCurrencyType(jsn.get('product_id'))
+        currency = str_to_currency_type(jsn.get('product_id'))
 
-        order_type = strToOrderType(jsn.get('order_type', ''))
-        side = strToSide(jsn.get('side', ''))
+        order_type = str_to_order_type(jsn.get('order_type', ''))
+        side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining_size', 'nan'))
         reason = jsn.get('reason', '')
         sequence = int(jsn.get('sequence'))

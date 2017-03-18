@@ -1,7 +1,7 @@
 import pytz
 import os
 from datetime import datetime
-from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType
+from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType, Side
 from .logging import ERROR as log
 
 NOPRINT = True
@@ -154,7 +154,36 @@ def get_keys_from_environment(prefix: str) -> tuple:
     return key, secret, passphrase
 
 
-def exchange_str_to_exchange(exchange: str) -> ExchangeType:
+def str_to_currency_type(s: str) -> CurrencyType:
+    s = s.upper()
+    if 'BTC' in s:
+        return CurrencyType.BTC
+    if 'ETH' in s:
+        return CurrencyType.ETH
+    if 'LTC' in s:
+        return CurrencyType.LTC
+    return CurrencyType.USD
+
+
+def str_to_side(s: str) -> Side:
+    s = s.upper()
+    if 'BUY' in s or 'BID' in s:
+        return Side.BUY
+    if 'SELL' in s or 'ASK' in s:
+        return Side.SELL
+    return Side.NONE
+
+
+def str_to_order_type(s: str) -> OrderType:
+    s = s.upper()
+    if 'MARKET' in s:
+        return OrderType.MARKET
+    if 'LIMIT' in s:
+        return OrderType.LIMIT
+    return OrderType.NONE
+
+
+def str_to_exchange(exchange: str) -> ExchangeType:
         if 'bitfinex' in exchange:
             return ExchangeType.BITFINEX
         elif 'bitstamp' in exchange:

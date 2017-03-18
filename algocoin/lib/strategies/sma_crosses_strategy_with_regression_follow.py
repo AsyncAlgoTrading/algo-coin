@@ -1,3 +1,7 @@
+import numpy
+import pandas
+# import matplotlib.pyplot as plt
+# import seaborn as sns
 from ..strategy import ticks, \
                        TradingStrategy
 from ..structs import MarketData, TradeRequest, TradeResponse
@@ -11,10 +15,14 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
         self.short = size_short
         self.shorts = []
         self.short_av = 0.0
+        self.short_slope = 0.0
+        self.short_x = numpy.arange(0, self.short)
 
         self.long = size_long
         self.longs = []
         self.long_av = 0.0
+        self.long_slope = 0.0
+        self.long_x = numpy.arange(0, self.long)
 
         self.prev_state = ''
         self.state = ''
@@ -74,7 +82,15 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
         self.short_av = float(sum(self.shorts)) / max(len(self.shorts), 1)
         self.long_av = float(sum(self.longs)) / max(len(self.longs), 1)
 
-        slog.critical('%.2f %.2f', self.short_av, self.long_av)
+        short_y = numpy.array(self.shorts)
+        long_y = numpy.array(self.longs)
+        short_h = numpy.polyfit(self.short_x, short_y, 1)  # linreg
+        long_h = numpy.polyfit(self.long_x, long_y, 1)  # linreg
+
+        short_trend = short_h[0]
+        long_trend = long_h[0]
+
+        slog.critical('ave : %.2f %.2f \ttrend :', self.short_av, self.long_av, short_trend, long_trend)
         # sell out if losing too much
         stoploss = (self.bought - data.price*self.bought_qty) > 5
         # stoploss = False
@@ -121,10 +137,6 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
         elog.critical(e)
 
     def onAnalyze(self, _) -> None:
-        import pandas
-        # import matplotlib.pyplot as plt
-        # import seaborn as sns
-
         ## pd = pandas.DataFrame(self._actions,
         ##                       columns=['time', 'action', 'price'])
 
