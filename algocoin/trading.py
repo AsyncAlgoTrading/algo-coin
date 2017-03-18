@@ -36,10 +36,11 @@ class TradingEngine(object):
 
 
         self._bt = Backtest(options.backtest_options) if self._backtest else None
-
         self._rk = Risk(options.risk_options)
-
         self._ec = Execution(options.execution_options, self._ex)
+
+        # sanity check
+        assert not (self._live and self._sandbox and self._backtest)
 
         if self._print:
             log.warn('WARNING: Running in verbose mode')
@@ -82,7 +83,7 @@ class TradingEngine(object):
             # register for exchange data
             self._ex.registerCallback(strat.callback())
 
-        if self._backtest:
+        elif self._backtest:
             # register for backtest data
             self._bt.registerCallback(strat.callback())
 
@@ -156,15 +157,16 @@ class TradingEngine(object):
                                      success=False)
 
         if self._backtest and strat:
+            print("HERE")
             # register the initial request
             strat.registerDesire(req.data.time, req.side, req.price)
 
             # adjust response with slippage and transaction cost modeling
             resp = strat.slippage(resp)
-            sllog.info("Slippage - %s" % resp)
+            sllog.info("Slippage BT- %s" % resp)
 
             resp = strat.transactionCost(resp)
-            tlog.info("TXN cost - %s" % resp)
+            tlog.info("TXN cost BT- %s" % resp)
 
             # register the response
             strat.registerAction(resp.data.time, resp.side, resp.price)
