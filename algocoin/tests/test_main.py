@@ -21,23 +21,23 @@ class TestMain:
         # teardown_class() after any methods in this class
 
     def test_parse_command_line(self):
-        from ..__main__ import parse_command_line
+        from ..__main__ import parse_command_line_config
         from ..lib.enums import TradingType
 
         argv = ['live']
-        ret = parse_command_line(argv)
+        ret = parse_command_line_config(argv)
         assert ret.type == TradingType.LIVE
 
         argv = ['sandbox']
-        ret = parse_command_line(argv)
+        ret = parse_command_line_config(argv)
         assert ret.type == TradingType.SANDBOX
 
         argv = ['backtest']
-        ret = parse_command_line(argv)
+        ret = parse_command_line_config(argv)
         assert ret.type == TradingType.BACKTEST
 
         argv = ['print']
-        ret = parse_command_line(argv)
+        ret = parse_command_line_config(argv)
         assert ret.print
 
     def test_main(self):

@@ -35,6 +35,7 @@ class Execution(object):
 
     def requestSell(self, req: TradeRequest) -> TradeResponse:
         # TODO
+        # res = self._ex.sell(req)
         resp = self._constructResp(req.data, req, req.side, req.volume, req.price, req.currency, True)
         exlog.info('Order executed: %s' % resp)
         return resp

@@ -22,6 +22,8 @@ class TradingEngine(object):
         self._strats = []  # type: List[TradingStrategy]
 
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
+        # self._exchanges = [ex_type_to_ex(o.exchange_options.exchange_type)(o.exchange_options) if self._live or self._sandbox else None for o in options]
+        self._exchanges = []
 
         if self._live or self._sandbox:
             accounts = self._ex.accounts()
