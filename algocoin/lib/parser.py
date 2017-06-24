@@ -1,20 +1,31 @@
 from configparser import ConfigParser
 from .config import TradingEngineConfig, BacktestConfig
 from .enums import TradingType
+from .exceptions import ConfigException
 from .utils import str_to_exchange, exchange_to_file, set_verbose
 from .logging import LOG as log
 
 
 def parse_file_config(filename: str) -> TradingEngineConfig:
     config = TradingEngineConfig()
-    with open(filename, 'r') as fp:
-        c = ConfigParser(fp)
-    general = c.get('general', None)
-    exchange = c.get('exchange', None)
-    strategy = c.get('strategy', None)
-    risk = c.get('risk', None)
-    default = c.get('DEFAULT', None)
+    c = ConfigParser()
+    c.read(filename)
 
+    general = c['general']
+    exchange = c['exchange']
+    strategy = c['strategy']
+    risk = c['risk']
+    default = c['DEFAULT']
+
+    _parse_general(general, config)
+    _parse_exchange(exchange, config)
+    _parse_strategy(strategy, config)
+    _parse_risk(risk, config)
+    _parse_default(default, config)
+    return config
+
+
+def _parse_general(general, config) -> None:
     if 'TradingType' in general:
         if general['TradingType'].lower() == 'live':
             log.critical("WARNING: Live trading. money will be lost ;^)")
@@ -25,12 +36,28 @@ def parse_file_config(filename: str) -> TradingEngineConfig:
         else:
             log.critical("Backtesting")
             set_all_trading_types(TradingType.BACKTEST, config)
+    else:
+        raise ConfigException('TradingType unspecified')
 
     if 'verbose' in general:
         if general['verbose'] == '1':
             set_verbose()
 
-    return config
+
+def _parse_exchange(exchange, config) -> None:
+    pass
+
+
+def _parse_strategy(strategy, config) -> None:
+    pass
+
+
+def _parse_risk(risk, config) -> None:
+    pass
+
+
+def _parse_default(default, config) -> None:
+    pass
 
 
 def parse_command_line_config(argv: list) -> TradingEngineConfig:
