@@ -25,7 +25,7 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import ExchangeType
 
-        with patch('os.environ'), patch('GDAX.AuthenticatedClient') as m:
+        with patch('os.environ'), patch('gdax.AuthenticatedClient') as m:
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GDAX
             m.getAccounts.return_value = []
@@ -38,7 +38,7 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import TickType, ExchangeType
 
-        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
+        with patch('os.environ'), patch('gdax.AuthenticatedClient'):
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GDAX
             e = GDAXExchange(ec)
@@ -65,7 +65,7 @@ class TestExchange:
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import TickType, ExchangeType
 
-        with patch('os.environ'), patch('GDAX.AuthenticatedClient'):
+        with patch('os.environ'), patch('gdax.AuthenticatedClient'):
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GDAX
             e = GDAXExchange(ec)

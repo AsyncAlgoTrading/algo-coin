@@ -1,4 +1,4 @@
-import GDAX
+import gdax
 import json
 # import os
 # import pprint
@@ -25,13 +25,13 @@ class GDAXExchange(Exchange):
 
         if options.trading_type == TradingType.LIVE:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX')
-            self._client = GDAX.AuthenticatedClient(self._key,
+            self._client = gdax.AuthenticatedClient(self._key,
                                                     self._secret,
                                                     self._passphrase)
 
         elif options.trading_type == TradingType.SANDBOX:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX_SANDBOX')
-            self._client = GDAX.AuthenticatedClient(self._key,
+            self._client = gdax.AuthenticatedClient(self._key,
                                                     self._secret,
                                                     self._passphrase,
                                                     api_url=self._oe_url
