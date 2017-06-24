@@ -1,8 +1,17 @@
 import pytz
 import os
+import logging
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType, Side
-from .logging import ERROR as log
+from .logging import LOG as log, \
+                         STRAT as slog, \
+                         DATA as dlog, \
+                         RISK as rlog, \
+                         EXEC as exlog, \
+                         SLIP as sllog, \
+                         TXNS as tlog, \
+                         MANUAL as mlog, \
+                         ERROR as elog
 
 NOPRINT = True
 
@@ -224,3 +233,23 @@ def exchange_to_file(exchange: ExchangeType) -> str:
     else:
         log.critical('Backtesting against coinbase data')
         return "./data/exchange/coinbaseUSD.csv"
+
+
+def set_verbose():
+    # Print/log extra info
+    # olog.propagate = True
+    # slog.propagate = True
+    # elog.propagate = True
+    # dlog.propagate = False  # too much
+    # tlog.propagate = True
+    # mlog.propagate = True
+    log.setLevel(logging.DEBUG)
+    slog.setLevel(logging.DEBUG)
+    dlog.setLevel(logging.DEBUG)
+    rlog.setLevel(logging.DEBUG)
+    exlog.setLevel(logging.DEBUG)
+    sllog.setLevel(logging.DEBUG)
+    tlog.setLevel(logging.DEBUG)
+    mlog.setLevel(logging.DEBUG)
+    elog.setLevel(logging.DEBUG)
+    log.info('running in verbose mode!')
