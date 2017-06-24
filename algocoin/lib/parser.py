@@ -33,9 +33,12 @@ def _parse_general(general, config) -> None:
         elif general['TradingType'].lower() == 'sandbox':
             log.critical("Sandbox trading")
             set_all_trading_types(TradingType.SANDBOX, config)
-        else:
+        elif general['TradingType'].lower() == 'backtest':
             log.critical("Backtesting")
             set_all_trading_types(TradingType.BACKTEST, config)
+        else:
+            raise ConfigException('Trading type not recognized : %s',
+                                  general['TradingType'])
     else:
         raise ConfigException('TradingType unspecified')
 
@@ -45,7 +48,17 @@ def _parse_general(general, config) -> None:
 
 
 def _parse_exchange(exchange, config) -> None:
-    pass
+    if config.type == TradingType.LIVE:
+        _parse_live_options(exchange, config)
+
+    elif config.type == TradingType.SANDBOX:
+        _parse_sandbox_options(exchange, config)
+
+    elif config.type == TradingType.BACKTEST:
+        _parse_backtest_options(exchange, config)
+
+    else:
+        ConfigException('No Trading Type specified in config!')
 
 
 def _parse_strategy(strategy, config) -> None:
@@ -60,37 +73,80 @@ def _parse_default(default, config) -> None:
     pass
 
 
+def _parse_args_to_dict(argv: list) -> dict:
+    ret = {}
+    for item in argv[1:]:
+        if '--' not in item:
+            log.critical('Argument not recognized: %s', item)
+        value = item.split('--')[1]
+        if '=' in value:
+            # = args
+            splits = value.split('=')
+            ret[splits[0]] = splits[-1]
+        else:
+            # single args
+            if value.upper() in TradingType.members():
+                ret['ttype'] = value
+            elif value.upper() == 'VERBOSE':
+                ret['verbose'] = True
+            else:
+                log.critical('Argument not recognized: %s', item)
+    return ret
+
+
+def _parse_live_options(argv, config: TradingEngineConfig) -> None:
+    log.critical("WARNING: Live trading. money will be lost ;^)")
+    config.exchange_options.exchange_type = \
+        str_to_exchange(argv.get('exchange', ''))
+
+
+def _parse_sandbox_options(argv, config) -> None:
+    log.critical("Sandbox trading")
+    config.exchange_options.exchange_type = \
+        str_to_exchange(argv.get('exchange', ''))
+
+
+def _parse_backtest_options(argv, config) -> None:
+    log.critical("Backtesting")
+    config.backtest_options = BacktestConfig()
+    config.backtest_options.file = \
+        exchange_to_file(str_to_exchange(argv.get('exchange', '')))
+    config.exchange_options.exchange_type = \
+        str_to_exchange(argv.get('exchange', ''))
+    config.risk_options.total_funds = 20000.0
+
+
 def parse_command_line_config(argv: list) -> TradingEngineConfig:
     # Every engine run requires a static config object
-    config = TradingEngineConfig()
-    if 'live' in argv:
+    argv = _parse_args_to_dict(argv)
+
+    if argv.get('config'):
+        config = parse_file_config(argv.get('config'))
+    else:
+        config = TradingEngineConfig()
+
+    if 'live' == argv.get('ttype'):
         # WARNING: Live trading. money will be lost ;^)
-        log.critical("WARNING: Live trading. money will be lost ;^)")
         set_all_trading_types(TradingType.LIVE, config)
-        config.exchange_options.exchange_type = str_to_exchange(argv)
+        _parse_live_options(argv, config)
 
-    elif 'sandbox' in argv:
+    elif 'sandbox' == argv.get('ttype'):
         # Trade against sandbox
-        log.critical("Sandbox trading")
+        _parse_sandbox_options(argv, config)
         set_all_trading_types(TradingType.SANDBOX, config)
-        config.exchange_options.exchange_type = str_to_exchange(argv)
 
-    elif 'backtest' in argv:
+    elif 'backtest' == argv.get('ttype'):
         # Backtest against trade data
-        log.critical("Backtesting")
         set_all_trading_types(TradingType.BACKTEST, config)
-        config.backtest_options = BacktestConfig()
-        config.backtest_options.file = exchange_to_file(str_to_exchange(argv))
-        config.exchange_options.exchange_type = str_to_exchange(argv)
-        config.risk_options.total_funds = 20000.0
+        _parse_backtest_options(argv, config)
 
-    log.critical("Config : %s", str(config))
-
-    if 'verbose' in argv:
+    if argv.get('verbose'):
         set_verbose()
 
-    if 'print' in argv:
+    if argv.get('print'):
         config.print = True
+
+    log.critical("Config : %s", str(config))
 
     return config
 

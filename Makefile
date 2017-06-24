@@ -1,14 +1,17 @@
+runconfig:  ## clean and make target, run target
+	python3 -m algocoin --config=config/config.cfg
+
 run:  ## clean and make target, run target
-	python3 -m algocoin live $(VERBOSE) $(EXCHANGE)
+	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
 sandbox:  ## clean and make target, run target
-	python3 -m algocoin sandbox $(VERBOSE) $(EXCHANGE)
+	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
 fetch_data: ## fetch data
-	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
+	. scripts/fetchdata.sh --exchange=$(EXCHANGE) --currency=$(CURRENCY)
 
 backtest: ## clean and make target, run backtest
-	python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)
+	python3 -m algocoin --backtest --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
 backtest_inline:  ## clean and make target, run backtest, plot in terminal
 	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"

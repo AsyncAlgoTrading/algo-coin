@@ -159,7 +159,6 @@ class TradingEngine(object):
                                      success=False)
 
         if self._backtest and strat:
-            print("HERE")
             # register the initial request
             strat.registerDesire(req.data.time, req.side, req.price)
 
