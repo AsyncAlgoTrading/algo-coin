@@ -24,19 +24,19 @@ class TestMain:
         from ..__main__ import parse_command_line_config
         from ..lib.enums import TradingType
 
-        argv = ['live']
+        argv = ['', '--live']
         ret = parse_command_line_config(argv)
         assert ret.type == TradingType.LIVE
 
-        argv = ['sandbox']
+        argv = ['', '--sandbox']
         ret = parse_command_line_config(argv)
         assert ret.type == TradingType.SANDBOX
 
-        argv = ['backtest']
+        argv = ['', '--backtest']
         ret = parse_command_line_config(argv)
         assert ret.type == TradingType.BACKTEST
 
-        argv = ['print']
+        argv = ['', '--live', '--print']
         ret = parse_command_line_config(argv)
         assert ret.print
 
@@ -44,4 +44,4 @@ class TestMain:
         from ..__main__ import main
         with patch('algocoin.__main__.TradingEngine'), \
                 patch('algocoin.__main__.CustomStrategy'):
-            main([])
+            main(['', '--live'])

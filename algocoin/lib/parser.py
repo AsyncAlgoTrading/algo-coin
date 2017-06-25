@@ -89,6 +89,8 @@ def _parse_args_to_dict(argv: list) -> dict:
                 ret['ttype'] = value
             elif value.upper() == 'VERBOSE':
                 ret['verbose'] = True
+            elif value.upper() == 'PRINT':
+                ret['print'] = True
             else:
                 log.critical('Argument not recognized: %s', item)
     return ret
@@ -139,6 +141,8 @@ def parse_command_line_config(argv: list) -> TradingEngineConfig:
         # Backtest against trade data
         set_all_trading_types(TradingType.BACKTEST, config)
         _parse_backtest_options(argv, config)
+    else:
+        raise ConfigException('Trading Type not specified')
 
     if argv.get('verbose'):
         set_verbose()
