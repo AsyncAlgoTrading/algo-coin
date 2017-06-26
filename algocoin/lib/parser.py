@@ -28,13 +28,10 @@ def parse_file_config(filename: str) -> TradingEngineConfig:
 def _parse_general(general, config) -> None:
     if 'TradingType' in general:
         if general['TradingType'].lower() == 'live':
-            log.critical("WARNING: Live trading. money will be lost ;^)")
             set_all_trading_types(TradingType.LIVE, config)
         elif general['TradingType'].lower() == 'sandbox':
-            log.critical("Sandbox trading")
             set_all_trading_types(TradingType.SANDBOX, config)
         elif general['TradingType'].lower() == 'backtest':
-            log.critical("Backtesting")
             set_all_trading_types(TradingType.BACKTEST, config)
         else:
             raise ConfigException('Trading type not recognized : %s',
@@ -45,6 +42,10 @@ def _parse_general(general, config) -> None:
     if 'verbose' in general:
         if general['verbose'] == '1':
             set_verbose()
+
+    if 'print' in general:
+        if general['print'] == '1':
+            config.print = True
 
 
 def _parse_exchange(exchange, config) -> None:
@@ -127,28 +128,28 @@ def parse_command_line_config(argv: list) -> TradingEngineConfig:
     else:
         config = TradingEngineConfig()
 
-    if 'live' == argv.get('ttype'):
-        # WARNING: Live trading. money will be lost ;^)
-        set_all_trading_types(TradingType.LIVE, config)
-        _parse_live_options(argv, config)
+        if 'live' == argv.get('ttype'):
+            # WARNING: Live trading. money will be lost ;^)
+            set_all_trading_types(TradingType.LIVE, config)
+            _parse_live_options(argv, config)
 
-    elif 'sandbox' == argv.get('ttype'):
-        # Trade against sandbox
-        _parse_sandbox_options(argv, config)
-        set_all_trading_types(TradingType.SANDBOX, config)
+        elif 'sandbox' == argv.get('ttype'):
+            # Trade against sandbox
+            _parse_sandbox_options(argv, config)
+            set_all_trading_types(TradingType.SANDBOX, config)
 
-    elif 'backtest' == argv.get('ttype'):
-        # Backtest against trade data
-        set_all_trading_types(TradingType.BACKTEST, config)
-        _parse_backtest_options(argv, config)
-    else:
-        raise ConfigException('Trading Type not specified')
+        elif 'backtest' == argv.get('ttype'):
+            # Backtest against trade data
+            set_all_trading_types(TradingType.BACKTEST, config)
+            _parse_backtest_options(argv, config)
+        else:
+            raise ConfigException('Trading Type not specified')
 
-    if argv.get('verbose'):
-        set_verbose()
+        if argv.get('verbose'):
+            set_verbose()
 
-    if argv.get('print'):
-        config.print = True
+        if argv.get('print'):
+            config.print = True
 
     log.critical("Config : %s", str(config))
 

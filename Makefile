@@ -1,5 +1,5 @@
 runconfig:  ## clean and make target, run target
-	python3 -m algocoin --config=config/config.cfg
+	python3 -m algocoin --config=$(CONFIG)
 
 run:  ## clean and make target, run target
 	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)

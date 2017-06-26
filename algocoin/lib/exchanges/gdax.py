@@ -37,7 +37,7 @@ class GDAXExchange(Exchange):
                                                     api_url=self._oe_url
                                                     )
 
-        val = self._client.getAccounts() if hasattr(self, '_client') else []
+        val = self._client.get_accounts() if hasattr(self, '_client') else []
 
         self._accounts = []
         for jsn in val:
