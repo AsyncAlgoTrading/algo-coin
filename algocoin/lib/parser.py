@@ -63,6 +63,7 @@ def _parse_exchange(exchange, config) -> None:
 
 
 def _parse_strategy(strategy, config) -> None:
+
     pass
 
 
@@ -101,6 +102,7 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     log.critical("WARNING: Live trading. money will be lost ;^)")
     config.exchange_options.exchange_type = \
         str_to_exchange(argv.get('exchange', ''))
+
 
 
 def _parse_sandbox_options(argv, config) -> None:

@@ -1,3 +1,5 @@
+CONFIG=./config/live_gdax.cfg
+
 runconfig:  ## clean and make target, run target
 	python3 -m algocoin --config=$(CONFIG)
 

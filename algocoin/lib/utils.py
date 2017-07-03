@@ -16,18 +16,34 @@ from .logging import LOG as log, \
 NOPRINT = True
 
 
-def create_pair(key: str, typ: type, default=None) -> property:
+def create_pair(key: str, typ: type, default=None, container=None) -> property:
     def get(self):
         if hasattr(self, '__' + str(key)):
             return getattr(self, '__' + str(key))
         if default is not None and type(default) == typ:
+            if container:
+                if container == list:
+                    return [default]
+                else:
+                    raise TypeError('Unrecognized container: %s',
+                                    str(container))
             return default
         raise TypeError("%s is unset" % key)
 
     def set(self, val):
-        if not isinstance(val, typ) and not type(val) == typ:
-            raise TypeError("%s attribute must be set to an instance of %s"
-                            % (key, typ))
+        if container:
+            if container == list:
+                if not isinstance(val, list) or not all(map(
+                        lambda x: isinstance(typ, x), val)):
+                    raise TypeError("%s attribute must be set to an "
+                                    "instance of %s" % (key, typ))
+            else:
+                raise TypeError('Unrecognized container: %s',
+                                str(container))
+        else:
+            if not isinstance(val, typ) and not type(val) == typ:
+                raise TypeError("%s attribute must be set to an instance of %s"
+                                % (key, typ))
         setattr(self, '__' + str(key), val)
     return property(get, set)
 
@@ -44,6 +60,18 @@ def config(cls):
                 isinstance(v[1], v[0]):
             v = create_pair(k, v[0], v[1])
             vars.append(k)
+        elif isinstance(v, list) and \
+                isinstance(v[0], type):
+            v = create_pair(k, v[0], container=list)
+            vars.append(k)
+        elif isinstance(v, tuple) and \
+                isinstance(v[0], list) and \
+                isinstance(v[0][0], type) and \
+                isinstance(v[1], list) and \
+                isinstance(v[1][0], v[0][0]):
+            v = create_pair(k, v[0][0], v[1][0], container=list)
+            vars.append(k)
+
         new_cls_dict[k] = v
     new_cls_dict['__repr__'] = __repr__
     new_cls_dict['_vars'] = vars

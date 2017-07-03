@@ -87,3 +87,114 @@ class TestUtils:
         from ..lib.enums import ExchangeType
         from ..lib.exchanges.gdax import GDAXExchange
         assert ex_type_to_ex(ExchangeType.GDAX) == GDAXExchange
+
+    def test_exchange_to_file(self):
+        from ..lib.utils import exchange_to_file
+        from ..lib.enums import ExchangeType
+
+        assert(exchange_to_file(ExchangeType.GDAX),
+               "./data/exchange/coinbaseUSD.csv")
+        assert(exchange_to_file(ExchangeType.BITSTAMP),
+               "./data/exchange/bitstampUSD.csv")
+        assert(exchange_to_file(ExchangeType.BITFINEX),
+               "./data/exchange/bitfinexUSD.csv")
+        assert(exchange_to_file(ExchangeType.ITBIT),
+               "./data/exchange/itbitUSD.csv")
+        assert(exchange_to_file(ExchangeType.KRAKEN),
+               "./data/exchange/krakenUSD.csv")
+        assert(exchange_to_file(ExchangeType.HITBTC),
+               "./data/exchange/hitbtcUSD.csv")
+        assert(exchange_to_file(ExchangeType.LAKE),
+               "./data/exchange/lakeUSD.csv")
+
+    def test_set_verbose(self):
+        import logging
+        from ..lib.utils import set_verbose
+        from ..lib.logging import LOG as log, \
+            STRAT as slog, \
+            DATA as dlog, \
+            RISK as rlog, \
+            EXEC as exlog, \
+            SLIP as sllog, \
+            TXNS as tlog, \
+            MANUAL as mlog, \
+            ERROR as elog
+        set_verbose()
+
+        assert(log.level == logging.DEBUG)
+        assert(slog.level == logging.DEBUG)
+        assert(dlog.level == logging.DEBUG)
+        assert(rlog.level == logging.DEBUG)
+        assert(exlog.level == logging.DEBUG)
+        assert(sllog.level == logging.DEBUG)
+        assert(tlog.level == logging.DEBUG)
+        assert(mlog.level == logging.DEBUG)
+        assert(elog.level == logging.DEBUG)
+
+    def test_trade_req_to_params_gdax(self):
+        from ..lib.utils import trade_req_to_params_gdax
+        from ..lib.enums import CurrencyType, OrderType, OrderSubType
+
+        class tmp:
+            def __init__(self, a=True):
+                self.price = 'test'
+                self.volume = 'test'
+                self.currency = CurrencyType.BTC
+                self.order_type = OrderType.LIMIT
+                self.order_sub_type = OrderSubType.POST_ONLY if a \
+                    else OrderSubType.FILL_OR_KILL
+
+        res1 = trade_req_to_params_gdax(tmp())
+        res2 = trade_req_to_params_gdax(tmp(False))
+
+        assert(res1['price'] == 'test')
+        assert(res1['size'] == 'test')
+        assert(res1['product_id'] == 'BTC-USD')
+        assert(res1['type'] == 'limit')
+        assert(res1['post_only'] == '1')
+        assert(res2['time_in_force'] == 'FOK')
+
+    def test_get_keys_from_environment(self):
+        from ..lib.utils import get_keys_from_environment
+        import os
+        os.environ['TEST_API_KEY'] = 'test'
+        os.environ['TEST_API_SECRET'] = 'test'
+        os.environ['TEST_API_PASS'] = 'test'
+        one, two, three = get_keys_from_environment('TEST')
+        assert(one == 'test')
+        assert(two == 'test')
+        assert(three == 'test')
+
+    def test_str_to_currency_type(self):
+        from ..lib.utils import str_to_currency_type
+        from ..lib.enums import CurrencyType
+        assert(str_to_currency_type('BTC') == CurrencyType.BTC)
+        assert(str_to_currency_type('ETH') == CurrencyType.ETH)
+        assert(str_to_currency_type('LTC') == CurrencyType.LTC)
+        assert(str_to_currency_type('USD') == CurrencyType.USD)
+
+    def test_str_to_side(self):
+        from ..lib.utils import str_to_side
+        from ..lib.enums import Side
+        assert(str_to_side('BUY') == Side.BUY)
+        assert(str_to_side('SELL') == Side.SELL)
+        assert(str_to_side('OTHER') == Side.NONE)
+
+    def test_str_to_order_type(self):
+        from ..lib.utils import str_to_order_type
+        from ..lib.enums import OrderType
+        assert(str_to_order_type('MARKET') == OrderType.MARKET)
+        assert(str_to_order_type('LIMIT') == OrderType.LIMIT)
+        assert(str_to_order_type('OTHER') == OrderType.NONE)
+
+    def test_str_to_exchange(self):
+        from ..lib.utils import str_to_exchange
+        from ..lib.enums import ExchangeType
+        assert(str_to_exchange('bitfinex') == ExchangeType.BITFINEX)
+        assert(str_to_exchange('bitstamp') == ExchangeType.BITSTAMP)
+        assert(str_to_exchange('gemini') == ExchangeType.GEMINI)
+        assert(str_to_exchange('hitbtc') == ExchangeType.HITBTC)
+        assert(str_to_exchange('itbit') == ExchangeType.ITBIT)
+        assert(str_to_exchange('kraken') == ExchangeType.KRAKEN)
+        assert(str_to_exchange('lake') == ExchangeType.LAKE)
+        assert(str_to_exchange('gdax') == ExchangeType.GDAX)
