@@ -24,6 +24,8 @@ class TestUtils:
         class Test:
             a = int
             b = str, ''
+            c = [str]
+            d = [str], ['']
 
         t = Test()
         t.a = 5
@@ -39,6 +41,10 @@ class TestUtils:
 
         t.b = 'test'
         assert t.b == 'test'
+
+        t.c = ['test']
+        assert t.c == ['test']
+        assert t.d == ['']
 
     def test_struct(self):
         from ..lib.utils import struct

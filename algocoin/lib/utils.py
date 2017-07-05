@@ -34,7 +34,7 @@ def create_pair(key: str, typ: type, default=None, container=None) -> property:
         if container:
             if container == list:
                 if not isinstance(val, list) or not all(map(
-                        lambda x: isinstance(typ, x), val)):
+                        lambda x: isinstance(x, typ), val)):
                     raise TypeError("%s attribute must be set to an "
                                     "instance of %s" % (key, typ))
             else:
