@@ -1,4 +1,7 @@
-                    GNU GENERAL PUBLIC LICENSE
+Library code is under the below license. Strategies, such as those under algocoin/lib/strategies, are under the Unlicense <https://unlicense.org>
+-----------------
+
+                      GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
