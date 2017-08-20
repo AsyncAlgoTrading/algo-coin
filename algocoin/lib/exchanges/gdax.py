@@ -13,7 +13,9 @@ from ..enums import TradingType, ExchangeType, TickType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
+from ..utils import parse_date, get_keys_from_environment, \
+                    str_to_currency_type, str_to_side, str_to_order_type
+from .enums import CurrencyType, OrderType, OrderSubType, Side
 from ..logging import LOG as log
 
 
@@ -173,15 +175,25 @@ class GDAXExchange(Exchange):
 
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
-        params = trade_req_to_params_gdax(req)
+        params = GDAXExchange.trade_req_to_params(req)
         log.warn(str(params))
-        # self._client.buy(params)
+        res = self._client.buy(params)
+        return TradeResponse(data=req.data
+                             request=req,
+                             side=Side,
+                             volume=0.0,
+                             price=0.0,
+                             currency=CurrencyType.BTC,
+                             slippage=0.0,
+                             transaction_cost=0, 
+                             success=bool)
+
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
-        params = trade_req_to_params_gdax(req)
+        params = GDAXExchange.trade_req_to_params(req)
         log.warn(str(params))
-        # self._client.sell(params)
+        res = self._client.sell(params)
 
     def tickToData(self, jsn: dict) -> MarketData:
         time = parse_date(jsn.get('time'))
@@ -224,3 +236,29 @@ class GDAXExchange(Exchange):
             return TickType.HEARTBEAT
         else:
             return TickType.ERROR
+
+    @staticmethod
+    def trade_req_to_params(req) -> dict:
+        p = {}
+        p['price'] = str(req.price)
+        p['size'] = str(req.volume)
+        p['product_id'] = GDAXExchange.currency_to_string(req.currency)
+        p['type'] = GDAXExchange.order_type_to_string(req.order_type)
+
+        if req.order_sub_type == OrderSubType.FILL_OR_KILL:
+            p['time_in_force'] = 'FOK'
+        elif req.order_sub_type == OrderSubType.POST_ONLY:
+            p['post_only'] = '1'
+        return p
+
+    @staticmethod
+    def currency_to_string(cur: CurrencyType) -> str:
+        if cur == CurrencyType.BTC:
+            return 'BTC-USD'
+
+    @staticmethod
+    def order_type_to_string(typ: OrderType) -> str:
+        if typ == OrderType.LIMIT:
+            return 'limit'
+        elif typ == OrderType.MARKET:
+            return 'market'

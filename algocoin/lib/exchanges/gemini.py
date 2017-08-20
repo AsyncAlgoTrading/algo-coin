@@ -169,13 +169,13 @@ class GeminiExchange(Exchange):
         '''execute a buy order'''
         params = trade_req_to_params_gdax(req)
         log.warn(str(params))
-        # self._client.buy(params)
+        return self._client.buy(params)
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = trade_req_to_params_gdax(req)
         log.warn(str(params))
-        # self._client.sell(params)
+        return self._client.sell(params)
 
     def tickToData(self, jsn: dict) -> MarketData:
         # print(jsn)

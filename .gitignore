@@ -66,3 +66,5 @@ coinbase.sh
 keys
 data/
 old
+
+.ipynb_checkpoints

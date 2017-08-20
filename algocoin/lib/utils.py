@@ -2,7 +2,7 @@ import pytz
 import os
 import logging
 from datetime import datetime
-from .enums import ExchangeType, CurrencyType, OrderType, OrderSubType, Side
+from .enums import ExchangeType, CurrencyType, OrderType, Side
 from .logging import LOG as log, \
                          STRAT as slog, \
                          DATA as dlog, \
@@ -156,32 +156,6 @@ def ex_type_to_ex(ex: ExchangeType):
         from .exchanges.kraken import KrakenExchange
         return KrakenExchange
     raise Exception('Exchange type not implemented : %s ' % ex)
-
-
-def currency_to_string_gdax(cur: CurrencyType) -> str:
-    if cur == CurrencyType.BTC:
-        return 'BTC-USD'
-
-
-def order_type_to_string_gdax(typ: OrderType) -> str:
-    if typ == OrderType.LIMIT:
-        return 'limit'
-    elif typ == OrderType.MARKET:
-        return 'market'
-
-
-def trade_req_to_params_gdax(req) -> dict:
-    p = {}
-    p['price'] = str(req.price)
-    p['size'] = str(req.volume)
-    p['product_id'] = currency_to_string_gdax(req.currency)
-    p['type'] = order_type_to_string_gdax(req.order_type)
-
-    if req.order_sub_type == OrderSubType.FILL_OR_KILL:
-        p['time_in_force'] = 'FOK'
-    elif req.order_sub_type == OrderSubType.POST_ONLY:
-        p['post_only'] = '1'
-    return p
 
 
 def get_keys_from_environment(prefix: str) -> tuple:
