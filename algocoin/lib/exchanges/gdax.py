@@ -24,6 +24,7 @@ class GDAXExchange(Exchange):
         super(GDAXExchange, self).__init__(options)
         self._type = ExchangeType.GDAX
         self._last = None
+        self._orders = {}
 
         if options.trading_type == TradingType.LIVE:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX')

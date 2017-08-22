@@ -68,3 +68,5 @@ data/
 old
 
 .ipynb_checkpoints
+*.pkl
+notebooks/BTC_*
