@@ -5,7 +5,7 @@ Algorithmic Trading Bitcoin.
 [![Build Status](https://travis-ci.org/theocean154/algo-coin.svg?branch=master)](https://travis-ci.org/theocean154/algo-coin)
 [![Coverage](https://codecov.io/gh/theocean154/algo-coin/coverage.svg?branch=master&token=JGqz8ChQxd)](https://codecov.io/gh/theocean154/algo-coin)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/algo-coin/Lobby)
-[![Site](https://img.shields.io/badge/site-lightgrey.svg)](http://paine.nyc/algo-coin)
+[![Site](https://img.shields.io/badge/Site--grey.svg?colorB=FFFFFF)](http://paine.nyc/algo-coin)
 
 ## Overview 
 Lightweight, extensible program for algorithmically trading cryptocurrencies across multiple exchanges. 
