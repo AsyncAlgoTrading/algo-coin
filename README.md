@@ -2,7 +2,7 @@
 Algorithmic Trading Bitcoin. 
 
 [![Version](https://img.shields.io/badge/version-0.0.15-lightgrey.svg)](https://img.shields.io/badge/version-0.0.15-lightgrey.svg)
-[![Build Status](https://travis-ci.com/theocean154/algo-coin.svg?token=y6bAWygGk2pr7D7jBosB&branch=master)](https://travis-ci.com/theocean154/algo-coin)
+[![Build Status](https://travis-ci.org/theocean154/algo-coin.svg?branch=master)](https://travis-ci.com/theocean154/algo-coin)
 [![Coverage](https://codecov.io/gh/theocean154/algo-coin/coverage.svg?branch=master&token=JGqz8ChQxd)](https://codecov.io/gh/theocean154/algo-coin)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/algo-coin/Lobby)
 
