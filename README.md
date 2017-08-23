@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/theocean154/algo-coin.png?label=ready&title=Ready)](https://waffle.io/theocean154/algo-coin?utm_source=badge)
 # AlgoCoin
 Algorithmic Trading Bitcoin. 
 
