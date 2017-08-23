@@ -15,7 +15,7 @@ from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
 from ..utils import parse_date, get_keys_from_environment, \
                     str_to_currency_type, str_to_side, str_to_order_type
-from .enums import CurrencyType, OrderType, OrderSubType, Side
+from ..enums import CurrencyType, OrderType, OrderSubType, Side
 from ..logging import LOG as log
 
 
@@ -179,15 +179,15 @@ class GDAXExchange(Exchange):
         params = GDAXExchange.trade_req_to_params(req)
         log.warn(str(params))
         res = self._client.buy(params)
-        return TradeResponse(data=req.data
+        return TradeResponse(data=req.data,
                              request=req,
-                             side=Side,
+                             side=req.side,
                              volume=0.0,
                              price=0.0,
                              currency=CurrencyType.BTC,
                              slippage=0.0,
-                             transaction_cost=0, 
-                             success=bool)
+                             transaction_cost=0.0,
+                             success=True)
 
 
     def sell(self, req: TradeRequest) -> TradeResponse:

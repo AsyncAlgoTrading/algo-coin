@@ -137,29 +137,6 @@ class TestUtils:
         assert(mlog.level == logging.DEBUG)
         assert(elog.level == logging.DEBUG)
 
-    def test_trade_req_to_params_gdax(self):
-        from ..lib.utils import trade_req_to_params_gdax
-        from ..lib.enums import CurrencyType, OrderType, OrderSubType
-
-        class tmp:
-            def __init__(self, a=True):
-                self.price = 'test'
-                self.volume = 'test'
-                self.currency = CurrencyType.BTC
-                self.order_type = OrderType.LIMIT
-                self.order_sub_type = OrderSubType.POST_ONLY if a \
-                    else OrderSubType.FILL_OR_KILL
-
-        res1 = trade_req_to_params_gdax(tmp())
-        res2 = trade_req_to_params_gdax(tmp(False))
-
-        assert(res1['price'] == 'test')
-        assert(res1['size'] == 'test')
-        assert(res1['product_id'] == 'BTC-USD')
-        assert(res1['type'] == 'limit')
-        assert(res1['post_only'] == '1')
-        assert(res2['time_in_force'] == 'FOK')
-
     def test_get_keys_from_environment(self):
         from ..lib.utils import get_keys_from_environment
         import os

@@ -14,7 +14,7 @@ from ..enums import TradingType, ExchangeType, TickType
 from ..exchange import Exchange
 from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import trade_req_to_params_gdax, parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
+from ..utils import parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
 from ..logging import LOG as log
 
 

@@ -94,3 +94,26 @@ class TestExchange:
                         assert e._missingseqnum
                     e.receive()
                 assert e._missingseqnum == set()
+
+    def test_trade_req_to_params_gdax(self):
+        from ...lib.exchanges.gdax import GDAXExchange
+        from ...lib.enums import CurrencyType, OrderType, OrderSubType
+
+        class tmp:
+            def __init__(self, a=True):
+                self.price = 'test'
+                self.volume = 'test'
+                self.currency = CurrencyType.BTC
+                self.order_type = OrderType.LIMIT
+                self.order_sub_type = OrderSubType.POST_ONLY if a \
+                    else OrderSubType.FILL_OR_KILL
+
+        res1 = GDAXExchange.trade_req_to_params(tmp())
+        res2 = GDAXExchange.trade_req_to_params(tmp(False))
+
+        assert(res1['price'] == 'test')
+        assert(res1['size'] == 'test')
+        assert(res1['product_id'] == 'BTC-USD')
+        assert(res1['type'] == 'limit')
+        assert(res1['post_only'] == '1')
+        assert(res2['time_in_force'] == 'FOK')
