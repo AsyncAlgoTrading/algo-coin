@@ -34,8 +34,8 @@ annotate_l: ## MyPy type annotation check - count only
 	mypy -s algocoin | wc -l 
 
 clean: ## clean the repository
-	find -name "*.pyc" -exec rm -rf {} \;
-	find -name "__pycache__" -exec rm -rf {} \;
+	find . -name "*.pyc" -exec rm -rf {} \;
+	find . -name "__pycache__" -exec rm -rf {} \;
 	rm -rf .coverage cover htmlcov logs
 
 # Thanks to Francoise at marmelab.com for this
