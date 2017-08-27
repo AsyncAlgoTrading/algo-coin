@@ -47,6 +47,7 @@ Eventual coverage:
 [![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
 [![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
 
+---
 
 ## Getting Started
 
@@ -64,3 +65,10 @@ Eventual coverage:
 
 ### Live Trading
 
+---
+
+## Contributing
+
+---
+
+## Contact
