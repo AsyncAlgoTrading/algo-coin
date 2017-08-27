@@ -42,6 +42,10 @@ class GDAXExchange(Exchange):
 
         val = self._client.get_accounts() if hasattr(self, '_client') else []
 
+        print(val)
+        if isinstance(val, dict) and val.get('message') == 'Invalid API Key':
+            raise Exception('Something went wrong with the API Key')
+
         self._accounts = []
         for jsn in val:
             currency = str_to_currency_type(jsn.get('currency'))
