@@ -46,3 +46,21 @@ Eventual coverage:
 [![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
 [![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
 [![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
+
+
+## Getting Started
+
+### Installation
+
+### API Keys
+
+### Writing an algorithm
+
+### Backtesting
+
+#### Getting Data
+
+### Sandboxes
+
+### Live Trading
+
