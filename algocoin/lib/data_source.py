@@ -70,7 +70,7 @@ class StreamingDataSource(DataSource):
 
     # Data functions
     @abstractmethod
-    def tickToData(self, data):
+    def tickToData(self, jsn):
         '''convert json to market data based on fields'''
 
     def onTrade(self, callback: Callback) -> None:

@@ -62,8 +62,7 @@ class TestSMACrossesStrategy:
         s._te.requestSell = MagicMock()
 
         def ret(callback, req, callback_failure=None, strat=None):
-            res = TradeResponse(data=req.data,
-                                request=req,
+            res = TradeResponse(request=req,
                                 side=req.side,
                                 price=req.price,
                                 volume=req.volume,

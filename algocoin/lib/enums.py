@@ -65,3 +65,10 @@ class OrderSubType(BaseEnum):
     POST_ONLY = 1
     FILL_OR_KILL = 2
     # ALL_OR_NOTHING = 3
+
+
+class TradeResult(BaseEnum):
+    NONE = 0
+    PENDING = 1
+    REJECTED = 2
+    FILLED = 3

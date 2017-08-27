@@ -17,6 +17,8 @@ class Exchange(StreamingDataSource):
         self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
         self._manual = False
 
+        self._pending_orders = {}
+
     def close(self) -> None:
         log.critical('Closing....')
         self.ws.close()

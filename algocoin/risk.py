@@ -21,13 +21,12 @@ class Risk(object):
         self.max_running_risk_incr = []  # type: List
 
     def _constructResp(self,
-                       data: MarketData,
                        side: Side,
                        vol: float,
                        price: float,
                        success: bool,
                        reason: str) -> TradeRequest:
-        resp = TradeRequest(data=data, side=side, volume=vol, price=price, risk_check=success, risk_reason=reason)
+        resp = TradeRequest(side=side, volume=vol, price=price, risk_check=success, risk_reason=reason)
 
         if success:
             self.outstanding += abs(vol * price) * (1 if side == Side.BUY else -1)
@@ -49,17 +48,17 @@ class Risk(object):
         if (total + self.outstanding) <= max:
             # room for full volume
             rlog.info('Order: %s' % req)
-            return self._constructResp(req.data, req.side, req.volume, req.price, True, '')
+            return self._constructResp(req.side, req.volume, req.price, True, '')
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
             rlog.info('Partial Order: %s' % req)
-            return self._constructResp(req.data, req.side, volume, req.price, True, '')
+            return self._constructResp(req.side, volume, req.price, True, '')
 
         # no room for volume
         rlog.info('Order rejected: %s' % req)
-        return self._constructResp(req.data, req.side, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
+        return self._constructResp(req.side, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
 
     def requestBuy(self, req: TradeRequest):
         '''precheck for risk compliance'''

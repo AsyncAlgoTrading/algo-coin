@@ -1,24 +1,18 @@
-import json
-# import os
-# import pprint
-# import websocket
 import threading
 import queue
-# import time
 from websocket import create_connection
-from datetime import datetime
 from krakenex import API
-from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType
+from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
 from ...manual import manual
-from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import parse_date, get_keys_from_environment, str_to_currency_type, str_to_side, str_to_order_type
+from ..structs import TradeRequest, TradeResponse, Account
+from ..utils import get_keys_from_environment, str_to_currency_type
 from ..logging import LOG as log
+from .helpers import KrakenHelpersMixin
 
 
-class KrakenExchange(Exchange):
+class KrakenExchange(KrakenHelpersMixin, Exchange):
     def __init__(self, options: ExchangeConfig) -> None:
         super(KrakenExchange, self).__init__(options)
         self._type = ExchangeType.KRAKEN
@@ -142,21 +136,12 @@ class KrakenExchange(Exchange):
 
             # except Exception as e:
             #     log.critical(e)
-
             #     self.callback(TickType.ERROR, e)
             #     self.close()
-
             #     return
 
     def accounts(self) -> list:
-        # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
-
-    def sendOrder(self, callback: Callback):
-        '''send order to exchange'''
-
-    def orderResponse(self, response):
-        '''parse the response'''
 
     def orderBook(self, level=1):
         '''get order book'''
@@ -164,54 +149,6 @@ class KrakenExchange(Exchange):
 
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
-        params = trade_req_to_params_gdax(req)
-        log.warn(str(params))
-        # self._client.buy(params)
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
-        params = trade_req_to_params_gdax(req)
-        log.warn(str(params))
-        # self._client.sell(params)
-
-    def tickToData(self, jsn: dict) -> MarketData:
-        print(jsn)
-        time = datetime.now()
-        price = float(jsn.get('price', 'nan'))
-        reason = jsn.get('reason', '')
-        volume = float(jsn.get('amount', 'nan'))
-        typ = self.strToTradeType(jsn.get('type'))
-
-        if typ == TickType.CHANGE and not volume:
-            delta = float(jsn.get('delta', 'nan'))
-            volume = delta
-            typ = self.reasonToTradeType(reason)
-
-        side = str_to_side(jsn.get('side', ''))
-        remaining_volume = float(jsn.get('remaining', 'nan'))
-
-        sequence = -1
-        currency = str_to_currency_type('BTC')
-
-        ret = MarketData(time=time,
-                         volume=volume,
-                         price=price,
-                         type=typ,
-                         currency=currency,
-                         remaining=remaining_volume,
-                         reason=reason,
-                         side=side,
-                         sequence=sequence)
-        print(ret)
-        return ret
-
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
-        if s == 'trade':
-            return TickType.TRADE
-        elif s == 'change':
-            return TickType.CHANGE
-        elif s == 'heartbeat':
-            return TickType.HEARTBEAT
-        else:
-            return TickType.ERROR

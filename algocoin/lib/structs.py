@@ -26,7 +26,6 @@ class MarketData:
 
 @struct
 class TradeRequest:
-    data = MarketData, NOPRINT
     side = Side
 
     volume = float
@@ -43,7 +42,6 @@ class TradeRequest:
 
 @struct
 class TradeResponse:
-    data = MarketData, NOPRINT
     request = TradeRequest
     side = Side
 
@@ -54,6 +52,7 @@ class TradeResponse:
     slippage = float, 0.0
     transaction_cost = float, 0.0
 
+    time = datetime.datetime, datetime.datetime.now() # FIXME
     success = bool
 
 

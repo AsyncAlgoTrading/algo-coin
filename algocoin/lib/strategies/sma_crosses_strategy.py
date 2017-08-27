@@ -32,7 +32,7 @@ class SMACrossesStrategy(TradingStrategy):
             return
 
         if self._intitialvalue is None:
-            date = res.data.time
+            date = res.time
             self._intitialvalue = (date, res.volume*res.price)
             self._portfolio_value.append(self._intitialvalue)
 
@@ -52,7 +52,7 @@ class SMACrossesStrategy(TradingStrategy):
         self.bought = 0.0
         self.bought_qty = 0.0
 
-        date = res.data.time
+        date = res.time
         self._portfolio_value.append((
                 date,
                 self._portfolio_value[-1][1] + profit))

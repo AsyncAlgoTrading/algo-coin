@@ -1,25 +1,20 @@
 import gdax
 import json
-# import os
-# import pprint
-# import websocket
 import threading
 import queue
-# import time
 from websocket import create_connection
-from ..callback import Callback
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType
+from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
 from ...manual import manual
-from ..structs import TradeRequest, TradeResponse, MarketData, Account
-from ..utils import parse_date, get_keys_from_environment, \
-                    str_to_currency_type, str_to_side, str_to_order_type
-from ..enums import CurrencyType, OrderType, OrderSubType, Side
+from ..structs import TradeRequest, TradeResponse, Account
+from ..utils import get_keys_from_environment, str_to_currency_type
+from ..enums import CurrencyType
 from ..logging import LOG as log
+from .helpers import GDAXHelpersMixin
 
 
-class GDAXExchange(Exchange):
+class GDAXExchange(GDAXHelpersMixin, Exchange):
     def __init__(self, options: ExchangeConfig) -> None:
         super(GDAXExchange, self).__init__(options)
         self._type = ExchangeType.GDAX
@@ -158,21 +153,12 @@ class GDAXExchange(Exchange):
 
             # except Exception as e:
             #     log.critical(e)
-
             #     self.callback(TickType.ERROR, e)
             #     self.close()
-
             #     return
 
     def accounts(self) -> list:
-        # return pprint.pformat(self._client.getAccounts()) if hasattr(self, '_client') else 'BACKTEST'
         return self._accounts
-
-    def sendOrder(self, callback: Callback):
-        '''send order to exchange'''
-
-    def orderResponse(self, response):
-        '''parse the response'''
 
     def orderBook(self, level=1):
         '''get order book'''
@@ -182,9 +168,8 @@ class GDAXExchange(Exchange):
         '''execute a buy order'''
         params = GDAXExchange.trade_req_to_params(req)
         log.warn(str(params))
-        res = self._client.buy(params)
-        return TradeResponse(data=req.data,
-                             request=req,
+        res = self._client.buy(**params)
+        return TradeResponse(request=req,
                              side=req.side,
                              volume=0.0,
                              price=0.0,
@@ -193,77 +178,16 @@ class GDAXExchange(Exchange):
                              transaction_cost=0.0,
                              success=True)
 
-
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = GDAXExchange.trade_req_to_params(req)
         log.warn(str(params))
-        res = self._client.sell(params)
-
-    def tickToData(self, jsn: dict) -> MarketData:
-        time = parse_date(jsn.get('time'))
-        price = float(jsn.get('price', 'nan'))
-        volume = float(jsn.get('size', 'nan'))
-        typ = self.strToTradeType(jsn.get('type'))
-        currency = str_to_currency_type(jsn.get('product_id'))
-
-        order_type = str_to_order_type(jsn.get('order_type', ''))
-        side = str_to_side(jsn.get('side', ''))
-        remaining_volume = float(jsn.get('remaining_size', 'nan'))
-        reason = jsn.get('reason', '')
-        sequence = int(jsn.get('sequence'))
-
-        ret = MarketData(time=time,
-                         volume=volume,
-                         price=price,
-                         type=typ,
-                         currency=currency,
-                         remaining=remaining_volume,
-                         reason=reason,
-                         side=side,
-                         order_type=order_type,
-                         sequence=sequence)
-        return ret
-
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
-        if s == 'match':
-            return TickType.TRADE
-        elif s == 'received':
-            return TickType.RECEIVED
-        elif s == 'open':
-            return TickType.OPEN
-        elif s == 'done':
-            return TickType.DONE
-        elif s == 'change':
-            return TickType.CHANGE
-        elif s == 'heartbeat':
-            return TickType.HEARTBEAT
-        else:
-            return TickType.ERROR
-
-    @staticmethod
-    def trade_req_to_params(req) -> dict:
-        p = {}
-        p['price'] = str(req.price)
-        p['size'] = str(req.volume)
-        p['product_id'] = GDAXExchange.currency_to_string(req.currency)
-        p['type'] = GDAXExchange.order_type_to_string(req.order_type)
-
-        if req.order_sub_type == OrderSubType.FILL_OR_KILL:
-            p['time_in_force'] = 'FOK'
-        elif req.order_sub_type == OrderSubType.POST_ONLY:
-            p['post_only'] = '1'
-        return p
-
-    @staticmethod
-    def currency_to_string(cur: CurrencyType) -> str:
-        if cur == CurrencyType.BTC:
-            return 'BTC-USD'
-
-    @staticmethod
-    def order_type_to_string(typ: OrderType) -> str:
-        if typ == OrderType.LIMIT:
-            return 'limit'
-        elif typ == OrderType.MARKET:
-            return 'market'
+        res = self._client.sell(**params)
+        return TradeResponse(request=req,
+                             side=req.side,
+                             volume=0.0,
+                             price=0.0,
+                             currency=CurrencyType.BTC,
+                             slippage=0.0,
+                             transaction_cost=0.0,
+                             success=True)
