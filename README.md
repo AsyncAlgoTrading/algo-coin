@@ -4,10 +4,10 @@ Algorithmic Trading Bitcoin.
 # WARNING: Do not use HEAD until I add support for limit orders. If you want a working package for market orders only, look prior to 9c2a453. I should be done with the upgrade shortly.
 
 [![Version](https://img.shields.io/badge/version-0.0.15-lightgrey.svg)](https://img.shields.io/badge/version-0.0.15-lightgrey.svg)
-[![Build Status](https://travis-ci.org/theocean154/algo-coin.svg?branch=master)](https://travis-ci.org/theocean154/algo-coin)
-[![Coverage](https://codecov.io/gh/theocean154/algo-coin/coverage.svg?branch=master&token=JGqz8ChQxd)](https://codecov.io/gh/theocean154/algo-coin)
+[![Build Status](https://travis-ci.org/timkpaine/algo-coin.svg?branch=master)](https://travis-ci.org/timkpaine/algo-coin)
+[![Coverage](https://codecov.io/gh/timkpaine/algo-coin/coverage.svg?branch=master&token=JGqz8ChQxd)](https://codecov.io/gh/timkpaine/algo-coin)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/algo-coin/Lobby)
-[![Waffle.io](https://badge.waffle.io/theocean154/algo-coin.png?label=ready&title=Ready)](https://waffle.io/theocean154/algo-coin?utm_source=badge)
+[![Waffle.io](https://badge.waffle.io/timkpaine/algo-coin.png?label=ready&title=Ready)](https://waffle.io/timkpaine/algo-coin?utm_source=badge)
 [![Site](https://img.shields.io/badge/Site--grey.svg?colorB=FFFFFF)](http://paine.nyc/algo-coin)
 
 ## Overview 
