@@ -52,8 +52,28 @@ Eventual coverage:
 ## Getting Started
 
 ### Installation
+Install the library from source:
+
+```python
+python setup.py install
+```
 
 ### API Keys
+You should creat API keys for exchanges you wish to trade on. For this example, we will assume a GDAX sandbox account with trading enabled. I usually put my keys in a set of shell scripts that are gitignored, so I don't post anything by accident. My scripts look something like:
+
+```bash
+export GDAX_API_KEY=...
+export GDAX_API_SECRET=...
+export GDAX_API_PASS=...
+```
+
+Prior to running, I then source the keys I need. 
+
+Let's make sure everything worked out by running a sample strategy on the GDAX sandbox exchange:
+
+```bash
+python3 -m algocoin --sandbox
+```
 
 ### Writing an algorithm
 
