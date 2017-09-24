@@ -36,7 +36,7 @@ annotate_l: ## MyPy type annotation check - count only
 clean: ## clean the repository
 	find . -name "*.pyc" -exec rm -rf {} \;
 	find . -name "__pycache__" -exec rm -rf {} \;
-	rm -rf .coverage cover htmlcov logs
+	rm -rf .coverage cover htmlcov logs build dist *.egg-info
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
