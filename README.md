@@ -92,5 +92,3 @@ python3 -m algocoin --sandbox
 ## Contributing
 
 ---
-
-## Contact
