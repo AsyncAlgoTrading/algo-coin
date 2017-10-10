@@ -5,7 +5,6 @@ os:
     #  - osx
   
 python:
-  - "3.5"
   - "3.6"
 
 install:
@@ -18,6 +17,13 @@ script: make test
 after_success:
     - codecov --token 10cff21a-48fa-4326-9714-fd63aa7c785d
     # - coveralls
+
+# deploy:
+#   provider: heroku
+#   api_key:
+#     secure: tf9st7uGWRQbsoUwqF0JVzjgDgGeRYOSzCdJKk/c5SVWgVK2JBENd5aZfYCbnpgAcsbOIbYwFttiU/KdXjg979KKR8mfJWfiN//bE8PGsUc4FIjiGZHeCwZdW+v7aGLc0LmElEOb8pTy9nl0i6Fy/353/BLLeGwuyHwUClNYv/iGYUc2w6Uspj3HvHYCRDnFO+p7bbGMfFGzXHrydpl5MgEavph+I9yPK6aKrzcnLX3i93aMU7yLrZyXDx28I/DhIjfTzfCRrPVXmnBI7GssIi/HmepO9PGPHZHubO93zvT+rVMYhX9ZeSb6OHJL1TR8MlxRm5/zYwOv+Two+QpefkC+1ugyebH90xqvxtkvuzNk1DaWeH1aOdWaWQDsy4ZnYx1SX5uPV1/UP2sE9lSvGiSMj1hCQeE1ppVgBzKDsqrJ+1wDdq1TRZ8LJ2mmB2fQUOn8BVVx5cXWRMLO0IMl/Uox0mbApVp9qp4SFPO7J3FzFhec1eabPYGQLr3FLxwbrKfnJ/b5vXxBjsB4PAQqgpzXe2qvAnIR7+BAc1f2QVlWU3zRG0FRvZ3p5BYXEQKYlVqPDbdRRZy+nD7thobFw7dZDpuwHmw6yeU4wFYZhEt57WggVKlngZ+rYoUSkhaXCJzyneOmK/qqT87IiB3iIkbg6FWRTpFCGfWloXED7Tw=
+#   app: algo-coin
+#   run: "python setup.py install"
 
 branches:
   only:
