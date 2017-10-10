@@ -9,6 +9,7 @@ Algorithmic Trading Bitcoin.
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/algo-coin/Lobby)
 [![Waffle.io](https://badge.waffle.io/timkpaine/algo-coin.png?label=ready&title=Ready)](https://waffle.io/timkpaine/algo-coin?utm_source=badge)
 [![BCH compliance](https://bettercodehub.com/edge/badge/timkpaine/algo-coin?branch=master)](https://bettercodehub.com/)
+[![Beerpay](https://beerpay.io/timkpaine/algo-coin/badge.svg?style=flat)](https://beerpay.io/timkpaine/algo-coin)
 [![Site](https://img.shields.io/badge/Site--grey.svg?colorB=FFFFFF)](http://paine.nyc/algo-coin)
 
 ## Overview 
