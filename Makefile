@@ -38,6 +38,9 @@ clean: ## clean the repository
 	find . -name "__pycache__" -exec rm -rf {} \;
 	rm -rf .coverage cover htmlcov logs build dist *.egg-info
 
+install: ## install the package
+	python3 setup.py install
+
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
 help:
@@ -46,4 +49,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run sandbox backtest test tests test_verbose help
+.PHONY: clean run sandbox backtest test tests test_verbose help install
