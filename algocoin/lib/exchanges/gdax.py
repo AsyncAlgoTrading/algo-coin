@@ -82,80 +82,10 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                 while True:
                     self.receive()
                     engine.tick()
-                    if self._manual and t and t.is_alive():
-                        try:
-                            x = outqueue.get(block=False)
-                            if x:
-                                if x[0] == 'c':
-                                    if not self._running:
-                                        log.warn('Continuing algo trading')
-
-                                    self._running = True
-                                    engine.continueTrading()
-
-                                elif x[0] == 'h':
-                                    if self._running:
-                                        log.warn('Halting algo trading')
-
-                                    self._running = False
-                                    engine.haltTrading()
-
-                                elif x[0] == 'q':
-                                    log.critical('Terminating program')
-
-                                    self.close()
-                                    inqueue.put(1)
-
-                                    self._manual = False
-
-                                    t.join()
-                                    t = None
-                                    return
-
-                                elif x[0] == 'r':
-                                    log.critical('leaving manual')
-
-                                    inqueue.put(1)
-
-                                    self._manual = False
-
-                                    t.join()
-                                    t = None
-                                elif x[0] == 'b':
-                                    self.buy(x[1])
-                                elif x[0] == 's':
-                                    self.sell(x[1])
-                                else:
-                                    log.critical('manual override error')
-                        except queue.Empty:
-                            pass
-
-                    elif self._manual and t:
-                        log.critical('leaving manual')
-                        self._manual = False
-
-                        t.join()
-                        t = None
 
             except KeyboardInterrupt:
-                # x = manual(self)
-                if not self._manual:
-                    self._manual = True
-                    inqueue = queue.Queue()
-                    outqueue = queue.Queue()
-                    t = threading.Thread(target=manual, args=(self, inqueue, outqueue,))
-                    t.start()
-                else:
-                    log.critical('Terminating program')
-                    inqueue.put(1)
-                    t.join()
-                    return
-
-            # except Exception as e:
-            #     log.critical(e)
-            #     self.callback(TickType.ERROR, e)
-            #     self.close()
-            #     return
+                log.critical('Terminating program')
+                return
 
     def accounts(self) -> list:
         return self._accounts

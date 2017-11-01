@@ -36,7 +36,6 @@ class TradingEngine(object):
             log.info(accounts)
             log.info("Running with %.2f USD" % options.risk_options.total_funds)
 
-
         self._bt = Backtest(options.backtest_options) if self._backtest else None
         self._rk = Risk(options.risk_options)
         self._ec = Execution(options.execution_options, self._ex)

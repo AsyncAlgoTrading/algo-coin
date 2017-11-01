@@ -43,6 +43,7 @@ def main(argv: list) -> None:
     application.listen(port)
     t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
     t.daemon = True  # So it terminates on exit
+    t.start()
 
     # Run the live trading engine
     te.run()
