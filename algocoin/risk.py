@@ -28,7 +28,7 @@ class Risk(object):
                        reason: str) -> TradeRequest:
         resp = TradeRequest(side=side, volume=vol, price=price, risk_check=status, risk_reason=reason)
 
-        if status:  # FIXME
+        if status == TradeResult.FILLED:  # FIXME
             self.outstanding += abs(vol * price) * (1 if side == Side.BUY else -1)
 
             self.max_running_outstanding = max(self.max_running_outstanding,

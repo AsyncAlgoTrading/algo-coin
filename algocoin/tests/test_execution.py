@@ -39,10 +39,9 @@ class TestExecution:
     def test_request(self):
         from ..execution import Execution
         from ..lib.exchanges.gdax import GDAXExchange
-        from ..lib.enums import Side, ExchangeType, \
-            TickType, TradingType
+        from ..lib.enums import Side, ExchangeType, TradingType
         from ..lib.config import ExecutionConfig, ExchangeConfig
-        from ..lib.structs import TradeRequest, MarketData
+        from ..lib.structs import TradeRequest
 
         with patch('os.environ'), patch('gdax.AuthenticatedClient'):
             exc = ExchangeConfig()
@@ -53,15 +52,8 @@ class TestExecution:
             ec = ExecutionConfig()
             e = Execution(ec, ex)
 
-            data = MarketData(time=datetime.now(),
-                              volume=1.0,
-                              price=1.0,
-                              type=TickType.TRADE,
-                              side=Side.BUY)
-            req = TradeRequest(data=data,
-                               side=Side.BUY,
+            req = TradeRequest(side=Side.BUY,
                                volume=1.0,
-                               price=1.0,
-                               exchange=ExchangeType.GDAX)
+                               price=1.0)
 
             resp = e.request(req)

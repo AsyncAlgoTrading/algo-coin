@@ -51,7 +51,7 @@ class TestSMACrossesStrategy:
 
     def test_sma_buy(self):
         from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import TickType, Side
+        from ...lib.enums import TickType, Side, TradeResult
         from ...lib.structs import MarketData, TradeResponse
         from ...lib.utils import parse_date
 
@@ -66,7 +66,7 @@ class TestSMACrossesStrategy:
                                 side=req.side,
                                 price=req.price,
                                 volume=req.volume,
-                                success=True)
+                                status=TradeResult.FILLED)
             callback(res)
 
         s._te.requestBuy.side_effect = ret

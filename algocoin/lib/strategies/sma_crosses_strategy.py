@@ -41,7 +41,7 @@ class SMACrossesStrategy(TradingStrategy):
         slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
 
     def onSell(self, res: TradeResponse) -> None:
-        if not res.success:
+        if not res.status == TradeResult.FILLED:
             slog.info('order failure: %s' % res)
             return
 
@@ -94,8 +94,7 @@ class SMACrossesStrategy(TradingStrategy):
 
         if self.state == 'golden' and self.prev_state != 'golden' and \
                 self.bought == 0.0:  # watch for floating point error
-            req = TradeRequest(data=data,
-                               side=Side.BUY,
+            req = TradeRequest(side=Side.BUY,
                                # buy between .2 and 1 BTC
                                volume=max(min(1.0, data.volume), .2),
                                currency=data.currency,
@@ -106,8 +105,7 @@ class SMACrossesStrategy(TradingStrategy):
 
         elif self.state == 'death' and self.prev_state != 'death' and \
                 self.bought > 0.0:
-            req = TradeRequest(data=data,
-                               side=Side.SELL,
+            req = TradeRequest(side=Side.SELL,
                                volume=self.bought_qty,
                                currency=data.currency,
                                price=data.price)

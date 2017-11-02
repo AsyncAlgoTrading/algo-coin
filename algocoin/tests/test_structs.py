@@ -32,15 +32,9 @@ class TestStructs:
         assert m
 
     def test_TradeRequest(self):
-        from ..lib.structs import TradeRequest, MarketData
-        from ..lib.enums import TickType, Side
-        data = MarketData(time=datetime.now(),
-                          volume=1.0,
-                          price=1.0,
-                          type=TickType.TRADE,
-                          side=Side.BUY)
-        t = TradeRequest(data=data,
-                         side=Side.BUY,
+        from ..lib.structs import TradeRequest
+        from ..lib.enums import Side
+        t = TradeRequest(side=Side.BUY,
                          volume=1.0,
                          price=1.0)
         assert t
@@ -53,19 +47,12 @@ class TestStructs:
         # order_sub_type = OrderSubType
 
     def test_TradeResponse(self):
-        from ..lib.structs import TradeRequest, TradeResponse, MarketData, TradeResult
-        from ..lib.enums import TickType, Side
-        data = MarketData(time=datetime.now(),
-                          volume=1.0,
-                          price=1.0,
-                          type=TickType.TRADE,
-                          side=Side.BUY)
-        req = TradeRequest(data=data,
-                           side=Side.BUY,
+        from ..lib.structs import TradeRequest, TradeResponse, TradeResult
+        from ..lib.enums import Side
+        req = TradeRequest(side=Side.BUY,
                            volume=1.0,
                            price=1.0)
-        t = TradeResponse(data=data,
-                          request=req,
+        t = TradeResponse(request=req,
                           side=Side.BUY,
                           volume=0.0,
                           price=0.0,

@@ -6,7 +6,7 @@ from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
 from ..structs import TradeRequest, TradeResponse, Account
 from ..utils import get_keys_from_environment, str_to_currency_type
-from ..enums import CurrencyType
+from ..enums import CurrencyType, TradeResult
 from ..logging import LOG as log
 from .helpers import GDAXHelpersMixin
 
@@ -101,7 +101,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              currency=CurrencyType.BTC,
                              slippage=0.0,
                              transaction_cost=0.0,
-                             success=True)
+                             status=TradeResult.FILLED)
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
@@ -115,4 +115,4 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              currency=CurrencyType.BTC,
                              slippage=0.0,
                              transaction_cost=0.0,
-                             success=True)
+                             status=TradeResult.FILLED)

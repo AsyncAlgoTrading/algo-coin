@@ -30,16 +30,10 @@ class TestRisk:
         pass
 
     def test_request(self):
-        from ..lib.structs import TradeRequest, MarketData
-        from ..lib.enums import TickType, Side
-        from ..lib.utils import parse_date
+        from ..lib.structs import TradeRequest
+        from ..lib.enums import Side
 
-        data = MarketData(type=TickType.TRADE,
-                          time=parse_date('1479272400'),
-                          price=float(1),
-                          volume=float(100),
-                          side=Side.BUY)
-        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         assert resp.risk_check == True
@@ -48,22 +42,16 @@ class TestRisk:
         assert self.risk.max_running_outstanding == 100.0
         assert self.risk.max_running_outstanding_incr == [100.0]
 
-        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         assert resp.risk_check == False
 
     def test_request2(self):
-        from ..lib.structs import TradeRequest, MarketData
-        from ..lib.enums import TickType, Side
-        from ..lib.utils import parse_date
+        from ..lib.structs import TradeRequest
+        from ..lib.enums import Side
 
-        data = MarketData(type=TickType.TRADE,
-                          time=parse_date('1479272400'),
-                          price=float(1),
-                          volume=float(100),
-                          side=Side.BUY)
-        req = TradeRequest(data=data, side=Side.BUY, volume=50.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, volume=50.0, price=1.0)
         resp = self.risk.request(req)
 
         assert resp.risk_check == True
@@ -72,7 +60,7 @@ class TestRisk:
         assert self.risk.max_running_outstanding == 50.0
         assert self.risk.max_running_outstanding_incr == [50.0]
 
-        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         assert resp.risk_check == True
@@ -81,7 +69,7 @@ class TestRisk:
         assert self.risk.max_running_outstanding == 100.0
         assert self.risk.max_running_outstanding_incr == [50.0, 100.0]
 
-        req = TradeRequest(data=data, side=Side.BUY, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         assert resp.risk_check == False
