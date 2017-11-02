@@ -1,12 +1,9 @@
 import gdax
 import json
-import threading
-import queue
 from websocket import create_connection
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
-from ...manual import manual
 from ..structs import TradeRequest, TradeResponse, Account
 from ..utils import get_keys_from_environment, str_to_currency_type
 from ..enums import CurrencyType
@@ -73,8 +70,6 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                 log.info('Sending Heartbeat %s' % self._heartbeat)
 
                 self._running = True
-
-                t, inqueue, outqueue = None, None, None
 
                 log.info('')
                 log.info('Starting algo trading')

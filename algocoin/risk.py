@@ -24,11 +24,11 @@ class Risk(object):
                        side: Side,
                        vol: float,
                        price: float,
-                       success: bool,
+                       status: bool,
                        reason: str) -> TradeRequest:
-        resp = TradeRequest(side=side, volume=vol, price=price, risk_check=success, risk_reason=reason)
+        resp = TradeRequest(side=side, volume=vol, price=price, risk_check=status, risk_reason=reason)
 
-        if success:
+        if status:  # FIXME
             self.outstanding += abs(vol * price) * (1 if side == Side.BUY else -1)
 
             self.max_running_outstanding = max(self.max_running_outstanding,

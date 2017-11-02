@@ -3,7 +3,8 @@ from .enums import Side, \
                    CurrencyType, \
                    OrderType, \
                    OrderSubType, \
-                   TickType
+                   TickType, \
+                   TradeResult
 from .utils import struct, NOPRINT
 
 
@@ -52,8 +53,8 @@ class TradeResponse:
     slippage = float, 0.0
     transaction_cost = float, 0.0
 
-    time = datetime.datetime, datetime.datetime.now() # FIXME
-    success = bool
+    time = datetime.datetime, datetime.datetime.now()  # FIXME
+    status = TradeResult, TradeResult.NONE
 
 
 @struct
