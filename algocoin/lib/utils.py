@@ -87,6 +87,9 @@ def __init__(self, **kwargs) -> None:
             setattr(self, item, kwargs.get(item))
 
         getattr(self, item)  # make sure all are set.
+    for k, v in kwargs.items():
+        if k not in self._vars:
+            raise Exception('Attribute not found! %s' % k)
 
 
 def __repr__(self) -> str:

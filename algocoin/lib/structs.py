@@ -54,7 +54,7 @@ class TradeResponse:
     transaction_cost = float, 0.0
 
     time = datetime.datetime, datetime.datetime.now()  # FIXME
-    status = TradeResult, TradeResult.NONE
+    status = TradeResult
 
 
 @struct

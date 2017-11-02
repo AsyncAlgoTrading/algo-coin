@@ -53,7 +53,7 @@ class TestStructs:
         # order_sub_type = OrderSubType
 
     def test_TradeResponse(self):
-        from ..lib.structs import TradeRequest, TradeResponse, MarketData
+        from ..lib.structs import TradeRequest, TradeResponse, MarketData, TradeResult
         from ..lib.enums import TickType, Side
         data = MarketData(time=datetime.now(),
                           volume=1.0,
@@ -69,7 +69,7 @@ class TestStructs:
                           side=Side.BUY,
                           volume=0.0,
                           price=0.0,
-                          success=False)
+                          status=TradeResult.FILLED)
         assert t
         # side = Side
         # volume = float

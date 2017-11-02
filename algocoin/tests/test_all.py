@@ -1,7 +1,6 @@
 from ..backtest import *
 from ..custom_strategies import *
 from ..execution import *
-from ..manual import *
 from ..risk import *
 from ..trading import *
 from ..lib.callback import *

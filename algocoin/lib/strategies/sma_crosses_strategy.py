@@ -1,7 +1,7 @@
 from ..strategy import ticks, \
                        TradingStrategy
 from ..structs import MarketData, TradeRequest, TradeResponse
-from ..enums import Side
+from ..enums import Side, TradeResult
 from ..logging import STRAT as slog, ERROR as elog
 
 
@@ -27,7 +27,7 @@ class SMACrossesStrategy(TradingStrategy):
         self._portfolio_value = []
 
     def onBuy(self, res: TradeResponse) -> None:
-        if not res.success:
+        if not res.status == TradeResult.FILLED:
             slog.critical('order failure: %s' % res)
             return
 
