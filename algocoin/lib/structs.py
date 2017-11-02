@@ -31,9 +31,9 @@ class TradeRequest:
 
     volume = float
     price = float
-    currency = CurrencyType, CurrencyType.BTC, NOPRINT
+    currency = CurrencyType
 
-    order_type = OrderType, OrderType.MARKET
+    order_type = OrderType
     order_sub_type = OrderSubType, OrderSubType.NONE
     # exchange = ExchangeType
 
@@ -48,7 +48,7 @@ class TradeResponse:
 
     volume = float
     price = float
-    currency = CurrencyType, CurrencyType.BTC
+    currency = CurrencyType
 
     slippage = float, 0.0
     transaction_cost = float, 0.0

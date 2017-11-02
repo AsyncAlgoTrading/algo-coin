@@ -33,8 +33,10 @@ class TestStructs:
 
     def test_TradeRequest(self):
         from ..lib.structs import TradeRequest
-        from ..lib.enums import Side
+        from ..lib.enums import Side, OrderType, CurrencyType
         t = TradeRequest(side=Side.BUY,
+                         currency=CurrencyType.BTC,
+                         order_type=OrderType.MARKET,
                          volume=1.0,
                          price=1.0)
         assert t
@@ -48,12 +50,15 @@ class TestStructs:
 
     def test_TradeResponse(self):
         from ..lib.structs import TradeRequest, TradeResponse, TradeResult
-        from ..lib.enums import Side
+        from ..lib.enums import Side, OrderType, CurrencyType
         req = TradeRequest(side=Side.BUY,
+                           order_type=OrderType.MARKET,
+                           currency=CurrencyType.BTC,
                            volume=1.0,
                            price=1.0)
         t = TradeResponse(request=req,
                           side=Side.BUY,
+                          currency=CurrencyType.BTC,
                           volume=0.0,
                           price=0.0,
                           status=TradeResult.FILLED)

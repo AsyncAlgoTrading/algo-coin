@@ -2,14 +2,13 @@ from typing import Callable
 from .backtest import Backtest
 from .lib.callback import Callback, Print
 from .lib.config import TradingEngineConfig
-from .lib.enums import TradingType, Side, CurrencyType
+from .lib.enums import TradingType, Side, CurrencyType, TradeResult, OrderType
 from .execution import Execution
 from .risk import Risk
 from .lib.strategy import TradingStrategy
 from .lib.structs import TradeRequest, TradeResponse
 from .lib.utils import ex_type_to_ex
 from .lib.logging import LOG as log, SLIP as sllog, TXNS as tlog
-# import time
 
 
 class TradingEngine(object):
@@ -60,6 +59,7 @@ class TradingEngine(object):
 
         self._ticked = []  # type: List
         self._trading = True  # type: bool
+        self._pending = {OrderType.MARKET: [], OrderType.LIMIT: []}  # TODO in progress
 
     def exchange(self):
         return self._ex
@@ -144,10 +144,26 @@ class TradingEngine(object):
                 # if risk passes, let execution execute
                 resp = self._ec.request(resp)
 
-                sllog.info("Slippage - %s" % resp)
-                tlog.info("TXN cost - %s" % resp)
-                # let risk update according to execution details
-                self._rk.update(resp)
+                # TODO
+                if resp.status == TradeResult.PENDING:
+                    # listen for later
+                    # TODO
+                    self._pending[req.order_type].append(resp)  # TODO or req?
+
+                elif resp.status == TradeResult.REJECTED:
+                    # send response
+                    resp = TradeResponse(data=resp.data,
+                                         request=resp,
+                                         side=resp.side,
+                                         volume=0.0,
+                                         price=0.0,
+                                         currency=req.currency,
+                                         status=TradeResult.REJECTED)
+                elif resp.status == TradeResult.FILLED:
+                    sllog.info("Slippage - %s" % resp)
+                    tlog.info("TXN cost - %s" % resp)
+                    # let risk update according to execution details
+                    self._rk.update(resp)
             else:
                 resp = TradeResponse(data=resp.data,
                                      request=resp,
@@ -155,7 +171,7 @@ class TradingEngine(object):
                                      volume=0.0,
                                      price=0.0,
                                      currency=req.currency,
-                                     success=False)
+                                     status=TradeResult.REJECTED)
 
         if self._backtest and strat:
             # register the initial request

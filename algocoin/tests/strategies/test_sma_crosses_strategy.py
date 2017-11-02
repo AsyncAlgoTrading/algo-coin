@@ -64,6 +64,7 @@ class TestSMACrossesStrategy:
         def ret(callback, req, callback_failure=None, strat=None):
             res = TradeResponse(request=req,
                                 side=req.side,
+                                currency=req.currency,
                                 price=req.price,
                                 volume=req.volume,
                                 status=TradeResult.FILLED)

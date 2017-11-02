@@ -92,7 +92,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
         params = GDAXExchange.trade_req_to_params(req)
-        log.warn(str(params))
+        log.warn("Buy params: %s", str(params))
         res = self._client.buy(**params)
         return TradeResponse(request=req,
                              side=req.side,
@@ -106,7 +106,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = GDAXExchange.trade_req_to_params(req)
-        log.warn(str(params))
+        log.warn("Sell params: %s", str(params))
         res = self._client.sell(**params)
         return TradeResponse(request=req,
                              side=req.side,

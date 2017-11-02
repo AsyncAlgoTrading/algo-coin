@@ -1,7 +1,7 @@
 from ..strategy import ticks, \
                        TradingStrategy
 from ..structs import MarketData, TradeRequest, TradeResponse
-from ..enums import Side, TradeResult
+from ..enums import Side, TradeResult, OrderType
 from ..logging import STRAT as slog, ERROR as elog
 
 
@@ -98,6 +98,7 @@ class SMACrossesStrategy(TradingStrategy):
                                # buy between .2 and 1 BTC
                                volume=max(min(1.0, data.volume), .2),
                                currency=data.currency,
+                               order_type=OrderType.MARKET,
                                price=data.price)
             # slog.critical("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
@@ -108,6 +109,7 @@ class SMACrossesStrategy(TradingStrategy):
             req = TradeRequest(side=Side.SELL,
                                volume=self.bought_qty,
                                currency=data.currency,
+                               order_type=OrderType.MARKET,
                                price=data.price)
             # slog.critical("requesting sell : %s", req)
             self.requestSell(self.onSell, req)

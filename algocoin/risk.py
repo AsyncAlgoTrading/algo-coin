@@ -1,6 +1,6 @@
 from .lib.config import RiskConfig
 from .lib.structs import TradeRequest, TradeResponse, MarketData
-from .lib.enums import Side, TradeResult
+from .lib.enums import Side, TradeResult, CurrencyType, OrderType
 from .lib.logging import RISK as rlog
 
 
@@ -22,11 +22,13 @@ class Risk(object):
 
     def _constructResp(self,
                        side: Side,
+                       currency: CurrencyType,
+                       order_type: OrderType,
                        vol: float,
                        price: float,
                        status: bool,
                        reason: str) -> TradeRequest:
-        resp = TradeRequest(side=side, volume=vol, price=price, risk_check=status, risk_reason=reason)
+        resp = TradeRequest(side=side, currency=currency, order_type=order_type, volume=vol, price=price, risk_check=status, risk_reason=reason)
 
         if status == TradeResult.FILLED:  # FIXME
             self.outstanding += abs(vol * price) * (1 if side == Side.BUY else -1)
@@ -48,17 +50,17 @@ class Risk(object):
         if (total + self.outstanding) <= max:
             # room for full volume
             rlog.info('Order: %s' % req)
-            return self._constructResp(req.side, req.volume, req.price, True, '')
+            return self._constructResp(req.side, req.currency, req.order_type, req.volume, req.price, True, '')
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
             rlog.info('Partial Order: %s' % req)
-            return self._constructResp(req.side, volume, req.price, True, '')
+            return self._constructResp(req.side, req.currency, req.order_type, volume, req.price, True, '')
 
         # no room for volume
         rlog.info('Order rejected: %s' % req)
-        return self._constructResp(req.side, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
+        return self._constructResp(req.side, req.currency, req.order_type, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
 
     def requestBuy(self, req: TradeRequest):
         '''precheck for risk compliance'''
