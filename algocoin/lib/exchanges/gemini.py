@@ -10,7 +10,7 @@ from ..logging import LOG as log
 from .helpers import GeminiHelpersMixin
 
 
-class GeminiExchange(Exchange, GeminiHelpersMixin):
+class GeminiExchange(GeminiHelpersMixin, Exchange):
     def __init__(self, options: ExchangeConfig) -> None:
         super(GeminiExchange, self).__init__(options)
         self._type = ExchangeType.GEMINI
@@ -77,13 +77,13 @@ class GeminiExchange(Exchange, GeminiHelpersMixin):
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
         params = GeminiExchange.trade_req_to_params(req)
-        log.warn(str(params))
+        log.warn("Buy params: %s", str(params))
         return self._client.buy(params)
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = GeminiExchange.trade_req_to_params(req)
-        log.warn(str(params))
+        log.warn("Sell params: %s", str(params))
         return self._client.sell(params)
 
     def receive(self) -> None:

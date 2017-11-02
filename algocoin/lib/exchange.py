@@ -1,5 +1,4 @@
 import json
-from abc import abstractmethod
 from .config import ExchangeConfig
 from .data_source import StreamingDataSource
 from .logging import LOG as log
@@ -16,7 +15,7 @@ class Exchange(StreamingDataSource):
         self._md_url = EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type)
         self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
         self._manual = False
-
+        self._accounts = []
         self._pending_orders = {}
 
     def close(self) -> None:
@@ -69,6 +68,6 @@ class Exchange(StreamingDataSource):
         else:
             self.callback(TickType.ERROR, res)
 
-    @abstractmethod
-    def accounts(self):
+    def accounts(self) -> list:
         '''account info'''
+        return self._accounts

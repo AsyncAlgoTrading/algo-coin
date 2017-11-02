@@ -240,7 +240,7 @@ def exchange_to_file(exchange: ExchangeType) -> str:
         return "./data/exchange/coinbaseUSD.csv"
 
 
-def set_verbose():
+def set_verbose(level):
     # Print/log extra info
     # olog.propagate = True
     # slog.propagate = True
@@ -248,13 +248,24 @@ def set_verbose():
     # dlog.propagate = False  # too much
     # tlog.propagate = True
     # mlog.propagate = True
-    log.setLevel(logging.DEBUG)
-    slog.setLevel(logging.DEBUG)
-    dlog.setLevel(logging.DEBUG)
-    rlog.setLevel(logging.DEBUG)
-    exlog.setLevel(logging.DEBUG)
-    sllog.setLevel(logging.DEBUG)
-    tlog.setLevel(logging.DEBUG)
-    mlog.setLevel(logging.DEBUG)
-    elog.setLevel(logging.DEBUG)
+    if level > 1:
+        log.setLevel(logging.DEBUG)
+        slog.setLevel(logging.DEBUG)
+        dlog.setLevel(logging.DEBUG)
+        rlog.setLevel(logging.DEBUG)
+        exlog.setLevel(logging.DEBUG)
+        sllog.setLevel(logging.DEBUG)
+        tlog.setLevel(logging.DEBUG)
+        mlog.setLevel(logging.DEBUG)
+        elog.setLevel(logging.DEBUG)
+    elif level == 1:
+        log.setLevel(logging.INFO)
+        slog.setLevel(logging.INFO)
+        dlog.setLevel(logging.INFO)
+        rlog.setLevel(logging.INFO)
+        exlog.setLevel(logging.INFO)
+        sllog.setLevel(logging.INFO)
+        tlog.setLevel(logging.INFO)
+        mlog.setLevel(logging.INFO)
+        elog.setLevel(logging.INFO)
     log.info('running in verbose mode!')

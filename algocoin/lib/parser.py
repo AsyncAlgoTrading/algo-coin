@@ -40,8 +40,8 @@ def _parse_general(general, config) -> None:
         raise ConfigException('TradingType unspecified')
 
     if 'verbose' in general:
-        if general['verbose'] == '1':
-            set_verbose()
+        if int(general['verbose']) >= 1:
+            set_verbose(int(general['verbose']))
 
     if 'print' in general:
         if general['print'] == '1':
@@ -102,7 +102,6 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     log.critical("WARNING: Live trading. money will be lost ;^)")
     config.exchange_options.exchange_type = \
         str_to_exchange(argv.get('exchange', ''))
-
 
 
 def _parse_sandbox_options(argv, config) -> None:

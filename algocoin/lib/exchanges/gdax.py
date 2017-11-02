@@ -82,9 +82,6 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                 log.critical('Terminating program')
                 return
 
-    def accounts(self) -> list:
-        return self._accounts
-
     def orderBook(self, level=1):
         '''get order book'''
         return self._client.getProductOrderBook(level=level)
