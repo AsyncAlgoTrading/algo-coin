@@ -8,7 +8,7 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
     (ExchangeType.BITFINEX, TradingType.LIVE): '',
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): '',
-    (ExchangeType.GDAX, TradingType.SANDBOX): 'wss://ws-feed-public.sandbox.gdax.com',
+    (ExchangeType.GDAX, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
     (ExchangeType.GDAX, TradingType.LIVE): 'wss://ws-feed.gdax.com',
     (ExchangeType.GEMINI, TradingType.SANDBOX): 'wss://api.sandbox.gemini.com/v1/marketdata/btcusd?heartbeat=true',
     (ExchangeType.GEMINI, TradingType.LIVE): 'wss://api.gemini.com/v1/marketdata/btcusd?heartbeat=true',
