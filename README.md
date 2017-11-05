@@ -1,7 +1,7 @@
 # AlgoCoin
 Algorithmic Trading Bitcoin. 
 
-# WARNING: Do not use HEAD until I add support for limit orders. If you want a working package for market orders only, look prior to 9c2a453. I should be done with the upgrade shortly.
+# UPDATE: MASTER is working for market orders ONLY on gemini. Everything else is still in beta until limit order support is done
 
 [![Version](https://img.shields.io/badge/version-0.0.1-lightgrey.svg)](https://img.shields.io/badge/version-0.0.1-lightgrey.svg)
 [![Build Status](https://travis-ci.org/timkpaine/algo-coin.svg?branch=master)](https://travis-ci.org/timkpaine/algo-coin)
