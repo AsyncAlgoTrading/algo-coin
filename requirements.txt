@@ -19,3 +19,4 @@ seaborn>=0.7.1
 six>=1.10.0
 tornado>=4.5.2
 websocket-client>=0.40.0
+ujson
