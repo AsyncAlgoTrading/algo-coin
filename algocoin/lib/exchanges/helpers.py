@@ -136,14 +136,26 @@ class GeminiHelpersMixin(object):
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GDAXHelpersMixin.currency_to_string(req.currency)
-        p['type'] = GDAXHelpersMixin.order_type_to_string(req.order_type)
+        p['product_id'] = GeminiHelpersMixin.currency_to_string(req.currency)
+        p['type'] = GeminiHelpersMixin.order_type_to_string(req.order_type)
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
             p['time_in_force'] = 'FOK'
         elif req.order_sub_type == OrderSubType.POST_ONLY:
             p['post_only'] = '1'
         return p
+
+    @staticmethod
+    def currency_to_string(cur: CurrencyType) -> str:
+        if cur == CurrencyType.BTC:
+            return 'BTCUSD'
+
+    @staticmethod
+    def order_type_to_string(typ: OrderType) -> str:
+        if typ == OrderType.LIMIT:
+            return 'limit'
+        elif typ == OrderType.MARKET:
+            return 'market'
 
 
 class ItBitHelpersMixin(object):

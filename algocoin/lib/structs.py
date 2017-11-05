@@ -55,6 +55,8 @@ class TradeResponse:
 
     time = datetime.datetime, datetime.datetime.now()  # FIXME
     status = TradeResult
+    order_id = str
+    remaining = float, 0.0
 
 
 @struct

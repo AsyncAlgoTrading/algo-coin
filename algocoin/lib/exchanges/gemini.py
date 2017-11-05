@@ -2,7 +2,7 @@ import json
 from websocket import create_connection
 from ..oe.gemini import GeminiSession
 from ..config import ExchangeConfig
-from ..enums import TradingType, ExchangeType, TickType
+from ..enums import TradingType, ExchangeType, TickType, TradeResult
 from ..exchange import Exchange
 from ..structs import TradeRequest, TradeResponse, Account
 from ..utils import get_keys_from_environment, str_to_currency_type
@@ -78,13 +78,76 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
         '''execute a buy order'''
         params = GeminiExchange.trade_req_to_params(req)
         log.warn("Buy params: %s", str(params))
-        return self._client.buy(params)
+        order = self._client.new_order(params['product_id'],
+                                       params['size'],
+                                       params['price'],
+                                       'buy',
+                                       client_order_id=None,
+                                       order_execution=None)
+        # FIXME check these
+        slippage = float(params['price'])-float(order['avg_execution_price'])
+        txn_cost = 0.0
+        status = TradeResult.NONE
+
+        if (float(order['executed_amount']) - req.volume) < 0.001:
+            status = TradeResult.FILLED
+        elif order.get('is_cancelled', ''):
+            status = TradeResult.REJECTED
+        elif float(order.get('remaining_amount', 0.0)):
+            status = TradeResult.PARTIAL
+        else:
+            status = TradeResult.PENDING
+
+        resp = TradeResponse(request=req,
+                             side=req.side,
+                             volume=float(order['executed_amount']),
+                             price=float(order['avg_execution_price']),
+                             currency=req.currency,
+                             slippage=slippage,
+                             transaction_cost=txn_cost,
+                             status=status,
+                             order_id=order['order_id'],
+                             remaining=float(order.get('remaining_amount', 0.0)),
+                             )
+        return resp
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = GeminiExchange.trade_req_to_params(req)
         log.warn("Sell params: %s", str(params))
-        return self._client.sell(params)
+        order = self._client.new_order(params['product_id'],
+                                       params['size'],
+                                       params['price'],
+                                       'sell',
+                                       client_order_id=None,
+                                       order_execution=None)
+
+        # FIXME check these
+        slippage = float(params['price'])-float(order['avg_execution_price'])
+        txn_cost = 0.0
+        status = TradeResult.NONE
+
+        if (float(order['executed_amount']) - req.volume) < 0.001:
+            status = TradeResult.FILLED
+        elif order.get('is_cancelled', ''):
+            status = TradeResult.REJECTED
+        elif float(order.get('remaining_amount', 0.0)):
+            status = TradeResult.PARTIAL
+        else:
+            status = TradeResult.PENDING
+
+        resp = TradeResponse(request=req,
+                             side=req.side,
+                             volume=float(order['executed_amount']),
+                             price=float(order['avg_execution_price']),
+                             currency=req.currency,
+                             slippage=slippage,
+                             transaction_cost=txn_cost,
+                             status=status,
+                             order_id=order['order_id'],
+                             remaining=float(order.get('remaining_amount', 0.0)),
+                             )
+        return resp
 
     def receive(self) -> None:
         jsn = json.loads(self.ws.recv())

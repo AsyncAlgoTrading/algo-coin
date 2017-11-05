@@ -11,6 +11,7 @@ import hashlib
 import json
 import hmac
 
+
 class GeminiSession:
     """Defines a Gemini API session.
     A session uses one Gemini API key. An account can have multiple sessions.
@@ -27,15 +28,15 @@ class GeminiSession:
             self.api_url = 'https://api.sandbox.gemini.com/v1/'
 
     def get_symbols(self):
-        """Returns all available symbols for trading."""      
-        try: 
+        """Returns all available symbols for trading."""
+        try:
             return requests.get(self.api_url + 'symbols').json()
         except requests.exceptions.RequestException as e:
             raise e
 
     def get_ticker(self, symbol):
         """Returns recent trading activity for a symbol"""
-        try: 
+        try:
             return requests.get(self.api_url + 'pubticker/' + symbol).json()
         except requests.exceptions.RequestException as e:
             raise e
@@ -45,11 +46,11 @@ class GeminiSession:
 
         Args:
             symbol (str): Symbol such as btcusd.
-            limit_bids (int): Optional. Max number of bids (offers to buy) to 
-                return. Default is 50.                
+            limit_bids (int): Optional. Max number of bids (offers to buy) to
+                return. Default is 50.
             limit_asks (int): Optional. Max number of asks (offers to sell) to
                 return. Default is 50.
-        
+
         Returns:
             A JSON object with two arrays, one for bids and one for asks.
         """
@@ -59,19 +60,18 @@ class GeminiSession:
             limits["limit_bids"] = limit_bids
         if limit_asks is not None:
             limits["limit_asks"] = limit_asks
-        
+
         try:
             return requests.get(self.api_url + symbol, params=limits).json()
         except requests.exceptions.RequestException as e:
             raise e
 
-    def new_order(self, symbol, amount, price, side, client_order_id=None, 
-        order_execution=None):
+    def new_order(self, symbol, amount, price, side, client_order_id=None, order_execution=None):
         """Place a new order
 
         Args:
             symbol (str): Symbol such as btcusd.
-            amount (str): Decimal amount of BTC to purchase. Note that this 
+            amount (str): Decimal amount of BTC to purchase. Note that this
                 should be a string.
             price (str): Decimal amount of USD to spend per BTC. Note that this
                 should be a string.
@@ -80,10 +80,10 @@ class GeminiSession:
                 "maker-or-cancel" and "immediate-or-cancel" are the currently
                 supported options.
 
-        Returns: 
+        Returns:
             A JSON object with information about the order.
         """
-        
+
         fields = {
                 'request': '/v1/order/new',
                 'nonce': self._nonce(),
@@ -100,16 +100,16 @@ class GeminiSession:
 
         if client_order_id is not None:
             fields['client_order_id'] = client_order_id
-        
+
         if order_execution is not None:
             fields['order_execution'] = [order_execution]
-        
+
         try:
-            return requests.post(self.api_url + 'order/new', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order/new',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
-    
+
     def cancel_order(self, order_id):
         """Cancels an existing order with the given order_id"""
         fields = {
@@ -119,8 +119,8 @@ class GeminiSession:
         }
 
         try:
-            return requests.post(self.api_url + 'order/cancel', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order/cancel',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
@@ -132,11 +132,11 @@ class GeminiSession:
         }
 
         try:
-            return requests.post(self.api_url + 'order/cancel/session', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order/cancel/session',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
-    
+
     def cancel_all_active_orders(self):
         """Cancels all orders across all sessions"""
         fields = {
@@ -145,8 +145,8 @@ class GeminiSession:
         }
 
         try:
-            return requests.post(self.api_url + 'order/cancel/all', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order/cancel/all',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
@@ -159,8 +159,8 @@ class GeminiSession:
         }
 
         try:
-            return requests.post(self.api_url + 'order/status', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order/status',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
@@ -172,21 +172,21 @@ class GeminiSession:
         }
 
         try:
-            return requests.post(self.api_url + 'order', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'order',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
     def get_past_trades(self, symbol, limit_trades=None, timestamp=None):
         """Returns information about past trades.
-        
+
         Args:
-            limit_trades (int): Optional. The max number of trades to return. 
+            limit_trades (int): Optional. The max number of trades to return.
                 Default is 50, max is 100.
-            timestamp (int): Optional. Can be provided to only return trades 
+            timestamp (int): Optional. Can be provided to only return trades
                 after timestamp. Can be in milliseconds or seconds.
 
-        Returns: 
+        Returns:
             Array of trade information items.
         """
 
@@ -203,16 +203,16 @@ class GeminiSession:
             fields["timestamp"] = timestamp
 
         try:
-            return requests.post(self.api_url + 'mytrades', 
-                headers=self._create_payload(fields)).json()
+            return requests.post(self.api_url + 'mytrades',
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
     def get_trade_volume(self):
         """Get trade volume information for the account
 
-        Returns: 
-            Array where each element contains information about one day of 
+        Returns:
+            Array where each element contains information about one day of
             trading activity.
         """
         fields = {
@@ -222,13 +222,13 @@ class GeminiSession:
 
         try:
             return requests.post(self.api_url + 'tradevolume',
-                headers=self._create_payload(fields)).json()
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
     def get_balances(self):
         """Get available balances in the supported currencies
-        
+
         Returns:
             Array where each element is for a different currency.
         """
@@ -239,12 +239,12 @@ class GeminiSession:
 
         try:
             return requests.post(self.api_url + 'balances',
-                headers=self._create_payload(fields)).json()
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
     def heartbeat(self):
-        """Prevents a session from timing out if the require heartbeat flag is 
+        """Prevents a session from timing out if the require heartbeat flag is
         set when the API key was provisioned.
         """
         fields = {
@@ -254,7 +254,7 @@ class GeminiSession:
 
         try:
             return requests.post(self.api_url + 'heartbeat',
-                headers=self._create_payload(fields)).json()
+                                 headers=self._create_payload(fields)).json()
         except requests.exceptions.RequestException as e:
             raise e
 
@@ -269,8 +269,8 @@ class GeminiSession:
         headers = {
             'X-GEMINI-APIKEY': self.api_key,
             'X-GEMINI-PAYLOAD': encodedFields,
-            'X-GEMINI-SIGNATURE': hmac.new(self.api_secret.encode(), 
-                encodedFields, digestmod=hashlib.sha384).hexdigest()
+            'X-GEMINI-SIGNATURE': hmac.new(self.api_secret.encode(),
+                                           encodedFields, digestmod=hashlib.sha384).hexdigest()
         }
 
         return headers

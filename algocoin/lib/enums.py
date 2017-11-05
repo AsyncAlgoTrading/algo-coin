@@ -70,5 +70,6 @@ class OrderSubType(BaseEnum):
 class TradeResult(BaseEnum):
     NONE = 0
     PENDING = 1
-    REJECTED = 2
+    PARTIAL = 2
     FILLED = 3
+    REJECTED = 4

@@ -3,6 +3,7 @@ import tornado
 import threading
 from .custom_strategies import CustomStrategy
 from .lib.strategies.sma_crosses_strategy import SMACrossesStrategy
+from .lib.strategies.test_strat import TestStrategy
 from .trading import TradingEngine
 # from .lib.parser import parse_command_line_config, parse_config
 from .lib.parser import parse_command_line_config
@@ -25,10 +26,12 @@ def main(argv: list) -> None:
     application = ServerApplication(te)
 
     # A sample strategy that impelements the correct interface
-    ts = CustomStrategy(50)
-    ts2 = SMACrossesStrategy(5, 10)
+    # ts = CustomStrategy(50)
+    # ts2 = SMACrossesStrategy(5, 10)
+    ts = TestStrategy()
     te.registerStrategy(ts)
-    te.registerStrategy(ts2)
+    # te.registerStrategy(ts)
+    # te.registerStrategy(ts2)
 
     # for i in [5, 10, 20, 25, 50, 100]:
     #     for j in [10, 20, 25, 75, 100, 150, 200]:
