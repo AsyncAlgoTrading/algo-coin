@@ -106,6 +106,10 @@ class TradingEngine(object):
         else:
             raise Exception('Invalid configuration')
 
+    def terminate(self):
+        for strat in self._strats:
+            strat.onExit()
+
     def tick(self):
         for strat in self._strats:
             # only if strat ticked
@@ -134,7 +138,8 @@ class TradingEngine(object):
                                  volume=0.0,
                                  price=0.0,
                                  currency=req.currency,
-                                 success=False)
+                                 success=False,
+                                 order_id='')
 
         else:
             # get risk report
@@ -158,7 +163,8 @@ class TradingEngine(object):
                                          volume=0.0,
                                          price=0.0,
                                          currency=req.currency,
-                                         status=TradeResult.REJECTED)
+                                         status=TradeResult.REJECTED,
+                                         order_id='')
                 elif resp.status == TradeResult.FILLED:
                     sllog.info("Slippage - %s" % resp)
                     tlog.info("TXN cost - %s" % resp)
@@ -171,7 +177,8 @@ class TradingEngine(object):
                                      volume=0.0,
                                      price=0.0,
                                      currency=req.currency,
-                                     status=TradeResult.REJECTED)
+                                     status=TradeResult.REJECTED,
+                                     order_id='')
 
         if self._backtest and strat:
             # register the initial request
@@ -189,11 +196,7 @@ class TradingEngine(object):
 
         callback_failure(resp) if callback_failure and not resp.success else callback(resp)
 
-    def requestBuy(self,
-                   callback: Callable,
-                   req: TradeRequest,
-                   callback_failure=None,
-                   strat=None):
+    def requestBuy(self, callback: Callable, req: TradeRequest, callback_failure=None, strat=None):
         self._request(Side.BUY, callback, req, callback_failure, strat)
 
     def requestSell(self,
@@ -202,3 +205,12 @@ class TradingEngine(object):
                     callback_failure=None,
                     strat=None):
         self._request(Side.SELL, callback, req, callback_failure, strat)
+
+    def cancel(self, callback: Callable, resp: TradeResponse, callback_failure=None, strat=None):
+        resp = self._ec.cancel(resp)
+        callback_failure(resp) if callback_failure and not resp.success else callback(resp)
+
+    def cancelAll(self, callback: Callable, callback_failure=None, strat=None):
+        # FIXME iterate through open in order
+        resp = self._ec.cancelAll()
+        callback_failure(resp) if callback_failure and not resp.success else callback(resp)

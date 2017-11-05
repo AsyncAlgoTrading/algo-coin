@@ -61,7 +61,8 @@ class TestStructs:
                           currency=CurrencyType.BTC,
                           volume=0.0,
                           price=0.0,
-                          status=TradeResult.FILLED)
+                          status=TradeResult.FILLED,
+                          order_id='1')
         assert t
         # side = Side
         # volume = float

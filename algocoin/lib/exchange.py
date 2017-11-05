@@ -1,12 +1,12 @@
 import json
 from .config import ExchangeConfig
-from .data_source import StreamingDataSource
+from .data_source import StreamingDataSource, RestAPIDataSource
 from .logging import LOG as log
 from .enums import TickType
 from .define import EXCHANGE_MARKET_DATA_ENDPOINT, EXCHANGE_ORDER_ENDPOINT
 
 
-class Exchange(StreamingDataSource):
+class Exchange(StreamingDataSource, RestAPIDataSource):
     def __init__(self, options: ExchangeConfig) -> None:
         super(Exchange, self).__init__(options)
         self._lastseqnum = -1

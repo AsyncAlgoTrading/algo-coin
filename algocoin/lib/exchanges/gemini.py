@@ -67,6 +67,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
 
             except KeyboardInterrupt:
                 log.critical('Terminating program')
+                engine.terminate()
                 return
         return self._accounts
 
@@ -84,7 +85,31 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                                        'buy',
                                        client_order_id=None,
                                        order_execution=None)
+
+        '''{
+            "avg_execution_price": "0.00",
+            "client_order_id": "20170208_example",
+            "exchange": "gemini",
+            "executed_amount": "0",
+            "id": "372456298",
+            "is_cancelled": false,
+            "is_hidden": false,
+            "is_live": true,
+            "order_id": "372456298",
+            "original_amount": "14.0296",
+            "price": "1059.54",
+            "remaining_amount": "14.0296",
+            "side": "buy",
+            "symbol": "btcusd",
+            "timestamp": "1478203017",
+            "timestampms": 1478203017455,
+            "type": "exchange limit",
+            "was_forced": false
+        }'''
         # FIXME check these
+        if order.get('result') == 'error':
+            raise Exception('Order Error!')
+
         slippage = float(params['price'])-float(order['avg_execution_price'])
         txn_cost = 0.0
         status = TradeResult.NONE
@@ -122,8 +147,13 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                                        client_order_id=None,
                                        order_execution=None)
 
+        if order.get('result') == 'error':
+            raise Exception('Order Error!')
+
         # FIXME check these
-        slippage = float(params['price'])-float(order['avg_execution_price'])
+        if 'avg_execution_price' not in order:
+            import pdb; pdb.set_trace()
+        slippage = float(params['price'])-float(order.get('avg_execution_price'))
         txn_cost = 0.0
         status = TradeResult.NONE
 
@@ -176,3 +206,12 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                     pass
                 else:
                     self.callback(TickType.ERROR, res)
+
+    def cancel(self, resp: TradeResponse):
+        '''cancel an order'''
+        raise NotImplementedError()
+
+    def cancelAll(self) -> None:
+        '''cancel all orders'''
+        log.critical('Cancelling all active orders')
+        self._client.cancel_all_active_orders()

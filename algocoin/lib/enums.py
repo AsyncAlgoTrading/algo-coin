@@ -17,7 +17,8 @@ class TickType(BaseEnum):
     ANALYZE = 6
     HALT = 7
     CONTINUE = 8
-    HEARTBEAT = 9
+    EXIT = 9
+    HEARTBEAT = 10
 
 
 class TradingType(BaseEnum):

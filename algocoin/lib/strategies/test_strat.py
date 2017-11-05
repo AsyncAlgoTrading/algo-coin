@@ -48,35 +48,33 @@ class TestStrategy(TradingStrategy):
                                price=data.price)
             slog.critical("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
+            self.active = True
             return True
         else:
-            req = TradeRequest(side=Side.SELL,
-                               volume=self.bought_qty,
-                               currency=data.currency,
-                               order_type=OrderType.MARKET,
-                               price=data.price)
-            slog.critical("requesting sell : %s", req)
-            self.requestSell(self.onSell, req)
-            return True
-
+            if self.bought_qty:
+                req = TradeRequest(side=Side.SELL,
+                                   volume=self.bought_qty,
+                                   currency=data.currency,
+                                   order_type=OrderType.MARKET,
+                                   price=data.price)
+                slog.critical("requesting sell : %s", req)
+                self.requestSell(self.onSell, req)
+                self.active = False
+                return True
+            else:
+                slog.critical('None bought yet!')
         return False
 
     def onError(self, e) -> None:
         elog.critical(e)
 
-    def onAnalyze(self, _) -> None:
-        pass
+    def onExit(self) -> None:
+        self.cancelAll(lambda *args: True)
 
     def onChange(self, data: MarketData) -> None:
         pass
 
-    def onContinue(self, data: MarketData) -> None:
-        pass
-
     def onDone(self, data: MarketData) -> None:
-        pass
-
-    def onHalt(self, data: MarketData) -> None:
         pass
 
     def onOpen(self, data: MarketData) -> None:

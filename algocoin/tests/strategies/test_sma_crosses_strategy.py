@@ -67,7 +67,8 @@ class TestSMACrossesStrategy:
                                 currency=req.currency,
                                 price=req.price,
                                 volume=req.volume,
-                                status=TradeResult.FILLED)
+                                status=TradeResult.FILLED,
+                                order_id='1')
             callback(res)
 
         s._te.requestBuy.side_effect = ret

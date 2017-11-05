@@ -13,16 +13,8 @@ class RestAPIDataSource(DataSource):
         pass
 
     @abstractmethod
-    def accountInfo(self):
+    def accounts(self):
         '''get account information'''
-
-    @abstractmethod
-    def sendOrder(self, callback: Callback):
-        '''send order to exchange'''
-
-    @abstractmethod
-    def orderResponse(self, response):
-        '''parse the response'''
 
     @abstractmethod
     def buy(self, req: TradeRequest) -> TradeResponse:
@@ -31,6 +23,18 @@ class RestAPIDataSource(DataSource):
     @abstractmethod
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
+
+    @abstractmethod
+    def cancel(self, resp: TradeResponse) -> None:
+        '''cancel an order'''
+
+    @abstractmethod
+    def cancelAll(self) -> None:
+        '''cancel all orders'''
+
+    @abstractmethod
+    def orderBook(self):
+        '''return the order book'''
 
 
 class StreamingDataSource(DataSource):
@@ -90,6 +94,9 @@ class StreamingDataSource(DataSource):
 
     def onError(self, callback: Callback) -> None:
         self._callbacks[TickType.ERROR].append(callback)
+
+    def onExit(self, callback: Callback) -> None:
+        self._callbacks[TickType.EXIT].append(callback)
 
     def onAnalyze(self, callback: Callback) -> None:
         self._callbacks[TickType.ANALYZE].append(callback)

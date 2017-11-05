@@ -24,3 +24,9 @@ class Execution(object):
         if req.side == Side.BUY:
             return self.requestBuy(req)
         return self.requestSell(req)
+
+    def cancel(self, resp: TradeResponse):  # TODO
+        return self._ex.cancel(resp)
+
+    def cancelAll(self):
+        return self._ex.cancelAll()

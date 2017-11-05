@@ -125,7 +125,7 @@ class TestUtils:
             TXNS as tlog, \
             MANUAL as mlog, \
             ERROR as elog
-        set_verbose()
+        set_verbose(2)
 
         assert(log.level == logging.DEBUG)
         assert(slog.level == logging.DEBUG)

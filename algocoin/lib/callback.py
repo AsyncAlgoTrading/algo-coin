@@ -29,17 +29,21 @@ class Callback(metaclass=ABCMeta):
     def onError(self, data: MarketData):
         '''onError'''
 
-    def onAnalyze(self, data) -> None:
-        '''onAnalyze'''
-        raise NotImplemented()
+    def onExit(self):
+        '''onExit'''
+        pass
 
-    @abstractmethod
+    def onAnalyze(self, data):
+        '''onAnalyze'''
+        pass
+
     def onHalt(self, data):
         '''onHalt'''
+        pass
 
-    @abstractmethod
     def onContinue(self, data):
         '''onContinue'''
+        pass
 
     def callback(self):
         return self
@@ -65,15 +69,6 @@ class NullCallback(Callback):
         pass
 
     def onError(self, data: MarketData) -> None:
-        pass
-
-    def onAnalyze(self, data: MarketData) -> None:
-        pass
-
-    def onHalt(self, data: MarketData) -> None:
-        pass
-
-    def onContinue(self, data: MarketData) -> None:
         pass
 
 

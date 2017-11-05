@@ -48,17 +48,21 @@ class Strategy(metaclass=ABCMeta):
 
 
 class TradingStrategy(Strategy, Callback):
-    def requestBuy(self,
-                   callback: Callable,
-                   req: TradeRequest,
-                   callback_failure=None) -> None:
+    def requestBuy(self, callback: Callable, req: TradeRequest, callback_failure=None) -> None:
+        '''attempt to buy'''
         self._te.requestBuy(callback, req, callback_failure, self)
 
-    def requestSell(self,
-                    callback: Callable,
-                    req: TradeRequest,
-                    callback_failure=None) -> None:
+    def requestSell(self, callback: Callable, req: TradeRequest, callback_failure=None) -> None:
+        '''attempt to sell'''
         self._te.requestSell(callback, req, callback_failure, self)
+
+    def cancel(self, callback: Callable, resp: TradeResponse, callback_failure=None) -> None:
+        '''cancel order'''
+        self._te.cancel(callback, resp, callback_failure, self)
+
+    def cancelAll(self, callback: Callable, callback_failure=None):
+        '''cancel all orders'''
+        self._te.cancelAll(callback, callback_failure, self)
 
     def slippage(self, data: TradeResponse) -> TradeResponse:
         '''slippage model. default is pass through'''
