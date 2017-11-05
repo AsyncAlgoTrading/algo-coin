@@ -9,11 +9,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='algocoin',
-    version='0.0.1',
+    version='0.0.2',
     description='Algorithmic trading library for cryptocurrencies',
     long_description=long_description,
     url='https://github.com/timkpaine/algo-coin',
-    download_url='https://github.com/timkpaine/algo-coin/archive/v0.0.1.tar.gz',
+    download_url='https://github.com/timkpaine/algo-coin/archive/v0.0.2.tar.gz',
     author='Tim Paine',
     author_email='timothy.k.paine@gmail.com',
     license='GPL',
