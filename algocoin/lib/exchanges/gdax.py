@@ -168,3 +168,9 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              remaining=float(order.get('remaining_amount', 0.0)),
                              )
         return resp
+
+    def cancel(self, resp: TradeResponse):
+        raise NotImplementedError()
+
+    def cancelAll(self, resp: TradeResponse):
+        raise NotImplementedError()
