@@ -41,8 +41,7 @@ class TestStrategy(TradingStrategy):
     def onTrade(self, data: MarketData) -> bool:
         if not self.active:
             req = TradeRequest(side=Side.BUY,
-                               # buy between .2 and 1 BTC
-                               volume=max(min(1.0, data.volume), .2),
+                               volume=1.0,
                                currency=data.currency,
                                order_type=OrderType.MARKET,
                                price=data.price)

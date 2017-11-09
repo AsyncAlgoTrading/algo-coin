@@ -199,11 +199,7 @@ class TradingEngine(object):
     def requestBuy(self, callback: Callable, req: TradeRequest, callback_failure=None, strat=None):
         self._request(Side.BUY, callback, req, callback_failure, strat)
 
-    def requestSell(self,
-                    callback: Callable,
-                    req: TradeRequest,
-                    callback_failure=None,
-                    strat=None):
+    def requestSell(self, callback: Callable, req: TradeRequest, callback_failure=None, strat=None):
         self._request(Side.SELL, callback, req, callback_failure, strat)
 
     def cancel(self, callback: Callable, resp: TradeResponse, callback_failure=None, strat=None):

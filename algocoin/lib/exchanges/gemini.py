@@ -108,6 +108,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
         }'''
         # FIXME check these
         if order.get('result') == 'error':
+            log.critical("Order Error - %s" % order)
             raise Exception('Order Error!')
 
         slippage = float(params['price'])-float(order['avg_execution_price'])
@@ -148,6 +149,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                                        order_execution=None)
 
         if order.get('result') == 'error':
+            log.critical("Order Error - %s" % order)
             raise Exception('Order Error!')
 
         # FIXME check these
