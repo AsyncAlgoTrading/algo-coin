@@ -56,6 +56,12 @@ Eventual coverage:
 ## Getting Started
 
 ### Installation
+Install the library from pip:
+
+```python
+pip install algocoin
+```
+
 Install the library from source:
 
 ```python
