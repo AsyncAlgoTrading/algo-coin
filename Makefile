@@ -3,7 +3,7 @@ CONFIG=./config/sandbox_gemini.cfg
 runconfig:  ## clean and make target, run target
 	python3 -m algocoin --config=$(CONFIG)
 
-run:  ## clean and make target, run target
+run:  clean ## clean and make target, run target
 	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
 sandbox:  ## clean and make target, run target
