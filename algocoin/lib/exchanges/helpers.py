@@ -1,5 +1,5 @@
 from datetime import datetime
-from ..enums import CurrencyType, OrderType, OrderSubType
+from ..enums import CurrencyType, OrderType, OrderSubType, Side
 from ..utils import parse_date, str_to_currency_type, str_to_side, \
     str_to_order_type
 from ..structs import MarketData
@@ -138,6 +138,12 @@ class GeminiHelpersMixin(object):
         p['size'] = str(req.volume)
         p['product_id'] = GeminiHelpersMixin.currency_to_string(req.currency)
         p['type'] = GeminiHelpersMixin.order_type_to_string(req.order_type)
+
+        if p['type'] == OrderType.MARKET:
+            if req.side == Side.BUY:
+                p['price'] = 100000000.0
+            else:
+                p['price'] = .00000001
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
             p['time_in_force'] = 'FOK'
