@@ -12,6 +12,7 @@ Algorithmic Trading Bitcoin.
 [![Beerpay](https://beerpay.io/timkpaine/algo-coin/badge.svg?style=flat)](https://beerpay.io/timkpaine/algo-coin)
 [![License](https://img.shields.io/github/license/timkpaine/algo-coin.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/algocoin.svg)]()
+[![Docs](https://img.shields.io/readthedocs/algo-coin.svg)]()
 [![Site](https://img.shields.io/badge/Site--grey.svg?colorB=FFFFFF)](http://paine.nyc/algo-coin)
 
 ## Overview 
