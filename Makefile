@@ -1,21 +1,21 @@
 CONFIG=./config/sandbox_gemini.cfg
 
-runconfig:  ## clean and make target, run target
+runconfig:  ## Clean and make target, run target
 	python3 -m algocoin --config=$(CONFIG)
 
-run:  clean ## clean and make target, run target
+run:  clean ## Clean and make target, run target
 	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
-sandbox:  ## clean and make target, run target
+sandbox:  ## Clean and make target, run target
 	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
-fetch_data: ## fetch data
+fetch_data: ## Fetch data
 	. scripts/fetchdata.sh --exchange=$(EXCHANGE) --currency=$(CURRENCY)
 
-backtest: ## clean and make target, run backtest
+backtest: ## Clean and make target, run backtest
 	python3 -m algocoin --backtest --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
-backtest_inline:  ## clean and make target, run backtest, plot in terminal
+backtest_inline:  ## Clean and make target, run backtest, plot in terminal
 	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"
 
 tests: ## Clean and Make unit tests
@@ -33,6 +33,9 @@ annotate: ## MyPy type annotation check
 annotate_l: ## MyPy type annotation check - count only
 	mypy -s algocoin | wc -l 
 
+docs:  ## Build the sphinx docs
+	make -C docs html
+
 clean: ## clean the repository
 	find . -name "*.pyc" -exec rm -rf {} \;
 	find . -name "__pycache__" -exec rm -rf {} \;
@@ -49,4 +52,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run sandbox backtest test tests test_verbose help install
+.PHONY: clean run sandbox backtest test tests test_verbose help install docs
