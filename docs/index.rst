@@ -7,7 +7,7 @@ algo-coin
 ===================================
 Lightweight, extensible program for algorithmically trading cryptocurrencies across multiple exchanges. 
 
-|version| |build-status| |waffle| |codecov| |gitter| |bch| |pypiv| |pypil| |docs| |site|
+|build-status| |waffle| |codecov| |gitter| |bch| |pypiv| |pypil| |docs| |site|
 
 
 .. toctree::
@@ -20,11 +20,6 @@ Lightweight, extensible program for algorithmically trading cryptocurrencies acr
 Introduction
 ==================
 
-
-.. |version| image:: https://img.shields.io/badge/version-0.0.2-lightgrey.svg
-    :alt: Version
-    :scale: 100%
-    :target: https://img.shields.io/badge/version-0.0.2-lightgrey.svg
 
 .. |build-status| image:: https://travis-ci.org/timkpaine/algo-coin.svg?branch=master
     :alt: Build Status
@@ -54,12 +49,12 @@ Introduction
 .. |pypiv| image:: https://img.shields.io/pypi/v/algo-coin.svg
     :alt: Version
     :scale: 100%
-    :target: https://img.shields.io/pypi/v/algo-coin.svg
+    :target: https://pypi.python.org/pypi/algocoin
 
 .. |pypil| image:: https://img.shields.io/pypi/l/algo-coin.svg
     :alt: License
     :scale: 100%
-    :target: https://img.shields.io/pypi/l/algo-coin.svg
+    :target: https://pypi.python.org/pypi/algocoin
 
 .. |docs| image:: https://img.shields.io/readthedocs/algo-coin.svg
     :alt: Docs
