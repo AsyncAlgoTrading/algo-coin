@@ -16,3 +16,5 @@ exclude:
 - /algocoin/lib/oe/.*
 - /algocoin/lib/oe/poloniex/.*
 - /scripts/.*
+- /algocoin/lib/logging\.py
+- /algocoin/lib/define\.py
