@@ -18,3 +18,5 @@ exclude:
 - /scripts/.*
 - /algocoin/lib/logging\.py
 - /algocoin/lib/define\.py
+- /algocoin/custom\_strategies\.py
+- /algocoin/lib/strategies/.*
