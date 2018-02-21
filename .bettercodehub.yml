@@ -13,3 +13,6 @@ languages:
 exclude:
 - /docs/.*
 - .*/setup\.py
+- /algocoin/lib/oe/.*
+- /algocoin/lib/oe/poloniex/.*
+- /scripts/.*
