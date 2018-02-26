@@ -43,7 +43,7 @@ class TradingEngine(object):
         assert not (self._live and self._sandbox and self._backtest)
 
         if self._print:
-            log.warn('WARNING: Running in verbose mode')
+            log.warn('WARNING: Running in print mode')
 
             if self._live or self._sandbox:
                 self._ex.registerCallback(

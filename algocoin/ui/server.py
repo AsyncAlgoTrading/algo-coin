@@ -9,7 +9,8 @@ class ServerHandler(tornado.web.RequestHandler):
         tornado.web.RequestHandler
     '''
     def get(self):
-        self.write("Server")
+        self.write("Server<br>")
+        self.write('<a href="/accounts">accounts</a>')
 
 
 class ServerAccountsHandler(tornado.web.RequestHandler):
