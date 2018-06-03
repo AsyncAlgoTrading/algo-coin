@@ -1,7 +1,7 @@
 # AlgoCoin
 Algorithmic Trading Bitcoin. 
 
-# UPDATE: MASTER is working for market orders ONLY on gemini. Everything else is still in beta until limit order support is done
+# WARNING: Code refactoring still in progress
 
 [![Build Status](https://travis-ci.org/timkpaine/algo-coin.svg?branch=master)](https://travis-ci.org/timkpaine/algo-coin)
 [![Coverage](https://codecov.io/gh/timkpaine/algo-coin/coverage.svg?branch=master&token=JGqz8ChQxd)](https://codecov.io/gh/timkpaine/algo-coin)
