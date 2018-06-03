@@ -63,12 +63,14 @@ def _parse_exchange(exchange, config) -> None:
 
 
 def _parse_strategy(strategy, config) -> None:
-
+    # TODO
     pass
 
 
 def _parse_risk(risk, config) -> None:
-    pass
+    config.risk_options.max_drawdown = float(risk.get('max_drawdown', config.risk_options.max_drawdown))
+    config.risk_options.max_risk = float(risk.get('max_drawdown', config.risk_options.max_risk))
+    config.risk_options.total_funds = float(risk.get('max_drawdown', config.risk_options.total_funds))
 
 
 def _parse_default(default, config) -> None:

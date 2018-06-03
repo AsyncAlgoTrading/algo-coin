@@ -30,7 +30,8 @@ class TradingEngine(object):
             # extract max funds info
             for account in accounts:
                 if account.currency == CurrencyType.USD:
-                    options.risk_options.total_funds = account.balance
+                    # TODO multiple USD accounts?
+                    options.risk_options.total_funds += account.balance
 
             log.info(accounts)
             log.info("Running with %.2f USD" % options.risk_options.total_funds)
@@ -110,20 +111,6 @@ class TradingEngine(object):
         for strat in self._strats:
             strat.onExit()
 
-    def tick(self):
-        for strat in self._strats:
-            # only if strat ticked
-            if strat.ticked():
-                self._ticked.append(strat)
-                strat.reset()
-        self.ticked()
-
-    def ticked(self):
-        while len(self._ticked):
-            self._ticked.pop()
-            # strat = self._ticked.pop()
-            # print('Strat ticked', strat, time.time())
-
     def _request(self,
                  side: Side,
                  callback: Callable,
@@ -132,8 +119,8 @@ class TradingEngine(object):
                  strat=None):
         if not self._trading:
             # not allowed to trade right now
-            resp = TradeResponse(data=req.data,
-                                 request=req,
+            log.info('Trading not allowed')
+            resp = TradeResponse(request=req,
                                  side=req.side,
                                  volume=0.0,
                                  price=0.0,
@@ -147,18 +134,20 @@ class TradingEngine(object):
 
             if resp.risk_check:
                 # if risk passes, let execution execute
+                log.info('Risk check passed')
                 resp = self._ec.request(resp)
 
                 # TODO
                 if resp.status == TradeResult.PENDING:
                     # listen for later
                     # TODO
+                    log.info('Order pending')
                     self._pending[req.order_type].append(resp)  # TODO or req?
 
                 elif resp.status == TradeResult.REJECTED:
                     # send response
-                    resp = TradeResponse(data=resp.data,
-                                         request=resp,
+                    log.info('Trade rejected')
+                    resp = TradeResponse(request=resp,
                                          side=resp.side,
                                          volume=0.0,
                                          price=0.0,
@@ -166,13 +155,14 @@ class TradingEngine(object):
                                          status=TradeResult.REJECTED,
                                          order_id='')
                 elif resp.status == TradeResult.FILLED:
+                    log.info('Trade filled')
                     sllog.info("Slippage - %s" % resp)
                     tlog.info("TXN cost - %s" % resp)
                     # let risk update according to execution details
                     self._rk.update(resp)
             else:
-                resp = TradeResponse(data=resp.data,
-                                     request=resp,
+                log.info('Risk check failed')
+                resp = TradeResponse(request=resp,
                                      side=resp.side,
                                      volume=0.0,
                                      price=0.0,

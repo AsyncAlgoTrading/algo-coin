@@ -12,12 +12,12 @@ class Execution(object):
 
     def requestBuy(self, req: TradeRequest) -> TradeResponse:
         resp = self._ex.buy(req)
-        exlog.info('Order executed: %s' % resp)
+        exlog.info('Order info: %s' % resp)
         return resp
 
     def requestSell(self, req: TradeRequest) -> TradeResponse:
         resp = self._ex.sell(req)
-        exlog.info('Order executed: %s' % resp)
+        exlog.info('Order info: %s' % resp)
         return resp
 
     def request(self, req: TradeRequest) -> TradeResponse:

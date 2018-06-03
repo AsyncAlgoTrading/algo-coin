@@ -2,8 +2,7 @@ import numpy
 import pandas
 # import matplotlib.pyplot as plt
 # import seaborn as sns
-from ..strategy import ticks, \
-                       TradingStrategy
+from ..strategy import TradingStrategy
 from ..structs import MarketData, TradeRequest, TradeResponse
 from ..enums import Side
 from ..logging import STRAT as slog, ERROR as elog
@@ -65,7 +64,6 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
                 date,
                 self._portfolio_value[-1][1] + profit))
 
-    @ticks
     def onTrade(self, data: MarketData) -> bool:
         # add data to arrays
         self.shorts.append(data.price)

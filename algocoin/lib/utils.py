@@ -4,14 +4,14 @@ import logging
 from datetime import datetime
 from .enums import ExchangeType, CurrencyType, OrderType, Side
 from .logging import LOG as log, \
-                         STRAT as slog, \
-                         DATA as dlog, \
-                         RISK as rlog, \
-                         EXEC as exlog, \
-                         SLIP as sllog, \
-                         TXNS as tlog, \
-                         MANUAL as mlog, \
-                         ERROR as elog
+                     STRAT as slog, \
+                     DATA as dlog, \
+                     RISK as rlog, \
+                     EXEC as exlog, \
+                     SLIP as sllog, \
+                     TXNS as tlog, \
+                     MANUAL as mlog, \
+                     ERROR as elog
 
 NOPRINT = True
 
@@ -83,7 +83,7 @@ def __init__(self, **kwargs) -> None:
     for item in self._vars:
         if item not in kwargs:
             pass
-            #log.debug('WARNING %s unset!', item)
+            # log.debug('WARNING %s unset!', item)
         else:
             setattr(self, item, kwargs.get(item))
 

@@ -43,23 +43,24 @@ class Risk(object):
         return resp
 
     def request(self, req: TradeRequest) -> TradeRequest:
+        rlog.info('Requesting %f @ %f', req.volume, req.price)
         total = req.volume * req.price
         total = total * -1 if req.side == Side.SELL else total
         max = self.max_risk/100.0 * self.total_funds
 
         if (total + self.outstanding) <= max:
             # room for full volume
-            rlog.info('Order: %s' % req)
+            rlog.info('Risk check passed for order: %s' % req)
             return self._constructResp(req.side, req.currency, req.order_type, req.volume, req.price, True, '')
 
         elif self.outstanding < max:
             # room for some volume
             volume = (max - self.outstanding) / req.price
-            rlog.info('Partial Order: %s' % req)
+            rlog.info('Risk check passed for partial order: %s' % req)
             return self._constructResp(req.side, req.currency, req.order_type, volume, req.price, True, '')
 
         # no room for volume
-        rlog.info('Order rejected: %s' % req)
+        rlog.info('Risk check failed for order: %s' % req)
         return self._constructResp(req.side, req.currency, req.order_type, req.volume, req.price, False, 'no room for volume %.2f of %.2f' % (self.outstanding, max))
 
     def requestBuy(self, req: TradeRequest):

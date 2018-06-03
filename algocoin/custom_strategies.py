@@ -1,6 +1,5 @@
 import numpy
-from .lib.strategy import ticks, \
-                          TradingStrategy
+from .lib.strategy import TradingStrategy
 from .lib.structs import MarketData, TradeRequest, TradeResponse
 from .lib.enums import Side
 from .lib.logging import STRAT as slog, ERROR as elog
@@ -54,7 +53,6 @@ class CustomStrategy(TradingStrategy):
                 date,
                 self._portfolio_value[-1][1] + profit))
 
-    @ticks
     def onTrade(self, data: MarketData):
         # add data to arrays
         self.ticks.append(data.price)

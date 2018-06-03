@@ -76,7 +76,6 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
             try:
                 while True:
                     self.receive()
-                    engine.tick()
 
             except KeyboardInterrupt:
                 log.critical('Terminating program')

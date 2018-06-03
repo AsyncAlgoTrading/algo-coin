@@ -21,7 +21,7 @@ class TestMain:
         # teardown_class() after any methods in this class
 
     def test_parse_command_line(self):
-        from ..__main__ import parse_command_line_config
+        from ..main import parse_command_line_config
         from ..lib.enums import TradingType
 
         argv = ['', '--live']
@@ -41,7 +41,7 @@ class TestMain:
         assert ret.print
 
     def test_main(self):
-        from ..__main__ import main
-        with patch('algocoin.__main__.TradingEngine'), \
-                patch('algocoin.__main__.CustomStrategy'):
+        from ..main import main
+        with patch('algocoin.main.TradingEngine'), \
+             patch('algocoin.main.TestStrategy'):
             main(['', '--live'])

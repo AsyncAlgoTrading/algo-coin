@@ -70,3 +70,4 @@ old
 .ipynb_checkpoints
 *.pkl
 notebooks/BTC_*
+.idea

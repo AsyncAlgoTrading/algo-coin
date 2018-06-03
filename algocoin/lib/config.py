@@ -18,13 +18,20 @@ class BacktestConfig:
 class RiskConfig:
     max_drawdown = float, 100.0  # % Max strat drawdown before liquidation
     max_risk = float, 100.0  # % Max to risk on any trade
-    total_funds = float, 0.0
+    total_funds = float, 0.0  # % Of total funds to use
     trading_type = TradingType, TradingType.NONE
 
 
 @config
 class ExecutionConfig:
     trading_type = TradingType, TradingType.NONE
+
+
+@config
+class StrategyConfig:
+    classname = str, ''
+    args = tuple, ()
+    kwargs = dict, {}
 
 
 @config
@@ -35,3 +42,4 @@ class TradingEngineConfig:
     backtest_options = BacktestConfig, BacktestConfig()
     risk_options = RiskConfig, RiskConfig()
     execution_options = ExecutionConfig, ExecutionConfig()
+    strategy_options = [StrategyConfig], [StrategyConfig()]  # List of strategy options

@@ -63,7 +63,6 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             try:
                 while True:
                     self.receive()
-                    engine.tick()
 
             except KeyboardInterrupt:
                 log.critical('Terminating program')
@@ -78,7 +77,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
         params = GeminiExchange.trade_req_to_params(req)
-        log.warn("Buy params: %s", str(params))
+        # log.warn("Buy params: %s", str(params))
         order = self._client.new_order(params['product_id'],
                                        params['size'],
                                        params['price'],
@@ -111,36 +110,40 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             log.critical("Order Error - %s" % order)
             raise Exception('Order Error!')
 
-        slippage = float(params['price'])-float(order['avg_execution_price'])
+        executed_amount = float(order['executed_amount'])
+        remaining_amount = float(order['remaining_amount'])
+        avg_execution_price = float(order['avg_execution_price'])
+
+        slippage = float(params['price'])-avg_execution_price if executed_amount > 0.0 else 0.0
         txn_cost = 0.0
         status = TradeResult.NONE
 
-        if (float(order['executed_amount']) - req.volume) < 0.001:
+        if (req.volume - executed_amount) < 0.001:
             status = TradeResult.FILLED
         elif order.get('is_cancelled', ''):
             status = TradeResult.REJECTED
-        elif float(order.get('remaining_amount', 0.0)):
+        elif remaining_amount > 0.0:
             status = TradeResult.PARTIAL
         else:
             status = TradeResult.PENDING
 
         resp = TradeResponse(request=req,
                              side=req.side,
-                             volume=float(order['executed_amount']),
-                             price=float(order['avg_execution_price']),
+                             volume=executed_amount,
+                             price=avg_execution_price,
                              currency=req.currency,
                              slippage=slippage,
                              transaction_cost=txn_cost,
                              status=status,
                              order_id=order['order_id'],
-                             remaining=float(order.get('remaining_amount', 0.0)),
+                             remaining=remaining_amount,
                              )
         return resp
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
         params = GeminiExchange.trade_req_to_params(req)
-        log.warn("Sell params: %s", str(params))
+        # log.warn("Sell params: %s", str(params))
         order = self._client.new_order(params['product_id'],
                                        params['size'],
                                        params['price'],
@@ -152,32 +155,33 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             log.critical("Order Error - %s" % order)
             raise Exception('Order Error!')
 
-        # FIXME check these
-        if 'avg_execution_price' not in order:
-            import pdb; pdb.set_trace()
-        slippage = float(params['price'])-float(order.get('avg_execution_price'))
+        executed_amount = float(order['executed_amount'])
+        remaining_amount = float(order['remaining_amount'])
+        avg_execution_price = float(order['avg_execution_price'])
+
+        slippage = float(params['price'])-avg_execution_price if executed_amount > 0.0 else 0.0
         txn_cost = 0.0
         status = TradeResult.NONE
 
-        if (float(order['executed_amount']) - req.volume) < 0.001:
+        if (req.volume - executed_amount) < 0.001:
             status = TradeResult.FILLED
         elif order.get('is_cancelled', ''):
             status = TradeResult.REJECTED
-        elif float(order.get('remaining_amount', 0.0)):
+        elif remaining_amount > 0.0:
             status = TradeResult.PARTIAL
         else:
             status = TradeResult.PENDING
 
         resp = TradeResponse(request=req,
                              side=req.side,
-                             volume=float(order['executed_amount']),
-                             price=float(order['avg_execution_price']),
+                             volume=executed_amount,
+                             price=avg_execution_price,
                              currency=req.currency,
                              slippage=slippage,
                              transaction_cost=txn_cost,
                              status=status,
                              order_id=order['order_id'],
-                             remaining=float(order.get('remaining_amount', 0.0)),
+                             remaining=remaining_amount,
                              )
         return resp
 

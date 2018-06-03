@@ -110,27 +110,27 @@ LOGGING_CONFIG = {
         },
         'strat': {
             'level': 'CRITICAL',
-            'handlers': ['file_strat']
+            'handlers': ['console', 'file_strat']
         },
         'data': {
             'level': 'CRITICAL',
-            'handlers': ['file_data']
+            'handlers': ['console', 'file_data']
         },
         'risk': {
             'level': 'CRITICAL',
-            'handlers': ['file_risk']
+            'handlers': ['console', 'file_risk']
         },
         'execution': {
             'level': 'CRITICAL',
-            'handlers': ['file_execution']
+            'handlers': ['console', 'file_execution']
         },
         'slippage': {
             'level': 'CRITICAL',
-            'handlers': ['file_slippage']
+            'handlers': ['console', 'file_slippage']
         },
         'transactionCost': {
             'level': 'CRITICAL',
-            'handlers': ['file_transaction_costs']
+            'handlers': ['console', 'file_transaction_costs']
         },
         'manual': {
             'level': 'CRITICAL',
@@ -138,7 +138,7 @@ LOGGING_CONFIG = {
         },
         'errors': {
             'level': 'CRITICAL',
-            'handlers': ['file_errors']
+            'handlers': ['console', 'file_errors']
         },
 
     }

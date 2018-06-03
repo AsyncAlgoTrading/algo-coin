@@ -4,24 +4,11 @@ from .callback import Callback
 from .structs import MarketData, TradeRequest, TradeResponse
 
 
-def ticks(f):
-    def wrapper(self, *args, **kwargs):
-        self._tick = f(self, *args, **kwargs)
-    return wrapper
-
-
 class Strategy(metaclass=ABCMeta):
     '''Strategy interface'''
     def __init__(self, *args, **kwargs) -> None:
-        self._tick = False
         self._actions = []
         self._requests = []
-
-    def ticked(self) -> bool:
-        return self._tick
-
-    def reset(self) -> None:
-        self._tick = False
 
     def setEngine(self, engine) -> None:
         self._te = engine

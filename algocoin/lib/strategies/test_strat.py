@@ -1,5 +1,4 @@
-from ..strategy import ticks, \
-                       TradingStrategy
+from ..strategy import TradingStrategy
 from ..structs import MarketData, TradeRequest, TradeResponse
 from ..enums import Side, TradeResult, OrderType
 from ..logging import STRAT as slog, ERROR as elog
@@ -17,27 +16,36 @@ class TestStrategy(TradingStrategy):
         self.profits = 0.0
 
     def onBuy(self, res: TradeResponse) -> None:
-        if not res.status == TradeResult.FILLED:
+        if res.status not in (TradeResult.FILLED, TradeResult.PARTIAL):
             slog.critical('order failure: %s' % res)
             return
 
-        self.bought = res.volume*res.price
-        self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
+        if res.status == TradeResult.PARTIAL:
+            slog.critical('waiting to buy: %.2f @ %.2f' % (res.request.volume, res.request.price))
+
+        else:
+            self.active = True
+            self.bought = res.volume*res.price
+            self.bought_qty = res.volume
+            slog.critical('bought: %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
 
     def onSell(self, res: TradeResponse) -> None:
-        if not res.status == TradeResult.FILLED:
+        if res.status not in (TradeResult.FILLED, TradeResult.PARTIAL):
             slog.info('order failure: %s' % res)
             return
 
-        sold = res.volume*res.price
-        profit = sold - self.bought
-        self.profits += profit
-        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
-        self.bought = 0.0
-        self.bought_qty = 0.0
+        if res.status == TradeResult.PARTIAL:
+            slog.critical('waiting to sell: %.2f @ %.2f' % (res.request.volume, res.request.price))
 
-    @ticks
+        else:
+            self.active = False
+            sold = res.volume*res.price
+            profit = sold - self.bought
+            self.profits += profit
+            slog.critical('sold: %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
+            self.bought = 0.0
+            self.bought_qty = 0.0
+
     def onTrade(self, data: MarketData) -> bool:
         if not self.active:
             req = TradeRequest(side=Side.BUY,
@@ -65,22 +73,22 @@ class TestStrategy(TradingStrategy):
         return False
 
     def onError(self, e) -> None:
-        elog.critical(e)
+        elog.critical(e, type(e))
 
     def onExit(self) -> None:
         self.cancelAll(lambda *args: True)
 
     def onChange(self, data: MarketData) -> None:
-        pass
+        slog.critical(data)
 
     def onDone(self, data: MarketData) -> None:
-        pass
+        slog.critical(data)
 
     def onOpen(self, data: MarketData) -> None:
-        pass
+        slog.critical(data)
 
     def onReceived(self, data: MarketData) -> None:
-        pass
+        slog.critical(data)
 
     def slippage(self, resp: TradeResponse) -> TradeResponse:
         return resp
