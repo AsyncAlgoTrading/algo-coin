@@ -122,7 +122,7 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
-        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
@@ -134,7 +134,7 @@ def _parse_sandbox_options(argv, config) -> None:
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
-        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
@@ -148,7 +148,7 @@ def _parse_backtest_options(argv, config) -> None:
         config.backtest_options.file = exchange_to_file(str_to_exchange(argv['exchange']))
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
-        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)

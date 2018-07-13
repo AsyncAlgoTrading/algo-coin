@@ -1,4 +1,7 @@
 CONFIG=./config/sandbox_gemini.cfg
+EXCHANGE=gemini
+CURRENCY=USD
+
 
 runconfig:  ## Clean and make target, run target
 	python3 -m algocoin --config=$(CONFIG)
@@ -9,14 +12,21 @@ run:  clean ## Clean and make target, run target
 sandbox:  ## Clean and make target, run target
 	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
-fetch_data: ## Fetch data
-	. scripts/fetchdata.sh --exchange=$(EXCHANGE) --currency=$(CURRENCY)
+data:  ## Fetch data for EXCHANGE
+	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
+
+fetch_data: ## Fetch data for EXCHANGE
+	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
+
+backtest_config: ## Clean and make target, run backtest
+	python3 -m algocoin --config=./config/backtest_gemini.cfg
 
 backtest: ## Clean and make target, run backtest
 	python3 -m algocoin --backtest --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
 backtest_inline:  ## Clean and make target, run backtest, plot in terminal
 	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"
+
 
 tests: ## Clean and Make unit tests
 	python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
@@ -52,4 +62,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run sandbox backtest test tests test_verbose help install docs
+.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data

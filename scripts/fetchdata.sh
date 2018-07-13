@@ -2,7 +2,7 @@
 BASE_URL="http://api.bitcoincharts.com/v1/csv/"
 
 function help_and_quit {
-    echo "usage: fetchdata -e <bitfinex/bitstamp/coinbase/itbit/kraken/hitbtc/lake> -c <USD>"
+    echo "usage: fetchdata <bitfinex/bitstamp/coinbase/itbit/kraken/hitbtc/lake> <USD>"
     exit
 }
 
