@@ -38,6 +38,10 @@ Eventual coverage:
 - HitBTC
 - LakeBTC
 
+
+#### Sandboxes
+[![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
+
 #### Market Data (Websocket)
 [![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
