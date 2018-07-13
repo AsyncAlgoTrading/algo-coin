@@ -65,7 +65,6 @@ def _parse_exchange(exchange, config) -> None:
 
 def _parse_strategy(strategy, config) -> None:
     strat_configs = []
-
     if 'strategies' not in strategy:
         raise Exception('No Strategies specified')
 
@@ -77,7 +76,7 @@ def _parse_strategy(strategy, config) -> None:
 
         args = []
         for x in splits[1:]:
-            args.append(float(x) if x.isdigit() else x)
+            args.append(float(x.strip()) if x.strip().isdigit() else x)
         args = tuple(args)
 
         strat_configs.append(StrategyConfig(clazz=cls, args=args))

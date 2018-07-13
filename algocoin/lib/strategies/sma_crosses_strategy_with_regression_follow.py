@@ -35,7 +35,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
 
     def onBuy(self, res: TradeResponse) -> None:
         if not res.success:
-            slog.critical('order failure: %s' % res)
+            slog.info('order failure: %s' % res)
             return
 
         if self._intitialvalue is None:
@@ -45,7 +45,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
+        slog.info('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
 
     def onSell(self, res: TradeResponse) -> None:
         if not res.success:
@@ -55,7 +55,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %.2f %.2f' % (res.volume, res.price, sold, profit, self.profits, self.short_av, self.long_av))
+        slog.info('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %.2f %.2f' % (res.volume, res.price, sold, profit, self.profits, self.short_av, self.long_av))
         self.bought = 0.0
         self.bought_qty = 0.0
 
@@ -88,7 +88,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
         short_trend = short_h[0]
         long_trend = long_h[0]
 
-        slog.critical('ave : %.2f %.2f \ttrend :', self.short_av, self.long_av, short_trend, long_trend)
+        slog.info('ave : %.2f %.2f \ttrend :', self.short_av, self.long_av, short_trend, long_trend)
         # sell out if losing too much
         stoploss = (self.bought - data.price*self.bought_qty) > 5
         # stoploss = False
@@ -114,7 +114,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
                                volume=max(min(1.0, data.volume), .2),
                                currency=data.currency,
                                price=data.price)
-            # slog.critical("requesting buy : %s", req)
+            # slog.info("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
             return True
 
@@ -125,7 +125,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
                                volume=self.bought_qty,
                                currency=data.currency,
                                price=data.price)
-            # slog.critical("requesting sell : %s", req)
+            # slog.info("requesting sell : %s", req)
             self.requestSell(self.onSell, req)
             return True
 

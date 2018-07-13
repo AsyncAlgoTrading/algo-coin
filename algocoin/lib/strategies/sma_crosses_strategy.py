@@ -27,7 +27,7 @@ class SMACrossesStrategy(TradingStrategy):
 
     def onBuy(self, res: TradeResponse) -> None:
         if not res.status == TradeResult.FILLED:
-            slog.critical('order failure: %s' % res)
+            slog.info('order failure: %s' % res)
             return
 
         if self._intitialvalue is None:
@@ -37,7 +37,7 @@ class SMACrossesStrategy(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
+        slog.info('d->g:bought %.2f @ %.2f for %.2f ---- %.2f %.2f' % (res.volume, res.price, self.bought, self.short_av, self.long_av))
 
     def onSell(self, res: TradeResponse) -> None:
         if not res.status == TradeResult.FILLED:
@@ -47,7 +47,7 @@ class SMACrossesStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %.2f %.2f' % (res.volume, res.price, sold, profit, self.profits, self.short_av, self.long_av))
+        slog.info('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f ---- %.2f %.2f' % (res.volume, res.price, sold, profit, self.profits, self.short_av, self.long_av))
         self.bought = 0.0
         self.bought_qty = 0.0
 
@@ -72,7 +72,7 @@ class SMACrossesStrategy(TradingStrategy):
         self.short_av = float(sum(self.shorts)) / max(len(self.shorts), 1)
         self.long_av = float(sum(self.longs)) / max(len(self.longs), 1)
 
-        slog.critical('%.2f %.2f', self.short_av, self.long_av)
+        slog.info('%.2f %.2f', self.short_av, self.long_av)
         # sell out if losing too much
         stoploss = (self.bought - data.price*self.bought_qty) > 5
         # stoploss = False
@@ -98,7 +98,7 @@ class SMACrossesStrategy(TradingStrategy):
                                currency=data.currency,
                                order_type=OrderType.MARKET,
                                price=data.price)
-            # slog.critical("requesting buy : %s", req)
+            # slog.info("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
             return True
 
@@ -109,7 +109,7 @@ class SMACrossesStrategy(TradingStrategy):
                                currency=data.currency,
                                order_type=OrderType.MARKET,
                                price=data.price)
-            # slog.critical("requesting sell : %s", req)
+            # slog.info("requesting sell : %s", req)
             self.requestSell(self.onSell, req)
             return True
 
@@ -120,39 +120,39 @@ class SMACrossesStrategy(TradingStrategy):
 
     def onAnalyze(self, _) -> None:
         import pandas
-        # import matplotlib.pyplot as plt
-        # import seaborn as sns
+        import matplotlib.pyplot as plt
+        import seaborn as sns
 
-        ## pd = pandas.DataFrame(self._actions,
-        ##                       columns=['time', 'action', 'price'])
+        # pd = pandas.DataFrame(self._actions,
+        #                       columns=['time', 'action', 'price'])
 
         pd = pandas.DataFrame(self._portfolio_value, columns=['time', 'value'])
         pd.set_index(['time'], inplace=True)
 
         print(self.short, self.long, pd.iloc[1].value, pd.iloc[-1].value)
-        ## sp500 = pandas.DataFrame()
-        ## tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
-        ## sp500['Date'] = pandas.to_datetime(tmp['Date'])
-        ## sp500['Close'] = tmp['Close']
-        ## sp500.set_index(['Date'], inplace=True)
-        ## print(sp500)
+        # sp500 = pandas.DataFrame()
+        # tmp = pandas.read_csv('./data/sp/sp500_v_kraken.csv')
+        # sp500['Date'] = pandas.to_datetime(tmp['Date'])
+        # sp500['Close'] = tmp['Close']
+        # sp500.set_index(['Date'], inplace=True)
+        # print(sp500)
 
-        # sns.set_style('darkgrid')
-        # fig, ax1 = plt.subplots()
+        sns.set_style('darkgrid')
+        fig, ax1 = plt.subplots()
 
-        # plt.title('BTC algo 1 performance - %d-%d Momentum ' % (self.short, self.long))
-        # ax1.plot(pd)
+        plt.title('BTC algo 1 performance - %d-%d Momentum ' % (self.short, self.long))
+        ax1.plot(pd)
 
-        # ax1.set_ylabel('Portfolio value($)')
-        # ax1.set_xlabel('Date')
-        # for xy in [self._portfolio_value[0]] + [self._portfolio_value[-1]]:
-        #     ax1.annotate('$%s' % xy[1], xy=xy, textcoords='data')
+        ax1.set_ylabel('Portfolio value($)')
+        ax1.set_xlabel('Date')
+        for xy in [self._portfolio_value[0]] + [self._portfolio_value[-1]]:
+            ax1.annotate('$%s' % xy[1], xy=xy, textcoords='data')
 
-        ## ax2 = ax1.twinx()
-        ## ax2.plot(sp500, 'r')
-        ## ax2.set_ylabel('S&P500 ($)')
+        # ax2 = ax1.twinx()
+        # ax2.plot(sp500, 'r')
+        # ax2.set_ylabel('S&P500 ($)')
 
-        # plt.show()
+        plt.show()
 
     def onChange(self, data: MarketData) -> None:
         pass

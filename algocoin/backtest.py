@@ -16,9 +16,10 @@ class Backtest(StreamingDataSource):
         with open(self._file, 'r') as fp:
             for line in fp:
                 self.receive(line)
-                engine.tick()
+                # engine.tick()
         log.info('Backtest done, running analysis.')
 
+        import ipdb; ipdb.set_trace()
         self.callback(TickType.ANALYZE, None)
 
         log.info('Analysis completed.')

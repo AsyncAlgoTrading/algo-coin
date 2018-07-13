@@ -1,3 +1,5 @@
+import threading
+import tornado
 from typing import Callable
 from .backtest import Backtest
 from .lib.callback import Print
@@ -9,6 +11,7 @@ from .lib.strategy import TradingStrategy
 from .lib.structs import TradeRequest, TradeResponse
 from .lib.utils import ex_type_to_ex
 from .lib.logging import LOG as log, SLIP as sllog, TXNS as tlog
+from .ui.server import ServerApplication
 
 
 class TradingEngine(object):
@@ -24,6 +27,12 @@ class TradingEngine(object):
 
         # the strategies to run
         self._strats = []
+
+        # instantiate backtest engine
+        self._bt = Backtest(options.backtest_options) if self._backtest else None
+
+        # instantiate riskengine
+        self._rk = Risk(options.risk_options)
 
         # instantiate exchange instance
         if options.exchange_options.exchange_types:
@@ -52,12 +61,6 @@ class TradingEngine(object):
 
             log.info(accounts)
             log.info("Running with %.2f USD" % options.risk_options.total_funds)
-
-        # instantiate backtest engine
-        self._bt = Backtest(options.backtest_options) if self._backtest else None
-
-        # instantiate riskengine
-        self._rk = Risk(options.risk_options)
 
         # instantiate execution engine
         self._ec = Execution(options.execution_options, self._ex)
@@ -122,6 +125,14 @@ class TradingEngine(object):
 
     def run(self):
         if self._live or self._sandbox:
+            port = 8080
+            application = ServerApplication(self)
+            log.critical('\n\nServer listening on port: %s\n\n', port)
+            application.listen(port)
+            t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
+            t.daemon = True  # So it terminates on exit
+            t.start()
+
             # run on exchange
             self._ex.run(self)
 
@@ -158,33 +169,58 @@ class TradingEngine(object):
             resp = self._rk.request(req)
 
             if resp.risk_check:
-                # if risk passes, let execution execute
                 log.info('Risk check passed')
-                resp = self._ec.request(resp)
+                # if risk passes, let execution execute
+                if self._live or self._sandbox:
+                    resp = self._ec.request(resp)
 
-                # TODO
-                if resp.status == TradeResult.PENDING:
-                    # listen for later
                     # TODO
-                    log.info('Order pending')
-                    self._pending[req.order_type].append(resp)  # TODO or req?
+                    if resp.status == TradeResult.PENDING:
+                        # listen for later
+                        # TODO
+                        log.info('Order pending')
+                        self._pending[req.order_type].append(resp)  # TODO or req?
 
-                elif resp.status == TradeResult.REJECTED:
-                    # send response
-                    log.info('Trade rejected')
-                    resp = TradeResponse(request=resp,
-                                         side=resp.side,
-                                         volume=0.0,
-                                         price=0.0,
+                    elif resp.status == TradeResult.REJECTED:
+                        # send response
+                        log.info('Trade rejected')
+                        resp = TradeResponse(request=resp,
+                                             side=resp.side,
+                                             volume=0.0,
+                                             price=0.0,
+                                             currency=req.currency,
+                                             status=TradeResult.REJECTED,
+                                             order_id='')
+
+                    elif resp.status == TradeResult.FILLED:
+                        log.info('Trade filled')
+                        sllog.info("Slippage - %s" % resp)
+                        tlog.info("TXN cost - %s" % resp)
+                        # let risk update according to execution details
+                        self._rk.update(resp)
+                else:
+                    # backtesting
+                    resp = TradeResponse(request=req,
+                                         side=req.side,
+                                         volume=req.volume,
+                                         price=req.price,
                                          currency=req.currency,
-                                         status=TradeResult.REJECTED,
+                                         status=TradeResult.FILLED,
+                                         time=req.time,
                                          order_id='')
-                elif resp.status == TradeResult.FILLED:
-                    log.info('Trade filled')
-                    sllog.info("Slippage - %s" % resp)
-                    tlog.info("TXN cost - %s" % resp)
-                    # let risk update according to execution details
-                    self._rk.update(resp)
+
+                    # register the initial request
+                    strat.registerDesire(resp.time, resp.side, resp.price)
+
+                    # adjust response with slippage and transaction cost modeling
+                    resp = strat.slippage(resp)
+                    sllog.info("Slippage BT- %s" % resp)
+
+                    resp = strat.transactionCost(resp)
+                    tlog.info("TXN cost BT- %s" % resp)
+
+                    # register the response
+                    strat.registerAction(resp.time, resp.side, resp.price)
             else:
                 log.info('Risk check failed')
                 resp = TradeResponse(request=resp,
@@ -194,20 +230,6 @@ class TradingEngine(object):
                                      currency=req.currency,
                                      status=TradeResult.REJECTED,
                                      order_id='')
-
-        if self._backtest and strat:
-            # register the initial request
-            strat.registerDesire(req.data.time, req.side, req.price)
-
-            # adjust response with slippage and transaction cost modeling
-            resp = strat.slippage(resp)
-            sllog.info("Slippage BT- %s" % resp)
-
-            resp = strat.transactionCost(resp)
-            tlog.info("TXN cost BT- %s" % resp)
-
-            # register the response
-            strat.registerAction(resp.data.time, resp.side, resp.price)
 
         callback_failure(resp) if callback_failure and not resp.success else callback(resp)
 

@@ -37,6 +37,7 @@ class TradeRequest:
     order_sub_type = OrderSubType, OrderSubType.NONE
     # exchange = ExchangeType
 
+    time = datetime.datetime, datetime.datetime.now()  # FIXME
     risk_check = bool, False
     risk_reason = str, ''
 

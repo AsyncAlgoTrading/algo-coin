@@ -1,15 +1,9 @@
-import tornado
-import threading
 from .trading import TradingEngine
 from .lib.parser import parse_command_line_config
-from .lib.logging import LOG as log
-from .ui.server import ServerApplication
 
 
 def main(argv: list) -> None:
     config = parse_command_line_config(argv)
-
-    port = 8889
 
     # Instantiate trading engine
     #
@@ -18,13 +12,6 @@ def main(argv: list) -> None:
     # exchange/backtest engine.
 
     te = TradingEngine(config)
-    application = ServerApplication(te)
-
-    log.critical('\n\nServer listening on port: %s\n\n', port)
-    application.listen(port)
-    t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
-    t.daemon = True  # So it terminates on exit
-    t.start()
 
     # Run the live trading engine
     te.run()
