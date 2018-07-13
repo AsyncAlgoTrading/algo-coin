@@ -5,7 +5,7 @@ from .enums import TradingType, ExchangeType
 @config
 class ExchangeConfig:
     exchange_type = ExchangeType, ExchangeType.NONE
-    exchange_types = [ExchangeType], [ExchangeType.NONE]
+    exchange_types = [ExchangeType], []
     trading_type = TradingType, TradingType.NONE
 
 
@@ -29,7 +29,7 @@ class ExecutionConfig:
 
 @config
 class StrategyConfig:
-    classname = str, ''
+    clazz = type
     args = tuple, ()
     kwargs = dict, {}
 
@@ -42,4 +42,4 @@ class TradingEngineConfig:
     backtest_options = BacktestConfig, BacktestConfig()
     risk_options = RiskConfig, RiskConfig()
     execution_options = ExecutionConfig, ExecutionConfig()
-    strategy_options = [StrategyConfig], [StrategyConfig()]  # List of strategy options
+    strategy_options = [StrategyConfig], []  # List of strategy options

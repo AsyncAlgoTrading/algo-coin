@@ -13,17 +13,25 @@ from .lib.logging import LOG as log, SLIP as sllog, TXNS as tlog
 
 class TradingEngine(object):
     def __init__(self, options: TradingEngineConfig) -> None:
+        # running live?
         self._live = options.type == TradingType.LIVE
+        # running sandbox?
         self._sandbox = options.type == TradingType.SANDBOX
+        # running backtest?
         self._backtest = options.type == TradingType.BACKTEST
+
+        # running print callback for debug?
         self._print = options.print
 
-        self._strats = []  # type: List[TradingStrategy]
+        # the strategies to run
+        self._strats = []
 
         self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
         # self._exchanges = [ex_type_to_ex(o.exchange_options.exchange_type)(o.exchange_options) if self._live or self._sandbox else None for o in options]
+
         self._exchanges = []
 
+        # if live or sandbox, get account information and balances
         if self._live or self._sandbox:
             accounts = self._ex.accounts()
 
@@ -36,8 +44,13 @@ class TradingEngine(object):
             log.info(accounts)
             log.info("Running with %.2f USD" % options.risk_options.total_funds)
 
+        # instantiate backtest engine
         self._bt = Backtest(options.backtest_options) if self._backtest else None
+
+        # instantiate riskengine
         self._rk = Risk(options.risk_options)
+
+        # instantiate execution engine
         self._ec = Execution(options.execution_options, self._ex)
 
         # sanity check
@@ -58,8 +71,15 @@ class TradingEngine(object):
             if self._backtest:
                 self._bt.registerCallback(Print())
 
-        self._ticked = []  # type: List
+        # register strategies from config
+        for x in options.strategy_options:
+            log.critical('Registering strategy: %s', str(x.clazz))
+            self.registerStrategy(x.clazz(*x.args, **x.kwargs))
+
+        # actively trading or halted?
         self._trading = True  # type: bool
+
+        # pending orders to process (partial fills)
         self._pending = {OrderType.MARKET: [], OrderType.LIMIT: []}  # TODO in progress
 
     def exchange(self):

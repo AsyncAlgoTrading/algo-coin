@@ -1,5 +1,6 @@
 from configparser import ConfigParser
-from .config import TradingEngineConfig, BacktestConfig
+from pydoc import locate
+from .config import TradingEngineConfig, BacktestConfig, StrategyConfig
 from .enums import TradingType
 from .exceptions import ConfigException
 from .utils import str_to_exchange, exchange_to_file, set_verbose
@@ -63,8 +64,19 @@ def _parse_exchange(exchange, config) -> None:
 
 
 def _parse_strategy(strategy, config) -> None:
-    # TODO
-    pass
+    strat_configs = []
+
+    if 'strategies' not in strategy:
+        raise Exception('No Strategies specified')
+
+    for strat in strategy['strategies'].split('\n'):
+        if strat == '':
+            continue
+        splits = [x for x in strat.split(',') if x]
+        cls = locate(splits[0])
+        args = tuple(splits[1:]) if len(splits) > 1 else ()
+        strat_configs.append(StrategyConfig(clazz=cls, args=args))
+    config.strategy_options = strat_configs
 
 
 def _parse_risk(risk, config) -> None:
@@ -114,12 +126,16 @@ def _parse_sandbox_options(argv, config) -> None:
 
 def _parse_backtest_options(argv, config) -> None:
     log.critical("Backtesting")
+
     config.backtest_options = BacktestConfig()
+
     config.backtest_options.file = \
         exchange_to_file(str_to_exchange(argv.get('exchange', '')))
+
     config.exchange_options.exchange_type = \
         str_to_exchange(argv.get('exchange', ''))
-    config.risk_options.total_funds = 20000.0
+
+    config.risk_options.total_funds = 20000.0  # FIXME
 
 
 def parse_command_line_config(argv: list) -> TradingEngineConfig:

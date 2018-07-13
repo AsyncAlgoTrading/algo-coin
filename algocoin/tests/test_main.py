@@ -43,5 +43,5 @@ class TestMain:
     def test_main(self):
         from ..main import main
         with patch('algocoin.main.TradingEngine'), \
-             patch('algocoin.main.TestStrategy'):
+             patch('algocoin.lib.strategies.test_strat.TestStrategy'):
             main(['', '--live'])

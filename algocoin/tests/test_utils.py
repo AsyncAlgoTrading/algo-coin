@@ -44,6 +44,7 @@ class TestUtils:
 
         t.c = ['test']
         assert t.c == ['test']
+        print(t.d)
         assert t.d == ['']
 
     def test_struct(self):
