@@ -26,20 +26,22 @@ Like Zipline, the inspriation for this system, AlgoCoin exposes a single algorit
 ### Markets
 Eventual coverage:
 
-- Bitstamp
-- Bitfinex
-- CEX
-- GDAX 
+- GDAX (Coinbase Pro)
 - Gemini 
-- HitBTC
+- Binance
+- Bitfinex
 - ItBit
 - Kraken
-- LakeBTC
 - Poloniex
+- Bitstamp
+- CEX
+- HitBTC
+- LakeBTC
 
 #### Market Data (Websocket)
 [![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
+[![BINANCE](https://img.shields.io/badge/Binance-ERR-brightred.svg)](https://img.shields.io/badge/Binance-ERR-brightred.svg)
 [![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
 [![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
 [![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
@@ -47,6 +49,7 @@ Eventual coverage:
 #### Order Entry (REST)
 [![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
+[![BINANCE](https://img.shields.io/badge/Binance-ERR-brightred.svg)](https://img.shields.io/badge/Binance-ERR-brightred.svg)
 [![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
 [![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
 [![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
