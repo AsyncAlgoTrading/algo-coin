@@ -24,7 +24,7 @@ class CustomStrategy(TradingStrategy):
 
     def onBuy(self, res: TradeResponse) -> None:
         if not res.success:
-            slog.critical('order failure: %s' % res)
+            slog.critical('order failure: %s', res)
             return
 
         if self._intitialvalue is None:
@@ -34,7 +34,7 @@ class CustomStrategy(TradingStrategy):
 
         self.bought = res.volume*res.price
         self.bought_qty = res.volume
-        slog.critical('d->g:bought %.2f @ %.2f for %.2f' % (res.volume, res.price, self.bought))
+        slog.critical('d->g:bought %.2f @ %.2f for %.2f', res.volume, res.price, self.bought)
 
     def onSell(self, res: TradeResponse) -> None:
         if not res.success:
@@ -44,7 +44,7 @@ class CustomStrategy(TradingStrategy):
         sold = res.volume*res.price
         profit = sold - self.bought
         self.profits += profit
-        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f' % (res.volume, res.price, sold, profit, self.profits))
+        slog.critical('g->d:sold %.2f @ %.2f for %.2f - %.2f - %.2f', res.volume, res.price, sold, profit, self.profits)
         self.bought = 0.0
         self.bought_qty = 0.0
 

@@ -20,7 +20,7 @@ def main(argv: list) -> None:
     te = TradingEngine(config)
     application = ServerApplication(te)
 
-    log.critical('Server listening on port: %s', port)
+    log.critical('\n\nServer listening on port: %s\n\n', port)
     application.listen(port)
     t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
     t.daemon = True  # So it terminates on exit

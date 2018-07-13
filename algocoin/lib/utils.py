@@ -270,7 +270,7 @@ def set_verbose(level):
     # dlog.propagate = False  # too much
     # tlog.propagate = True
     # mlog.propagate = True
-    if level > 1:
+    if level >= 2:
         log.setLevel(logging.DEBUG)
         slog.setLevel(logging.DEBUG)
         dlog.setLevel(logging.DEBUG)

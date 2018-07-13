@@ -58,8 +58,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
 
                 self._running = True
 
-                log.info('')
-                log.info('Starting algo trading')
+                log.critical('\n\nStarting algo trading\n\n')
             try:
                 while True:
                     self.receive()
@@ -107,7 +106,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
         }'''
         # FIXME check these
         if order.get('result') == 'error':
-            log.critical("Order Error - %s" % order)
+            log.critical("Order Error - %s", order)
             raise Exception('Order Error!')
 
         executed_amount = float(order['executed_amount'])
@@ -152,7 +151,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                                        order_execution=None)
 
         if order.get('result') == 'error':
-            log.critical("Order Error - %s" % order)
+            log.critical("Order Error - %s", order)
             raise Exception('Order Error!')
 
         executed_amount = float(order['executed_amount'])

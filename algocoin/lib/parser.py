@@ -74,7 +74,12 @@ def _parse_strategy(strategy, config) -> None:
             continue
         splits = [x for x in strat.split(',') if x]
         cls = locate(splits[0])
-        args = tuple(splits[1:]) if len(splits) > 1 else ()
+
+        args = []
+        for x in splits[1:]:
+            args.append(float(x) if x.isdigit() else x)
+        args = tuple(args)
+
         strat_configs.append(StrategyConfig(clazz=cls, args=args))
     config.strategy_options = strat_configs
 
@@ -113,7 +118,7 @@ def _parse_args_to_dict(argv: list) -> dict:
 
 
 def _parse_live_options(argv, config: TradingEngineConfig) -> None:
-    log.critical("WARNING: Live trading. money will be lost ;^)")
+    log.critical("\n\nWARNING: Live trading. money will be lost ;^)\n\n")
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
@@ -124,7 +129,8 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
 
 
 def _parse_sandbox_options(argv, config) -> None:
-    log.critical("Sandbox trading")
+    log.critical("\n\nSandbox trading\n\n")
+
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
@@ -135,8 +141,7 @@ def _parse_sandbox_options(argv, config) -> None:
 
 
 def _parse_backtest_options(argv, config) -> None:
-    log.critical("Backtesting")
-
+    log.critical("\n\nBacktesting\n\n")
     config.backtest_options = BacktestConfig()
 
     if argv.get('exchange'):
@@ -181,7 +186,7 @@ def parse_command_line_config(argv: list) -> TradingEngineConfig:
         if argv.get('print'):
             config.print = True
 
-    log.critical("Config : %s", str(config))
+    log.debug("Config : %s", str(config))
 
     return config
 
