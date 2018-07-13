@@ -1,6 +1,6 @@
 from typing import Callable
 from .backtest import Backtest
-from .lib.callback import Callback, Print
+from .lib.callback import Print
 from .lib.config import TradingEngineConfig
 from .lib.enums import TradingType, Side, CurrencyType, TradeResult, OrderType
 from .execution import Execution
@@ -15,19 +15,28 @@ class TradingEngine(object):
     def __init__(self, options: TradingEngineConfig) -> None:
         # running live?
         self._live = options.type == TradingType.LIVE
+
         # running sandbox?
         self._sandbox = options.type == TradingType.SANDBOX
+
         # running backtest?
         self._backtest = options.type == TradingType.BACKTEST
-
-        # running print callback for debug?
-        self._print = options.print
 
         # the strategies to run
         self._strats = []
 
-        self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
-        # self._exchanges = [ex_type_to_ex(o.exchange_options.exchange_type)(o.exchange_options) if self._live or self._sandbox else None for o in options]
+        # instantiate exchange instance
+        if options.exchange_options.exchange_types:
+            # multiple exchanges
+            # TODO
+            # FIXME
+            self._ex = [ex_type_to_ex(o)(options.exchange_options) if self._live or self._sandbox else None for o in options.exchange_options.exchange_types]
+            # FIXME
+            # TODO
+
+        else:
+            # single exchange
+            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
 
         self._exchanges = []
 
@@ -56,18 +65,14 @@ class TradingEngine(object):
         # sanity check
         assert not (self._live and self._sandbox and self._backtest)
 
-        if self._print:
+        # running print callback for debug?
+        if options.print:
             log.warn('WARNING: Running in print mode')
 
+            # register a printer callback that prints every message
             if self._live or self._sandbox:
                 self._ex.registerCallback(
-                    Print(onTrade=True,
-                          onReceived=True,
-                          onOpen=True,
-                          onDone=True,
-                          onChange=True,
-                          onError=False))
-
+                    Print(onTrade=True, onReceived=True, onOpen=True, onDone=True, onChange=True, onError=False))
             if self._backtest:
                 self._bt.registerCallback(Print())
 

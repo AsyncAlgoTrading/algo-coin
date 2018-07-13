@@ -72,14 +72,13 @@ def config(cls):
                 isinstance(v[0][0], type) and \
                 isinstance(v[1], list):
             # v is a pair,  ([type], [instance?])
-            if len(v[1]) > 0 and isinstance(v[1][0], v[0][0]): # TODO check all
+            if len(v[1]) > 0 and isinstance(v[1][0], v[0][0]):  # TODO check all
                 v = create_pair(k, v[0][0], v[1], container=list)
                 vars.append(k)
             elif v[1] == []:
                 v = create_pair(k, v[0][0], v[1], container=list)
                 vars.append(k)
             else:
-                print(v)
                 raise Exception('Unexpected list instance: %s' % v[1][0])
 
         new_cls_dict[k] = v

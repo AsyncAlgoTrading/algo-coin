@@ -82,7 +82,7 @@ def _parse_strategy(strategy, config) -> None:
 def _parse_risk(risk, config) -> None:
     config.risk_options.max_drawdown = float(risk.get('max_drawdown', config.risk_options.max_drawdown))
     config.risk_options.max_risk = float(risk.get('max_drawdown', config.risk_options.max_risk))
-    config.risk_options.total_funds = float(risk.get('max_drawdown', config.risk_options.total_funds))
+    config.risk_options.total_funds = float(risk.get('total_funds', config.risk_options.total_funds))
 
 
 def _parse_default(default, config) -> None:
@@ -114,14 +114,24 @@ def _parse_args_to_dict(argv: list) -> dict:
 
 def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     log.critical("WARNING: Live trading. money will be lost ;^)")
-    config.exchange_options.exchange_type = \
-        str_to_exchange(argv.get('exchange', ''))
+    if argv.get('exchange'):
+        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
+    elif argv.get('exchanges'):
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+    else:
+        config.exchange_options.exchange_type = str_to_exchange('')
+        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
 
 
 def _parse_sandbox_options(argv, config) -> None:
     log.critical("Sandbox trading")
-    config.exchange_options.exchange_type = \
-        str_to_exchange(argv.get('exchange', ''))
+    if argv.get('exchange'):
+        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
+    elif argv.get('exchanges'):
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+    else:
+        config.exchange_options.exchange_type = str_to_exchange('')
+        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
 
 
 def _parse_backtest_options(argv, config) -> None:
@@ -129,13 +139,14 @@ def _parse_backtest_options(argv, config) -> None:
 
     config.backtest_options = BacktestConfig()
 
-    config.backtest_options.file = \
-        exchange_to_file(str_to_exchange(argv.get('exchange', '')))
-
-    config.exchange_options.exchange_type = \
-        str_to_exchange(argv.get('exchange', ''))
-
-    config.risk_options.total_funds = 20000.0  # FIXME
+    if argv.get('exchange'):
+        config.backtest_options.file = exchange_to_file(str_to_exchange(argv['exchange']))
+        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
+    elif argv.get('exchanges'):
+        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split(',') if x]
+    else:
+        config.exchange_options.exchange_type = str_to_exchange('')
+        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
 
 
 def parse_command_line_config(argv: list) -> TradingEngineConfig:

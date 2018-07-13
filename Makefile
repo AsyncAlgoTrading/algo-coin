@@ -37,8 +37,8 @@ docs:  ## Build the sphinx docs
 	make -C docs html
 
 clean: ## clean the repository
-	find . -name "__pycache__" -exec rm -rf {} \;
-	find . -name "*.pyc" -exec rm -rf {} \;
+	find . -name "__pycache__" | xargs rm -rf
+	find . -name "*.pyc" | xargs rm -rf
 	rm -rf .coverage cover htmlcov logs build dist *.egg-info
 
 install: ## install the package

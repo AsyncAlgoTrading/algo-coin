@@ -2,6 +2,7 @@ import gdax
 import json
 from websocket import create_connection
 from ..config import ExchangeConfig
+from ..define import EXCHANGE_ORDER_ENDPOINT
 from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
 from ..structs import TradeRequest, TradeResponse, Account
@@ -26,10 +27,11 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
 
         elif options.trading_type == TradingType.SANDBOX:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX_SANDBOX')
+            import ipdb; ipdb.set_trace()
             self._client = gdax.AuthenticatedClient(self._key,
                                                     self._secret,
                                                     self._passphrase,
-                                                    api_url=self._oe_url
+                                                    api_url=EXCHANGE_ORDER_ENDPOINT(ExchangeType.GDAX, TradingType.SANDBOX)
                                                     )
 
         val = self._client.get_accounts() if hasattr(self, '_client') else []
