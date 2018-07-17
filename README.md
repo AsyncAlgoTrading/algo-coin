@@ -41,9 +41,10 @@ Eventual coverage:
 
 #### Sandboxes
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
+[![GDAX](https://img.shields.io/badge/GDAX-ERR-brightreg.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 
 #### Market Data (Websocket)
-[![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
+[![GDAX](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
 [![BINANCE](https://img.shields.io/badge/Binance-ERR-brightred.svg)](https://img.shields.io/badge/Binance-ERR-brightred.svg)
 [![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
@@ -57,6 +58,12 @@ Eventual coverage:
 [![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
 [![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
 [![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
+
+#### Markets Coverage
+| Exchange | Pairs |
+| -------- | :---: |
+| Gemini   | BTCUSD, ZECUSD, ZECBTC, ZECETH, ETHBTC, ETHUSD |
+| GDAX     | BTC-USD,BTC-ETH,BTC-LTC,BTC-BCH,ETH-USD,LTC-USD,BCH-USD,ETH-BTC,LTC-BTC,BCH-BTC |
 
 ---
 
