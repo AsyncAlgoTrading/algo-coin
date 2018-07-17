@@ -63,7 +63,7 @@ Eventual coverage:
 | Exchange | Pairs |
 | -------- | :---: |
 | Gemini   | BTCUSD, ZECUSD, ZECBTC, ZECETH, ETHBTC, ETHUSD |
-| GDAX     | BTC-USD,BTC-ETH,BTC-LTC,BTC-BCH,ETH-USD,LTC-USD,BCH-USD,ETH-BTC,LTC-BTC,BCH-BTC |
+| GDAX     | BTC-USD, BTC-ETH, BTC-LTC, BTC-BCH, ETH-USD, LTC-USD, BCH-USD, ETH-BTC, LTC-BTC, BCH-BTC |
 
 ---
 
