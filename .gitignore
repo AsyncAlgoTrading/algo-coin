@@ -71,3 +71,5 @@ old
 *.pkl
 notebooks/BTC_*
 .idea
+
+custom_strategies
