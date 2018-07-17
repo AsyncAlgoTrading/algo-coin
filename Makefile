@@ -54,6 +54,9 @@ clean: ## clean the repository
 install: ## install the package
 	python3 setup.py install
 
+dist:  ## dist to pypi
+	python3 setup.py sdist upload -r pypi
+
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
 help:
@@ -62,4 +65,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data
+.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data dist
