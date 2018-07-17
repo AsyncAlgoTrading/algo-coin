@@ -39,7 +39,7 @@ class TestExecution:
     def test_request(self):
         from ..execution import Execution
         from ..lib.exchanges.gdax import GDAXExchange
-        from ..lib.enums import Side, ExchangeType, TradingType, CurrencyType, OrderType
+        from ..lib.enums import Side, ExchangeType, TradingType, PairType, OrderType
         from ..lib.config import ExecutionConfig, ExchangeConfig
         from ..lib.structs import TradeRequest
 
@@ -53,7 +53,7 @@ class TestExecution:
             e = Execution(ec, ex)
 
             req = TradeRequest(side=Side.BUY,
-                               currency=CurrencyType.BTC,
+                               currency_pair=PairType.BTCUSD,
                                order_type=OrderType.MARKET,
                                volume=1.0,
                                price=1.0)

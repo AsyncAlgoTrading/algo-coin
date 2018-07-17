@@ -57,7 +57,7 @@ class TestExchange:
                     m1.return_value = {'type': val,
                                        'sequence': i,
                                        'time': '2017-02-19T18:52:17.088000Z',
-                                       'product_id': 'BTC'}
+                                       'product_id': 'BTCUSD'}
                     e.receive()
 
     def test_seqnum_fix(self):
@@ -78,7 +78,7 @@ class TestExchange:
                 m1.return_value = {'type': TickType.TRADE,
                                    'sequence': 0,
                                    'time': '2017-02-19T18:52:17.088000Z',
-                                   'product_id': 'BTC'}
+                                   'product_id': 'BTCUSD'}
                 e.receive()
                 for i, val in enumerate([TickType.TRADE,
                                          TickType.RECEIVED,
@@ -89,7 +89,7 @@ class TestExchange:
                     m1.return_value = {'type': val,
                                        'sequence': 6-i,
                                        'time': '2017-02-19T18:52:17.088000Z',
-                                       'product_id': 'BTC'}
+                                       'product_id': 'BTCUSD'}
                     if i != 0:
                         assert e._missingseqnum
                     e.receive()
@@ -97,13 +97,13 @@ class TestExchange:
 
     def test_trade_req_to_params_gdax(self):
         from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import CurrencyType, OrderType, OrderSubType
+        from ...lib.enums import PairType, OrderType, OrderSubType
 
         class tmp:
             def __init__(self, a=True):
                 self.price = 'test'
                 self.volume = 'test'
-                self.currency = CurrencyType.BTC
+                self.currency_pair = PairType.BTCUSD
                 self.order_type = OrderType.LIMIT
                 self.order_sub_type = OrderSubType.POST_ONLY if a \
                     else OrderSubType.FILL_OR_KILL

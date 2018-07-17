@@ -27,7 +27,6 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
 
         elif options.trading_type == TradingType.SANDBOX:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX_SANDBOX')
-            import ipdb; ipdb.set_trace()
             self._client = gdax.AuthenticatedClient(self._key,
                                                     self._secret,
                                                     self._passphrase,
@@ -48,12 +47,12 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
             account = Account(id=id, currency=currency, balance=balance)
             self._accounts.append(account)
 
-        self._subscription = json.dumps({"type": "subscribe",
-                                         "product_id": "BTC-USD"})
+        self._subscription = [json.dumps({"type": "subscribe",
+                                         "product_id": GDAXExchange.currency_pair_to_string(x)}) for x in options.currency_pairs]
         self._heartbeat = json.dumps({"type": "heartbeat",
                                       "on": True})
 
-        self._seqnum_enabled = True
+        self._seqnum_enabled = False  # FIXME?
 
     def run(self, engine) -> None:
         # DEBUG
@@ -66,8 +65,9 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                 self.ws = create_connection(self._md_url)
                 log.info('Connected!')
 
-                self.ws.send(self._subscription)
-                log.info('Sending Subscription %s' % self._subscription)
+                for sub in self._subscription:
+                    self.ws.send(sub)
+                    log.info('Sending Subscription %s' % sub)
                 self.ws.send(self._heartbeat)
                 log.info('Sending Heartbeat %s' % self._heartbeat)
 
@@ -128,7 +128,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              side=req.side,
                              volume=float(order['filled_size']),
                              price=float(order['price']),
-                             currency=req.currency,
+                             currency_pair=req.currency_pair,
                              slippage=slippage,
                              transaction_cost=txn_cost,
                              status=status,

@@ -1,8 +1,8 @@
 import numpy
-from .lib.strategy import TradingStrategy
-from .lib.structs import MarketData, TradeRequest, TradeResponse
-from .lib.enums import Side, OrderType
-from .lib.logging import STRAT as slog, ERROR as elog
+from ..strategy import TradingStrategy
+from ..structs import MarketData, TradeRequest, TradeResponse
+from ..enums import Side, OrderType
+from ..logging import STRAT as slog, ERROR as elog
 
 
 class CustomStrategy(TradingStrategy):

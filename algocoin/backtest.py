@@ -3,7 +3,7 @@ from .lib.data_source import StreamingDataSource
 from .lib.logging import LOG as log, DATA as dlog
 from .lib.structs import MarketData
 from .lib.utils import parse_date
-from .lib.enums import CurrencyType, TickType, Side
+from .lib.enums import PairType, TickType, Side
 
 
 class Backtest(StreamingDataSource):
@@ -32,7 +32,7 @@ class Backtest(StreamingDataSource):
                           price=float(res[1]),
                           volume=float(res[2]),
                           type=TickType.TRADE,
-                          currency=CurrencyType.BTC,
+                          currency_pair=PairType.BTCUSD,
                           side=Side.NONE)
 
         if data.type == TickType.TRADE:

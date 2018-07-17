@@ -34,6 +34,7 @@ class ExchangeType(BaseEnum):
     BITFINEX = 2
     CEX = 3
     GDAX = 4
+    COINBASE = 11
     GEMINI = 5
     HITBTC = 6
     ITBIT = 7
@@ -47,6 +48,41 @@ class CurrencyType(BaseEnum):
     BTC = 1
     ETH = 2
     LTC = 3
+    BCH = 4
+    ZEC = 5
+
+
+class PairType(BaseEnum):
+    # USD Pairs
+    USDBTC = (CurrencyType.USD, CurrencyType.BTC)
+    USDETH = (CurrencyType.USD, CurrencyType.ETH)
+    USDLTC = (CurrencyType.USD, CurrencyType.LTC)
+    USDBCH = (CurrencyType.USD, CurrencyType.BCH)
+    USDZEC = (CurrencyType.USD, CurrencyType.ZEC)
+
+    # BTC Pairs
+    BTCUSD = (CurrencyType.BTC, CurrencyType.USD)
+    BTCETH = (CurrencyType.BTC, CurrencyType.ETH)
+    BTCLTC = (CurrencyType.BTC, CurrencyType.LTC)
+    BTCBCH = (CurrencyType.BTC, CurrencyType.BCH)
+    BTCZEC = (CurrencyType.BTC, CurrencyType.ZEC)
+
+    # ETH Pairs
+    ETHUSD = (CurrencyType.ETH, CurrencyType.USD)
+    ETHBTC = (CurrencyType.ETH, CurrencyType.BTC)
+
+    # LTC Pairs
+    LTCUSD = (CurrencyType.LTC, CurrencyType.USD)
+    LTCBTC = (CurrencyType.LTC, CurrencyType.BTC)
+
+    # BCH Pairs
+    BCHUSD = (CurrencyType.BCH, CurrencyType.USD)
+    BCHBTC = (CurrencyType.BCH, CurrencyType.BTC)
+
+    # ZEC Pairs
+    ZECUSD = (CurrencyType.ZEC, CurrencyType.USD)
+    ZECBTC = (CurrencyType.ZEC, CurrencyType.BTC)
+    ZECETH = (CurrencyType.ZEC, CurrencyType.ETH)  # Gemini
 
 
 class Side(BaseEnum):

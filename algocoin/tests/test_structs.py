@@ -22,10 +22,11 @@ class TestStructs:
 
     def test_MarketData(self):
         from ..lib.structs import MarketData
-        from ..lib.enums import TickType, Side
+        from ..lib.enums import TickType, Side, PairType
         m = MarketData(time=datetime.now(),
                        volume=1.0,
                        price=1.0,
+                       currency_pair=PairType.BTCUSD,
                        type=TickType.TRADE,
                        side=Side.BUY)
         # TODO no fields yet
@@ -33,9 +34,9 @@ class TestStructs:
 
     def test_TradeRequest(self):
         from ..lib.structs import TradeRequest
-        from ..lib.enums import Side, OrderType, CurrencyType
+        from ..lib.enums import Side, OrderType, PairType
         t = TradeRequest(side=Side.BUY,
-                         currency=CurrencyType.BTC,
+                         currency_pair=PairType.BTCUSD,
                          order_type=OrderType.MARKET,
                          volume=1.0,
                          price=1.0)
@@ -50,15 +51,15 @@ class TestStructs:
 
     def test_TradeResponse(self):
         from ..lib.structs import TradeRequest, TradeResponse, TradeResult
-        from ..lib.enums import Side, OrderType, CurrencyType
+        from ..lib.enums import Side, OrderType, PairType
         req = TradeRequest(side=Side.BUY,
                            order_type=OrderType.MARKET,
-                           currency=CurrencyType.BTC,
+                           currency_pair=PairType.BTCUSD,
                            volume=1.0,
                            price=1.0)
         t = TradeResponse(request=req,
                           side=Side.BUY,
-                          currency=CurrencyType.BTC,
+                          currency_pair=PairType.BTCUSD,
                           volume=0.0,
                           price=0.0,
                           status=TradeResult.FILLED,

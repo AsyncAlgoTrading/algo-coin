@@ -1,6 +1,7 @@
 import datetime
 from .enums import Side, \
                    CurrencyType, \
+                   PairType, \
                    OrderType, \
                    OrderSubType, \
                    TickType, \
@@ -15,7 +16,7 @@ class MarketData:
     volume = float
     price = float
     type = TickType
-    currency = CurrencyType, CurrencyType.BTC
+    currency_pair = PairType
     side = Side
 
     # maybe specific
@@ -31,7 +32,7 @@ class TradeRequest:
 
     volume = float
     price = float
-    currency = CurrencyType
+    currency_pair = PairType
 
     order_type = OrderType
     order_sub_type = OrderSubType, OrderSubType.NONE
@@ -49,7 +50,7 @@ class TradeResponse:
 
     volume = float
     price = float
-    currency = CurrencyType
+    currency_pair = PairType
 
     slippage = float, 0.0
     transaction_cost = float, 0.0

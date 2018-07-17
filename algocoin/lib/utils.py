@@ -2,7 +2,7 @@ import pytz
 import os
 import logging
 from datetime import datetime
-from .enums import ExchangeType, CurrencyType, OrderType, Side
+from .enums import ExchangeType, CurrencyType, OrderType, Side, PairType
 from .logging import LOG as log, \
                      STRAT as slog, \
                      DATA as dlog, \
@@ -199,6 +199,51 @@ def str_to_currency_type(s: str) -> CurrencyType:
     if 'LTC' in s:
         return CurrencyType.LTC
     return CurrencyType.USD
+
+
+def str_to_currency_pair_type(s: str) -> PairType:
+    s = s.strip().upper().replace('-', '')
+    if s == 'BTCUSD':
+        return PairType.BTCUSD
+    elif s == 'USDBTC':
+        return PairType.USDBTC
+    elif s == 'USDETH':
+        return PairType.USDETH
+    elif s == 'USDLTC':
+        return PairType.USDLTC
+    elif s == 'USDBCH':
+        return PairType.USDBCH
+    elif s == 'USDZEC':
+        return PairType.USDZEC
+    elif s == 'BTCUSD':
+        return PairType.BTCUSD
+    elif s == 'BTCETH':
+        return PairType.BTCETH
+    elif s == 'BTCLTC':
+        return PairType.BTCLTC
+    elif s == 'BTCBCH':
+        return PairType.BTCBCH
+    elif s == 'BTCZEC':
+        return PairType.BTCZEC
+    elif s == 'ETHUSD':
+        return PairType.ETHUSD
+    elif s == 'ETHBTC':
+        return PairType.ETHBTC
+    elif s == 'LTCUSD':
+        return PairType.LTCUSD
+    elif s == 'LTCBTC':
+        return PairType.LTCBTC
+    elif s == 'BCHUSD':
+        return PairType.BCHUSD
+    elif s == 'BCHBTC':
+        return PairType.BCHBTC
+    elif s == 'ZECUSD':
+        return PairType.ZECUSD
+    elif s == 'ZECBTC':
+        return PairType.ZECBTC
+    elif s == 'ZECETH':
+        return PairType.ZECETH
+    raise Exception('PairType not recognized %s' % s)
 
 
 def str_to_side(s: str) -> Side:

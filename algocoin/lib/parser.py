@@ -1,9 +1,9 @@
 from configparser import ConfigParser
 from pydoc import locate
 from .config import TradingEngineConfig, BacktestConfig, StrategyConfig
-from .enums import TradingType
+from .enums import TradingType, PairType
 from .exceptions import ConfigException
-from .utils import str_to_exchange, exchange_to_file, set_verbose
+from .utils import str_to_exchange, exchange_to_file, set_verbose, str_to_currency_pair_type
 from .logging import LOG as log
 
 
@@ -116,6 +116,14 @@ def _parse_args_to_dict(argv: list) -> dict:
     return ret
 
 
+def _parse_currencies(currencies):
+    splits = [x.strip().upper().replace('-', '') for x in currencies.split(',')]
+    ret = []
+    for s in splits:
+        ret.append(str_to_currency_pair_type(s))
+    return ret
+
+
 def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     log.critical("\n\nWARNING: Live trading. money will be lost ;^)\n\n")
     if argv.get('exchange'):
@@ -125,6 +133,9 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
+
+    if argv.get('currency_pairs'):
+        config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
 
 
 def _parse_sandbox_options(argv, config) -> None:
@@ -137,6 +148,9 @@ def _parse_sandbox_options(argv, config) -> None:
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
+
+    if argv.get('currency_pairs'):
+        config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
 
 
 def _parse_backtest_options(argv, config) -> None:
@@ -151,6 +165,9 @@ def _parse_backtest_options(argv, config) -> None:
     else:
         config.exchange_options.exchange_type = str_to_exchange('')
         log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
+
+    if argv.get('currency_pairs'):
+        config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
 
 
 def parse_command_line_config(argv: list) -> TradingEngineConfig:

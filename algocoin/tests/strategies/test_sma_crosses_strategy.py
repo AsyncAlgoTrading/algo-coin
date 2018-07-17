@@ -27,7 +27,7 @@ class TestSMACrossesStrategy:
 
     def test_sma_match(self):
         from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import TickType, Side
+        from ...lib.enums import TickType, Side, PairType
         from ...lib.structs import MarketData
         from ...lib.utils import parse_date
 
@@ -35,6 +35,7 @@ class TestSMACrossesStrategy:
         s._te = MagicMock()
 
         data = [MarketData(type=TickType.TRADE,
+                           currency_pair=PairType.BTCUSD,
                            time=parse_date('1479272400'),
                            price=float(x),
                            volume=float(100),
@@ -51,7 +52,7 @@ class TestSMACrossesStrategy:
 
     def test_sma_buy(self):
         from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import TickType, Side, TradeResult
+        from ...lib.enums import TickType, Side, TradeResult, PairType
         from ...lib.structs import MarketData, TradeResponse
         from ...lib.utils import parse_date
 
@@ -64,7 +65,7 @@ class TestSMACrossesStrategy:
         def ret(callback, req, callback_failure=None, strat=None):
             res = TradeResponse(request=req,
                                 side=req.side,
-                                currency=req.currency,
+                                currency_pair=req.currency_pair,
                                 price=req.price,
                                 volume=req.volume,
                                 status=TradeResult.FILLED,
@@ -76,6 +77,7 @@ class TestSMACrossesStrategy:
 
         data = [MarketData(type=TickType.TRADE,
                            time=parse_date('1479272400'),
+                           currency_pair=PairType.BTCUSD,
                            price=float(x),
                            volume=float(100),
                            side=Side.BUY) for x in range(10)]
@@ -106,7 +108,7 @@ class TestSMACrossesStrategy:
     def test_sma_sell(self):
         self.test_sma_buy()
 
-        from ...lib.enums import TickType, Side
+        from ...lib.enums import TickType, Side, PairType
         from ...lib.structs import MarketData
         from ...lib.utils import parse_date
 
@@ -114,6 +116,7 @@ class TestSMACrossesStrategy:
                           time=parse_date('1479272400'),
                           price=float(0),
                           volume=float(100),
+                          currency_pair=PairType.BTCUSD,
                           side=Side.BUY)
 
         s = self.s

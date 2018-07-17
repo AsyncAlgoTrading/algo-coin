@@ -1,5 +1,4 @@
 from ..backtest import *
-from ..custom_strategies import *
 from ..execution import *
 from ..risk import *
 from ..trading import *
@@ -25,3 +24,4 @@ from ..lib.exchanges.kraken import *
 from ..lib.strategies.test_strat import *
 from ..lib.strategies.sma_crosses_strategy import *
 from ..lib.strategies.sma_crosses_strategy_with_regression_follow import *
+from ..lib.strategies.backtest import *

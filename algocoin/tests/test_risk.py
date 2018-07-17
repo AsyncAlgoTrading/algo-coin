@@ -31,9 +31,9 @@ class TestRisk:
 
     def test_request(self):
         from ..lib.structs import TradeRequest
-        from ..lib.enums import Side, CurrencyType, OrderType
+        from ..lib.enums import Side, PairType, OrderType
 
-        req = TradeRequest(side=Side.BUY, currency=CurrencyType.BTC, order_type=OrderType.MARKET, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, currency_pair=PairType.BTCUSD, order_type=OrderType.MARKET, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         # FIXME
@@ -51,9 +51,9 @@ class TestRisk:
 
     def test_request2(self):
         from ..lib.structs import TradeRequest
-        from ..lib.enums import Side, CurrencyType, OrderType
+        from ..lib.enums import Side, PairType, OrderType
 
-        req = TradeRequest(side=Side.BUY, currency=CurrencyType.BTC, order_type=OrderType.MARKET, volume=50.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, currency_pair=PairType.BTCUSD, order_type=OrderType.MARKET, volume=50.0, price=1.0)
         resp = self.risk.request(req)
 
         # FIXME
