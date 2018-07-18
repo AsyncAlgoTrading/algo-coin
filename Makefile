@@ -57,6 +57,10 @@ install: ## install the package
 dist:  ## dist to pypi
 	python3 setup.py sdist upload -r pypi
 
+js:  ## build the js
+	npm install
+	npm run build
+
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
 help:
@@ -65,4 +69,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data dist
+.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data dist js

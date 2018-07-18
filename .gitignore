@@ -73,3 +73,6 @@ notebooks/BTC_*
 .idea
 
 custom_strategies
+
+node_modules
+package-lock.json
