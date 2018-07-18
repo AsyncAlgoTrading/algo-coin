@@ -114,6 +114,13 @@ def __init__struct(self, **kwargs) -> None:
             raise Exception('Attribute not found! %s' % k)
 
 
+def to_dict(self, **kwargs) -> dict:
+    ret = {}
+    for item in self._vars:
+        ret[item] = getattr(self, item)
+    return ret
+
+
 def __repr__(self) -> str:
     # log.warn(str(self.__class__))
     return '<' + ', '.join([x + '-' + str(getattr(self, x))
@@ -157,6 +164,7 @@ def struct(cls):
     new_cls_dict['__repr__'] = __repr__
     new_cls_dict['_vars'] = vars
     new_cls_dict['_excludes'] = excludes
+    new_cls_dict['to_dict'] = to_dict
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 

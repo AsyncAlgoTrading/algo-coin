@@ -13,6 +13,7 @@ class ExchangeConfig:
 @config
 class BacktestConfig:
     file = str, ''
+    files = [str], []
 
 
 @config

@@ -18,6 +18,8 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
         self._accounts = []
         self._pending_orders = {}
 
+        self._messages = {}
+
     def close(self) -> None:
         log.critical('Closing....')
         self.ws.close()
@@ -51,8 +53,12 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
         if not self._running:
             pass
 
+        if res.type not in self._messages:
+            self._messages[res.type] = [res]
+        else:
+            self._messages[res.type].append(res)
+
         if res.type == TickType.TRADE:
-            self._last = res
             self.callback(TickType.TRADE, res)
         elif res.type == TickType.RECEIVED:
             self.callback(TickType.RECEIVED, res)
@@ -71,3 +77,6 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
     def accounts(self) -> list:
         '''account info'''
         return self._accounts
+
+    def messages(self) -> list:
+        return self._messages

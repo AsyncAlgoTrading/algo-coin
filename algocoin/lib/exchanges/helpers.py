@@ -17,7 +17,7 @@ class GDAXHelpersMixin(object):
 
         order_type = str_to_order_type(jsn.get('order_type', ''))
         side = str_to_side(jsn.get('side', ''))
-        remaining_volume = float(jsn.get('remaining_size', 'nan'))
+        remaining_volume = float(jsn.get('remaining_size', 0.0))
         reason = jsn.get('reason', '')
         sequence = int(jsn.get('sequence'))
         ret = MarketData(time=time,

@@ -67,11 +67,11 @@ class TestBacktest:
         assert b._file == 'test'
 
     def test_receive(self):
-        from ..backtest import Backtest
+        from ..backtest import Backtest, line_to_data
 
         b = Backtest(self.config)
         cb = self.demo_callback()
 
         b.registerCallback(cb)
-        b.receive(self.test_line)
+        b.receive(line_to_data(self.test_line))
         assert cb._onTrade

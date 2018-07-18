@@ -188,7 +188,7 @@ class TradingEngine(object):
                                              side=resp.side,
                                              volume=0.0,
                                              price=0.0,
-                                             currency=req.currency,
+                                             currency_pair=req.currency_pair,
                                              status=TradeResult.REJECTED,
                                              order_id='')
 
@@ -204,7 +204,7 @@ class TradingEngine(object):
                                          side=req.side,
                                          volume=req.volume,
                                          price=req.price,
-                                         currency=req.currency,
+                                         currency_pair=req.currency_pair,
                                          status=TradeResult.FILLED,
                                          time=req.time,
                                          order_id='')
@@ -227,7 +227,7 @@ class TradingEngine(object):
                                      side=resp.side,
                                      volume=0.0,
                                      price=0.0,
-                                     currency=req.currency,
+                                     currency_pair=req.currency_pair,
                                      status=TradeResult.REJECTED,
                                      order_id='')
 

@@ -8,48 +8,48 @@ class BaseEnum(Enum):
 
 
 class TickType(BaseEnum):
-    TRADE = 0
-    RECEIVED = 1
-    OPEN = 2
-    DONE = 3
-    CHANGE = 4
-    ERROR = 5
-    ANALYZE = 6
-    HALT = 7
-    CONTINUE = 8
-    EXIT = 9
-    HEARTBEAT = 10
+    TRADE = 'TRADE'
+    RECEIVED = 'RECEIVED'
+    OPEN = 'OPEN'
+    DONE = 'DONE'
+    CHANGE = 'CHANGE'
+    ERROR = 'ERROR'
+    ANALYZE = 'ANALYZE'
+    HALT = 'HALT'
+    CONTINUE = 'CONTINUE'
+    EXIT = 'EXIT'
+    HEARTBEAT = 'HEARTBEAT'
 
 
 class TradingType(BaseEnum):
-    NONE = 0
-    SANDBOX = 1
-    LIVE = 2
-    BACKTEST = 3
+    NONE = 'NONE'
+    SANDBOX = 'SANDBOX'
+    LIVE = 'LIVE'
+    BACKTEST = 'BACKTEST'
 
 
 class ExchangeType(BaseEnum):
-    NONE = 0
-    BITSTAMP = 1
-    BITFINEX = 2
-    CEX = 3
-    GDAX = 4
-    COINBASE = 11
-    GEMINI = 5
-    HITBTC = 6
-    ITBIT = 7
-    KRAKEN = 8
-    LAKE = 9
-    POLONIEX = 10
+    NONE = 'NONE'
+    BITSTAMP = 'BITSTAMP'
+    BITFINEX = 'BITFINEX'
+    CEX = 'CEX'
+    GDAX = 'GDAX'
+    COINBASE = 'COINBASE'
+    GEMINI = 'GEMINI'
+    HITBTC = 'HITBTC'
+    ITBIT = 'ITBIT'
+    KRAKEN = 'KRAKEN'
+    LAKE = 'LAKE'
+    POLONIEX = 'POLONIEX'
 
 
 class CurrencyType(BaseEnum):
-    USD = 0
-    BTC = 1
-    ETH = 2
-    LTC = 3
-    BCH = 4
-    ZEC = 5
+    USD = 'USD'
+    BTC = 'BTC'
+    ETH = 'ETH'
+    LTC = 'LTC'
+    BCH = 'BCH'
+    ZEC = 'ZEC'
 
 
 class PairType(BaseEnum):
@@ -86,27 +86,27 @@ class PairType(BaseEnum):
 
 
 class Side(BaseEnum):
-    NONE = 0
-    BUY = 1
-    SELL = 2
+    NONE = 'NONE'
+    BUY = 'BUY'
+    SELL = 'SELL'
 
 
 class OrderType(BaseEnum):
-    NONE = 0
-    MARKET = 1
-    LIMIT = 2
+    NONE = 'NONE'
+    MARKET = 'MARKET'
+    LIMIT = 'LIMIT'
 
 
 class OrderSubType(BaseEnum):
-    NONE = 0
-    POST_ONLY = 1
-    FILL_OR_KILL = 2
+    NONE = 'NONE'
+    POST_ONLY = 'POST_ONLY'
+    FILL_OR_KILL = 'FILL_OR_KILL'
     # ALL_OR_NOTHING = 3
 
 
 class TradeResult(BaseEnum):
-    NONE = 0
-    PENDING = 1
-    PARTIAL = 2
-    FILLED = 3
-    REJECTED = 4
+    NONE = 'NONE'
+    PENDING = 'PENDING'
+    PARTIAL = 'PARTIAL'
+    FILLED = 'FILLED'
+    REJECTED = 'REJECTED'
