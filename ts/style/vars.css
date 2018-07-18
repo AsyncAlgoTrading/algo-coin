@@ -1,0 +1,15 @@
+:root {
+    --dark-bg-color: #2F3136;
+    --dark-bg-color2: #2a2c2f;
+    --dark-bg-color3: #1a1c1f;
+    --dark-bg-hover: #636363;
+
+    --dark-color: white;
+    --dark-color-disabled: rgba(255, 255, 255, 0.25);
+    --dark-border: #666;
+    --dark-border2: #3b3e44;
+    --dark-overlay: rgba(0, 0, 0, 0.6);
+    --dark-drop-shadow: rgba(255, 255, 255, 0.2);
+
+    --light-border: black;
+}

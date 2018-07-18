@@ -1,0 +1,58 @@
+/*-----------------------------------------------------------------------------
+| Copyright (c) 2014-2017, PhosphorJS Contributors
+|
+| Distributed under the terms of the BSD 3-Clause License.
+|
+| The full license is in the file LICENSE, distributed with this software.
+|----------------------------------------------------------------------------*/
+@import './vars.css';
+@import '~@phosphor/dragdrop/style/index.css';
+@import '~@phosphor/widgets/style/index.css';
+@import './commandpalette.css';
+@import './content.css';
+@import './dockpanel.css';
+@import './menu.css';
+@import './menubar.css';
+@import './tabbar.css';
+@import './psp.css';
+@import './material.dark.css';
+
+
+body {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--dark-color);
+  font-family: Arial;
+}
+
+
+#menuBar {
+  flex: 0 0 auto;
+  background-color: var(--dark-bg-color3);
+  color: var(--dark-color);
+}
+
+
+#main {
+  flex: 1 1 auto;
+}
+
+
+#palette {
+  min-width: 300px;
+  border-right: 1px solid var(--dark-border);
+}
+
+
+#dock {
+  padding: 4px;
+  background-color: var(--dark-bg-color2);
+}

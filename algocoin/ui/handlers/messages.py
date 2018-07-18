@@ -16,23 +16,27 @@ class ServerMessagesHandler(tornado.web.RequestHandler):
     def get(self):
         try:
             type = self.get_argument('type', None)
+            page = int(self.get_argument('page', 0))
 
             try:
                 type = TickType(type)
             except ValueError:
                 pass
 
-            msgs = self.te._ex.messages()
-            msgs = {str(a): [x.to_dict() for x in msgs[a]] for a in msgs if type is None or a == type}
+            if type is None:
+                msgs = self.te._ex.messages()[-(page+1)*20: -1 + (page)*20]
+            else:
+                msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20]
+
+            msgs = [x.to_dict() for x in msgs]
 
             # convert to str
-            for k in msgs:
-                for v in msgs[k]:
-                    for kk in v:
-                        if isinstance(v[kk], datetime):
-                            v[kk] = v[kk].strftime('%d/%m/%y %H:%M:%S')
-                        else:
-                            v[kk] = str(v[kk])
+            for msg in msgs:
+                for kk in msg:
+                    if isinstance(msg[kk], datetime):
+                        msg[kk] = msg[kk].strftime('%d/%m/%y %H:%M:%S')
+                    else:
+                        msg[kk] = str(msg[kk])
 
             self.write(ujson.dumps(msgs))
         except Exception as e:
