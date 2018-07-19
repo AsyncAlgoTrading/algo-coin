@@ -37,7 +37,9 @@ function _fetch_and_load(path:string, type:string, loadto:PSPWidget, wrap_list=f
     xhr1.onload = function () { 
         if(xhr1.response){
             var jsn = JSON.parse(xhr1.response);
-            setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
+            if (Object.keys(jsn).length > 0){
+              setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
+            }
         }
     };
     xhr1.send(null);
@@ -233,8 +235,11 @@ function main(): void {
   Widget.attach(bar, document.body);
   Widget.attach(main, document.body);
 
-  setInterval(() => {
-    fetch_and_load(psps);
+  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['chart'], false, false);
+  setTimeout(()=> {
+    setInterval(() => {
+      fetch_and_load(psps);
+    }, 500);
   }, 500);
 
 

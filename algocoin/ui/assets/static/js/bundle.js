@@ -36771,7 +36771,9 @@ function _fetch_and_load(path, type, loadto, wrap_list, _delete) {
     xhr1.onload = function () {
         if (xhr1.response) {
             var jsn = JSON.parse(xhr1.response);
-            setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
+            if (Object.keys(jsn).length > 0) {
+                setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
+            }
         }
     };
     xhr1.send(null);
@@ -36938,8 +36940,11 @@ function main() {
     window.onresize = function () { main.update(); };
     widgets_1.Widget.attach(bar, document.body);
     widgets_1.Widget.attach(main, document.body);
-    setInterval(function () {
-        fetch_and_load(psps);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['chart'], false, false);
+    setTimeout(function () {
+        setInterval(function () {
+            fetch_and_load(psps);
+        }, 500);
     }, 500);
 }
 window.onload = main;
