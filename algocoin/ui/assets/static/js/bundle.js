@@ -36667,62 +36667,228 @@ function updateLink(linkElement, obj) {
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var widgets_1 = __webpack_require__(137);
+const widgets_1 = __webpack_require__(137);
 __webpack_require__(138);
 __webpack_require__(136);
 __webpack_require__(135);
 __webpack_require__(134);
-var PSPWidget = (function (_super) {
-    __extends(PSPWidget, _super);
-    function PSPWidget(name) {
-        var _this = _super.call(this, { node: PSPWidget.createNode() }) || this;
-        _this.addClass('pspwidget');
-        _this.title.label = name;
-        _this.title.closable = true;
-        _this.title.caption = "Long description for: " + name;
-        return _this;
-    }
-    PSPWidget.createNode = function () {
-        var node = document.createElement('div');
-        var content = document.createElement('perspective-viewer');
+class PSPWidget extends widgets_1.Widget {
+    static createNode() {
+        let node = document.createElement('div');
+        let content = document.createElement('perspective-viewer');
         node.appendChild(content);
         return node;
-    };
-    Object.defineProperty(PSPWidget.prototype, "pspNode", {
-        get: function () {
-            return this.node.getElementsByTagName('perspective-viewer')[0];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    PSPWidget.prototype.onAfterAttach = function (msg) {
+    }
+    constructor(name) {
+        super({ node: PSPWidget.createNode() });
+        this.addClass('pspwidget');
+        this.title.label = name;
+        this.title.closable = true;
+        this.title.caption = `Long description for: ${name}`;
+    }
+    get pspNode() {
+        return this.node.getElementsByTagName('perspective-viewer')[0];
+    }
+    onAfterAttach(msg) {
         this.pspNode.notifyResize();
-    };
-    PSPWidget.prototype.onAfterShow = function (msg) {
+    }
+    onAfterShow(msg) {
         this.pspNode.notifyResize();
-    };
-    PSPWidget.prototype.onResize = function (msg) {
+    }
+    onResize(msg) {
         this.pspNode.notifyResize();
-    };
-    PSPWidget.prototype.onActivateRequest = function (msg) {
+    }
+    onActivateRequest(msg) {
         if (this.isAttached) {
             this.pspNode.focus();
         }
-    };
-    return PSPWidget;
-}(widgets_1.Widget));
+    }
+}
 exports.PSPWidget = PSPWidget;
+var ViewOption;
+(function (ViewOption) {
+    ViewOption["VIEW"] = "view";
+    ViewOption["INDEX"] = "index";
+    ViewOption["COLUMNS"] = "columns";
+    ViewOption["ROW_PIVOTS"] = "row-pivots";
+    ViewOption["COLUMN_PIVOTS"] = "column-pivots";
+    ViewOption["AGGREGATES"] = "aggregates";
+    ViewOption["SORT"] = "sort";
+    ViewOption["SETTINGS"] = "settings";
+})(ViewOption = exports.ViewOption || (exports.ViewOption = {}));
+function view_string_to_view_option(option) {
+    switch (option) {
+        case 'view': {
+            return ViewOption.VIEW;
+        }
+        case 'index': {
+            return ViewOption.INDEX;
+        }
+        case 'columns': {
+            return ViewOption.COLUMNS;
+        }
+        case 'row-pivots': {
+            return ViewOption.ROW_PIVOTS;
+        }
+        case 'column-pivots': {
+            return ViewOption.COLUMN_PIVOTS;
+        }
+        case 'aggregates': {
+            return ViewOption.AGGREGATES;
+        }
+        case 'sort': {
+            return ViewOption.SORT;
+        }
+        case 'settings': {
+            return ViewOption.SETTINGS;
+        }
+        default: {
+            throw 'option not recognized';
+        }
+    }
+}
+var DataOption;
+(function (DataOption) {
+    DataOption["DELETE"] = "delete";
+    DataOption["WRAP"] = "wrap";
+})(DataOption = exports.DataOption || (exports.DataOption = {}));
+// TODO pull from perspective/types
+var TypeNames;
+(function (TypeNames) {
+    TypeNames["STRING"] = "string";
+    TypeNames["FLOAT"] = "float";
+    TypeNames["INTEGER"] = "integer";
+    TypeNames["BOOLEAN"] = "boolean";
+    TypeNames["DATE"] = "date";
+})(TypeNames = exports.TypeNames || (exports.TypeNames = {}));
+class PerspectiveHelper {
+    constructor(url, // The url to fetch data from
+        psps, // A set of perspective widgets 
+        view_options, // view options to configure the widgets,
+        // keyed by the `psps` keys
+        data_options, // data load options to configure the widgets,
+        // keyed by the `psps` keys
+        schema, // <optional> schemas to preload onto the widgets,
+        // keyed by the `psps` keys
+        preload_url, // The url to fetch initial/cached data from
+        repeat) {
+        this._repeat = -1;
+        this._url = url;
+        this._preload_url = preload_url;
+        this._datatype = Private.data_source(url);
+        this._psp_widgets = psps;
+        this._data_options = data_options;
+        if (repeat) {
+            this._repeat = repeat;
+        }
+        for (let psp of Object.keys(this._psp_widgets)) {
+            // preload schema
+            if (schema && Object.keys(schema).includes(psp)) {
+                this._psp_widgets[psp].pspNode.load(schema[psp]);
+            }
+            // preset view options
+            if (view_options && Object.keys(view_options).includes(psp)) {
+                for (let attr of Object.keys(view_options[psp])) {
+                    let view_option = view_string_to_view_option(attr);
+                    this._psp_widgets[psp].pspNode.setAttribute(attr, view_options[psp][view_option]);
+                }
+            }
+        }
+        console.log(this._url);
+        console.log(this._preload_url);
+        console.log(this._datatype);
+        console.log(this._data_options);
+        console.log(this._psp_widgets);
+    }
+    start(delay) {
+        if (this._datatype === 'http') {
+            if (this._preload_url) {
+                this.fetch_and_load(true);
+            }
+            if (this._repeat > 0) {
+                setInterval(() => {
+                    this.fetch_and_load();
+                }, this._repeat);
+            }
+            else {
+                this.fetch_and_load();
+            }
+        }
+    }
+    fetch_and_load(use_preload_url = false) {
+        let url = '';
+        if (use_preload_url && this._preload_url) {
+            url = this._preload_url;
+        }
+        else {
+            url = this._url;
+        }
+        for (let psp of Object.keys(this._psp_widgets)) {
+            let _delete = false;
+            let wrap = false;
+            if (this._data_options && Object.keys(this._data_options).includes(psp)) {
+                //TODO
+                if (Object.keys(this._data_options[psp]).includes(DataOption.DELETE)) {
+                    _delete = this._data_options[psp][DataOption.DELETE] || false;
+                }
+                if (Object.keys(this._data_options[psp]).includes(DataOption.WRAP)) {
+                    wrap = this._data_options[psp][DataOption.WRAP] || false;
+                }
+            }
+            this._fetch_and_load_http(url, psp, wrap, _delete);
+        }
+    }
+    _fetch_and_load_http(url, psp_key, wrap = false, _delete = false) {
+        var xhr1 = new XMLHttpRequest();
+        xhr1.open('GET', url, true);
+        xhr1.onload = () => {
+            if (xhr1.response) {
+                var jsn = JSON.parse(xhr1.response);
+                if (Object.keys(jsn).length > 0) {
+                    if (wrap) {
+                        jsn = [jsn];
+                    }
+                    if (_delete) {
+                        this._psp_widgets[psp_key].pspNode.delete();
+                    }
+                    this._psp_widgets[psp_key].pspNode.update(jsn);
+                }
+            }
+        };
+        xhr1.send(null);
+    }
+}
+exports.PerspectiveHelper = PerspectiveHelper;
+var Private;
+(function (Private) {
+    Private._loaded = false;
+    function data_source(url) {
+        if (url.indexOf('sio://') !== -1) {
+            return 'sio';
+        }
+        else if (url.indexOf('ws://') !== -1) {
+            return 'ws';
+        }
+        else if (url.indexOf('wss://') !== -1) {
+            return 'wss';
+        }
+        else if (url.indexOf('http://') !== -1) {
+            return 'http';
+        }
+        else if (url.indexOf('https://') !== -1) {
+            return 'http';
+        }
+        else if (url.indexOf('comm://') !== -1) {
+            return 'comm';
+        }
+        else {
+            console.log('assuming http');
+            return 'http';
+        }
+    }
+    Private.data_source = data_source;
+})(Private || (Private = {}));
 
 
 /***/ }),
@@ -36751,71 +36917,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 | The full license is in the file LICENSE, distributed with this software.
 |----------------------------------------------------------------------------*/
 __webpack_require__(219); // polyfill Promise on IE
-var commands_1 = __webpack_require__(84);
-var widgets_1 = __webpack_require__(137);
+const commands_1 = __webpack_require__(84);
+const widgets_1 = __webpack_require__(137);
 __webpack_require__(138);
 __webpack_require__(136);
 __webpack_require__(135);
 __webpack_require__(134);
-var perspective_widget_1 = __webpack_require__(218);
-var commands = new commands_1.CommandRegistry();
-function fetch_and_load(psps) {
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['performance-grid'], false, false);
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'performance-chart', psps['performance-chart'], false, false);
-    // _fetch_and_load('/api/json/v1/messages', 'grid', psps['quote']);
-}
-function _fetch_and_load(path, type, loadto, wrap_list, _delete) {
-    if (wrap_list === void 0) { wrap_list = false; }
-    if (_delete === void 0) { _delete = true; }
-    var xhr1 = new XMLHttpRequest();
-    xhr1.open('GET', path, true);
-    xhr1.onload = function () {
-        if (xhr1.response) {
-            var jsn = JSON.parse(xhr1.response);
-            if (Object.keys(jsn).length > 0) {
-                setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
-            }
-        }
-    };
-    xhr1.send(null);
-}
-function setup_psp_and_load(type, data, loadto, wrap_list, _delete) {
-    if (wrap_list === void 0) { wrap_list = false; }
-    if (_delete === void 0) { _delete = true; }
-    if (wrap_list) {
-        data = [data];
-    }
-    if (_delete) {
-        loadto.pspNode.delete();
-    }
-    if (data) {
-        switch (type) {
-            case 'performance-chart': {
-                loadto.pspNode.view = 'xy_line';
-                loadto.pspNode.setAttribute('index', 'sequence');
-                loadto.pspNode.setAttribute('column-pivots', '["currency_pair"]');
-                loadto.pspNode.setAttribute('columns', '["time", "price"]');
-                loadto.pspNode.update(data);
-                break;
-            }
-            case 'grid': {
-                loadto.pspNode.view = 'hypergrid';
-                loadto.pspNode.setAttribute('index', 'sequence');
-                loadto.pspNode.update(data);
-                break;
-            }
-        }
-    }
-}
+const perspective_widget_1 = __webpack_require__(218);
+const commands = new commands_1.CommandRegistry();
 function main() {
     /* File Menu */
-    var menu = new widgets_1.Menu({ commands: commands });
+    let menu = new widgets_1.Menu({ commands });
     menu.title.label = 'File';
     menu.title.mnemonic = 0;
     menu.addItem({ command: 'controls:open' });
     menu.addItem({ type: 'separator' });
     /* Data Menu */
-    var menu2 = new widgets_1.Menu({ commands: commands });
+    let menu2 = new widgets_1.Menu({ commands });
     menu2.title.label = 'Data';
     menu2.title.mnemonic = 0;
     menu2.addItem({ command: 'performance-chart:open' });
@@ -36823,21 +36941,21 @@ function main() {
     menu2.addItem({ command: 'quotes:open' });
     menu2.addItem({ type: 'separator' });
     /* layouts menu */
-    var menu3 = new widgets_1.Menu({ commands: commands });
+    let menu3 = new widgets_1.Menu({ commands });
     menu3.title.label = 'Layout';
     menu3.title.mnemonic = 0;
     menu3.addItem({ command: 'save-dock-layout' });
     menu3.addItem({ type: 'separator' });
     menu3.addItem({ command: 'restore-dock-layout', args: { index: 0 } });
     /* Top bar */
-    var bar = new widgets_1.MenuBar();
+    let bar = new widgets_1.MenuBar();
     bar.addMenu(menu);
     bar.addMenu(menu2);
     bar.addMenu(menu3);
     bar.id = 'menuBar';
     /* context menu */
-    var contextMenu = new widgets_1.ContextMenu({ commands: commands });
-    document.addEventListener('contextmenu', function (event) {
+    let contextMenu = new widgets_1.ContextMenu({ commands });
+    document.addEventListener('contextmenu', (event) => {
         if (contextMenu.open(event)) {
             event.preventDefault();
         }
@@ -36846,26 +36964,55 @@ function main() {
     contextMenu.addItem({ type: 'separator', selector: '.p-CommandPalette-input' });
     contextMenu.addItem({ command: 'save-dock-layout', selector: '.content' });
     contextMenu.addItem({ command: 'restore-dock-layout', selector: '.content' });
-    document.addEventListener('keydown', function (event) {
+    document.addEventListener('keydown', (event) => {
         commands.processKeydownEvent(event);
     });
     /* perspectives */
-    var psp = new perspective_widget_1.PSPWidget('Perf-chart'); // chart
-    var psp2 = new perspective_widget_1.PSPWidget('Perf-grid'); // grid
-    var psp3 = new perspective_widget_1.PSPWidget('Quotes'); // quote
-    var psps = { 'performance-chart': psp,
+    let psp = new perspective_widget_1.PSPWidget('Perf-chart'); // chart
+    let psp2 = new perspective_widget_1.PSPWidget('Perf-grid'); // grid
+    let psp3 = new perspective_widget_1.PSPWidget('Quotes'); // quote
+    let psps = { 'performance-chart': psp,
         'performance-grid': psp2,
         'quote': psp3 };
+    let psps_view_options = {
+        'performance-chart': {
+            [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
+            [perspective_widget_1.ViewOption.COLUMN_PIVOTS]: '["currency_pair"]',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]'
+        },
+        'performance-grid': {
+            [perspective_widget_1.ViewOption.VIEW]: 'hypergrid',
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence'
+        },
+        'quote': {}
+    };
+    let psps_data_options = {
+        'performance-chart': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        },
+        'performance-grid': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        },
+        'quote': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        }
+    };
+    let psps_schemas = {};
+    let psps_helper1 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE', psps, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1', 500);
     /* main dock */
-    var dock = new widgets_1.DockPanel();
+    let dock = new widgets_1.DockPanel();
     dock.addWidget(psps['performance-chart']);
     dock.addWidget(psps['performance-grid'], { mode: 'split-right', ref: psp });
     dock.addWidget(psps['quote'], { mode: 'split-bottom', ref: psp });
     dock.id = 'dock';
     /* save/restore layouts */
-    var savedLayouts = [];
+    let savedLayouts = [];
     /* command palette */
-    var palette = new widgets_1.CommandPalette({ commands: commands });
+    let palette = new widgets_1.CommandPalette({ commands });
     palette.id = 'palette';
     palette.addItem({
         command: 'save-dock-layout',
@@ -36896,7 +37043,7 @@ function main() {
     commands.addCommand('save-dock-layout', {
         label: 'Save Layout',
         caption: 'Save the current dock layout',
-        execute: function () {
+        execute: () => {
             savedLayouts.push(dock.saveLayout());
             palette.addItem({
                 command: 'restore-dock-layout',
@@ -36907,10 +37054,10 @@ function main() {
         }
     });
     commands.addCommand('restore-dock-layout', {
-        label: function (args) {
-            return "Restore Layout " + args.index;
+        label: args => {
+            return `Restore Layout ${args.index}`;
         },
-        execute: function (args) {
+        execute: args => {
             dock.restoreLayout(savedLayouts[args.index]);
         }
     });
@@ -36918,7 +37065,7 @@ function main() {
         label: 'Controls',
         mnemonic: 1,
         iconClass: 'fa fa-plus',
-        execute: function () {
+        execute: () => {
             dock.restoreLayout(savedLayouts[0]);
         }
     });
@@ -36926,7 +37073,7 @@ function main() {
         label: 'Open Performance',
         mnemonic: 2,
         iconClass: 'fa fa-plus',
-        execute: function () {
+        execute: () => {
             dock.addWidget(psps['performance-chart']);
         }
     });
@@ -36934,7 +37081,7 @@ function main() {
         label: 'Open Performance',
         mnemonic: 2,
         iconClass: 'fa fa-plus',
-        execute: function () {
+        execute: () => {
             dock.addWidget(psps['performance-grid']);
         }
     });
@@ -36942,7 +37089,7 @@ function main() {
         label: 'Open Quotes',
         mnemonic: 2,
         iconClass: 'fa fa-plus',
-        execute: function () {
+        execute: () => {
             dock.addWidget(psps['quote']);
         }
     });
@@ -36960,19 +37107,13 @@ function main() {
     });
     /* main area setup */
     widgets_1.BoxPanel.setStretch(dock, 1);
-    var main = new widgets_1.BoxPanel({ direction: 'left-to-right', spacing: 0 });
+    let main = new widgets_1.BoxPanel({ direction: 'left-to-right', spacing: 0 });
     main.id = 'main';
     main.addWidget(dock);
-    window.onresize = function () { main.update(); };
+    window.onresize = () => { main.update(); };
     widgets_1.Widget.attach(bar, document.body);
     widgets_1.Widget.attach(main, document.body);
-    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'performance-chart', psps['performance-chart'], false, false);
-    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['performance-grid'], false, false);
-    setTimeout(function () {
-        setInterval(function () {
-            fetch_and_load(psps);
-        }, 500);
-    }, 500);
+    psps_helper1.start();
 }
 window.onload = main;
 

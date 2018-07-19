@@ -21,54 +21,10 @@ import "@jpmorganchase/perspective-viewer-hypergrid";
 import "@jpmorganchase/perspective-viewer-highcharts";
 
 import {
-  PSPWidget
+  PSPWidget, PerspectiveHelper, ViewOption, DataOption
 } from './perspective-widget';
 
 const commands = new CommandRegistry();
-
-function fetch_and_load(psps: {[key:string]:PSPWidget;}){
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['performance-grid'], false, false);
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'performance-chart', psps['performance-chart'], false, false);
-    // _fetch_and_load('/api/json/v1/messages', 'grid', psps['quote']);
-}
-
-function _fetch_and_load(path:string, type:string, loadto:PSPWidget, wrap_list=false, _delete=true){
-    var xhr1 = new XMLHttpRequest();
-    xhr1.open('GET', path, true);
-    xhr1.onload = function () { 
-        if(xhr1.response){
-            var jsn = JSON.parse(xhr1.response);
-            if (Object.keys(jsn).length > 0){
-              setup_psp_and_load(type, jsn, loadto, wrap_list, _delete);
-            }
-        }
-    };
-    xhr1.send(null);
-}
-
-function setup_psp_and_load(type: string, data: any, loadto: PSPWidget, wrap_list=false, _delete=true){
-    if (wrap_list){data = [data];}
-    if(_delete){loadto.pspNode.delete();}
-    if (data) {
-        switch(type){
-            case 'performance-chart': {
-                loadto.pspNode.view = 'xy_line';
-                loadto.pspNode.setAttribute('index', 'sequence');
-                loadto.pspNode.setAttribute('column-pivots', '["currency_pair"]');
-                loadto.pspNode.setAttribute('columns', '["time", "price"]');
-                loadto.pspNode.update(data);
-                break;
-              }
-            case 'grid': {
-                loadto.pspNode.view = 'hypergrid';
-                loadto.pspNode.setAttribute('index', 'sequence');
-                loadto.pspNode.update(data);
-                break;
-            }
-        }
-    }
-}
-
 
 function main(): void {
   /* File Menu */
@@ -132,6 +88,45 @@ function main(): void {
   let psps= {'performance-chart':psp,
              'performance-grid':psp2,
              'quote':psp3}
+
+  let psps_view_options = {
+    'performance-chart': {
+      [ViewOption.VIEW]: 'xy_line',
+      [ViewOption.INDEX]: 'sequence',
+      [ViewOption.COLUMN_PIVOTS]: '["currency_pair"]',
+      [ViewOption.COLUMNS]: '["time", "price"]'
+    },
+    'performance-grid': {
+      [ViewOption.VIEW]: 'hypergrid',
+      [ViewOption.INDEX]: 'sequence'
+    },
+    'quote': {}
+  };
+
+  let psps_data_options = {
+   'performance-chart': {
+     [DataOption.DELETE]: false,
+     [DataOption.WRAP]: false
+    },
+    'performance-grid': {
+     [DataOption.DELETE]: false,
+     [DataOption.WRAP]: false
+    },
+    'quote': {
+     [DataOption.DELETE]: false,
+     [DataOption.WRAP]: false
+    } 
+  };
+
+  let psps_schemas = {};
+
+  let psps_helper1 = new PerspectiveHelper('/api/json/v1/messages?type=TRADE',
+                                           psps,
+                                           psps_view_options,
+                                           psps_data_options,
+                                           psps_schemas,
+                                           '/api/json/v1/messages?type=TRADE&page=-1',
+                                           500);
 
   /* main dock */
   let dock = new DockPanel();
@@ -263,15 +258,7 @@ function main(): void {
   Widget.attach(bar, document.body);
   Widget.attach(main, document.body);
 
-  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'performance-chart', psps['performance-chart'], false, false);
-  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['performance-grid'], false, false);
-  setTimeout(()=> {
-    setInterval(() => {
-      fetch_and_load(psps);
-    }, 500);
-  }, 500);
-
-
+  psps_helper1.start();
 }
 
 

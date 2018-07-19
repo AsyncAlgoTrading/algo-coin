@@ -7,9 +7,9 @@
     "strictNullChecks": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "ES5",
+    "target": "es2016",
     "outDir": "./build",
-    "lib": ["ES5", "ES2015.Promise", "DOM"],
+    "lib": ["es2016", "ES2015.Promise", "DOM"],
     "types": []
   },
   "include": ["ts/src/*"]
