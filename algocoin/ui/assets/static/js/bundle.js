@@ -36757,10 +36757,11 @@ __webpack_require__(138);
 __webpack_require__(136);
 __webpack_require__(135);
 __webpack_require__(134);
-var psp_1 = __webpack_require__(218);
+var perspective_widget_1 = __webpack_require__(218);
 var commands = new commands_1.CommandRegistry();
 function fetch_and_load(psps) {
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['chart'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['performance-grid'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'performance-chart', psps['performance-chart'], false, false);
     // _fetch_and_load('/api/json/v1/messages', 'grid', psps['quote']);
 }
 function _fetch_and_load(path, type, loadto, wrap_list, _delete) {
@@ -36789,6 +36790,14 @@ function setup_psp_and_load(type, data, loadto, wrap_list, _delete) {
     }
     if (data) {
         switch (type) {
+            case 'performance-chart': {
+                loadto.pspNode.view = 'xy_line';
+                loadto.pspNode.setAttribute('index', 'sequence');
+                loadto.pspNode.setAttribute('column-pivots', '["currency_pair"]');
+                loadto.pspNode.setAttribute('columns', '["time", "price"]');
+                loadto.pspNode.update(data);
+                break;
+            }
             case 'grid': {
                 loadto.pspNode.view = 'hypergrid';
                 loadto.pspNode.setAttribute('index', 'sequence');
@@ -36809,7 +36818,8 @@ function main() {
     var menu2 = new widgets_1.Menu({ commands: commands });
     menu2.title.label = 'Data';
     menu2.title.mnemonic = 0;
-    menu2.addItem({ command: 'performance:open' });
+    menu2.addItem({ command: 'performance-chart:open' });
+    menu2.addItem({ command: 'performance-grid:open' });
     menu2.addItem({ command: 'quotes:open' });
     menu2.addItem({ type: 'separator' });
     /* layouts menu */
@@ -36840,13 +36850,16 @@ function main() {
         commands.processKeydownEvent(event);
     });
     /* perspectives */
-    var psp = new psp_1.PSPWidget('Performance'); // chart
-    var psp2 = new psp_1.PSPWidget('Quotes'); // quote
-    var psps = { 'chart': psp,
-        'quote': psp2 };
+    var psp = new perspective_widget_1.PSPWidget('Perf-chart'); // chart
+    var psp2 = new perspective_widget_1.PSPWidget('Perf-grid'); // grid
+    var psp3 = new perspective_widget_1.PSPWidget('Quotes'); // quote
+    var psps = { 'performance-chart': psp,
+        'performance-grid': psp2,
+        'quote': psp3 };
     /* main dock */
     var dock = new widgets_1.DockPanel();
-    dock.addWidget(psps['chart']);
+    dock.addWidget(psps['performance-chart']);
+    dock.addWidget(psps['performance-grid'], { mode: 'split-right', ref: psp });
     dock.addWidget(psps['quote'], { mode: 'split-bottom', ref: psp });
     dock.id = 'dock';
     /* save/restore layouts */
@@ -36865,7 +36878,12 @@ function main() {
         rank: 0
     });
     palette.addItem({
-        command: 'performance:open',
+        command: 'performance-chart:open',
+        category: 'Dock Layout',
+        rank: 0
+    });
+    palette.addItem({
+        command: 'performance-grid:open',
         category: 'Dock Layout',
         rank: 0
     });
@@ -36904,12 +36922,20 @@ function main() {
             dock.restoreLayout(savedLayouts[0]);
         }
     });
-    commands.addCommand('performance:open', {
+    commands.addCommand('performance-chart:open', {
         label: 'Open Performance',
         mnemonic: 2,
         iconClass: 'fa fa-plus',
         execute: function () {
-            dock.addWidget(psps['chart']);
+            dock.addWidget(psps['performance-chart']);
+        }
+    });
+    commands.addCommand('performance-grid:open', {
+        label: 'Open Performance',
+        mnemonic: 2,
+        iconClass: 'fa fa-plus',
+        execute: function () {
+            dock.addWidget(psps['performance-grid']);
         }
     });
     commands.addCommand('quotes:open', {
@@ -36940,7 +36966,8 @@ function main() {
     window.onresize = function () { main.update(); };
     widgets_1.Widget.attach(bar, document.body);
     widgets_1.Widget.attach(main, document.body);
-    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['chart'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'performance-chart', psps['performance-chart'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['performance-grid'], false, false);
     setTimeout(function () {
         setInterval(function () {
             fetch_and_load(psps);

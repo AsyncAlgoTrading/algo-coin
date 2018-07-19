@@ -1,6 +1,5 @@
 import tornado.web
 import ujson
-from datetime import datetime
 from ...lib.enums import TickType
 
 
@@ -28,15 +27,7 @@ class ServerMessagesHandler(tornado.web.RequestHandler):
             else:
                 msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
 
-            msgs = [x.to_dict() for x in msgs]
-
-            # convert to str
-            for msg in msgs:
-                for kk in msg:
-                    if isinstance(msg[kk], datetime):
-                        msg[kk] = msg[kk].strftime('%m/%d/%y %H:%M:%S')
-                    else:
-                        msg[kk] = str(msg[kk])
+            msgs = [x.to_dict(True) for x in msgs]
 
             self.write(ujson.dumps(msgs))
         except Exception as e:

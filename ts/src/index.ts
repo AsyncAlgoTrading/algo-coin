@@ -22,12 +22,13 @@ import "@jpmorganchase/perspective-viewer-highcharts";
 
 import {
   PSPWidget
-} from './psp';
+} from './perspective-widget';
 
 const commands = new CommandRegistry();
 
 function fetch_and_load(psps: {[key:string]:PSPWidget;}){
-    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['chart'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'grid', psps['performance-grid'], false, false);
+    _fetch_and_load('/api/json/v1/messages?type=TRADE', 'performance-chart', psps['performance-chart'], false, false);
     // _fetch_and_load('/api/json/v1/messages', 'grid', psps['quote']);
 }
 
@@ -50,6 +51,14 @@ function setup_psp_and_load(type: string, data: any, loadto: PSPWidget, wrap_lis
     if(_delete){loadto.pspNode.delete();}
     if (data) {
         switch(type){
+            case 'performance-chart': {
+                loadto.pspNode.view = 'xy_line';
+                loadto.pspNode.setAttribute('index', 'sequence');
+                loadto.pspNode.setAttribute('column-pivots', '["currency_pair"]');
+                loadto.pspNode.setAttribute('columns', '["time", "price"]');
+                loadto.pspNode.update(data);
+                break;
+              }
             case 'grid': {
                 loadto.pspNode.view = 'hypergrid';
                 loadto.pspNode.setAttribute('index', 'sequence');
@@ -75,7 +84,8 @@ function main(): void {
   menu2.title.label = 'Data';
   menu2.title.mnemonic = 0;
 
-  menu2.addItem({ command: 'performance:open' });
+  menu2.addItem({ command: 'performance-chart:open' });
+  menu2.addItem({ command: 'performance-grid:open' });
   menu2.addItem({ command: 'quotes:open' });
   menu2.addItem({ type: 'separator'});
 
@@ -115,15 +125,18 @@ function main(): void {
 
 
   /* perspectives */
-  let psp = new PSPWidget('Performance');  // chart
-  let psp2 = new PSPWidget('Quotes');  // quote
+  let psp = new PSPWidget('Perf-chart');  // chart
+  let psp2 = new PSPWidget('Perf-grid');  // grid
+  let psp3 = new PSPWidget('Quotes');  // quote
 
-  let psps= {'chart':psp,
-             'quote':psp2}
+  let psps= {'performance-chart':psp,
+             'performance-grid':psp2,
+             'quote':psp3}
 
   /* main dock */
   let dock = new DockPanel();
-  dock.addWidget(psps['chart']);
+  dock.addWidget(psps['performance-chart']);
+  dock.addWidget(psps['performance-grid'], { mode: 'split-right', ref: psp });
   dock.addWidget(psps['quote'], { mode: 'split-bottom', ref: psp });
 
   dock.id = 'dock';
@@ -148,7 +161,13 @@ function main(): void {
   });
 
   palette.addItem({
-    command: 'performance:open',
+    command: 'performance-chart:open',
+    category: 'Dock Layout',
+    rank: 0
+  });
+
+  palette.addItem({
+    command: 'performance-grid:open',
     category: 'Dock Layout',
     rank: 0
   });
@@ -192,12 +211,21 @@ function main(): void {
     }
   });
 
-  commands.addCommand('performance:open', {
+  commands.addCommand('performance-chart:open', {
     label: 'Open Performance',
     mnemonic: 2,
     iconClass: 'fa fa-plus',
     execute: () => {
-      dock.addWidget(psps['chart']);
+      dock.addWidget(psps['performance-chart']);
+    }
+  });
+
+  commands.addCommand('performance-grid:open', {
+    label: 'Open Performance',
+    mnemonic: 2,
+    iconClass: 'fa fa-plus',
+    execute: () => {
+      dock.addWidget(psps['performance-grid']);
     }
   });
 
@@ -235,7 +263,8 @@ function main(): void {
   Widget.attach(bar, document.body);
   Widget.attach(main, document.body);
 
-  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['chart'], false, false);
+  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'performance-chart', psps['performance-chart'], false, false);
+  _fetch_and_load('/api/json/v1/messages?type=TRADE&page=-1', 'grid', psps['performance-grid'], false, false);
   setTimeout(()=> {
     setInterval(() => {
       fetch_and_load(psps);

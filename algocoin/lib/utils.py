@@ -2,6 +2,7 @@ import pytz
 import os
 import logging
 from datetime import datetime
+from enum import Enum
 from .enums import ExchangeType, CurrencyType, OrderType, Side, PairType
 from .logging import LOG as log, \
                      STRAT as slog, \
@@ -114,10 +115,18 @@ def __init__struct(self, **kwargs) -> None:
             raise Exception('Attribute not found! %s' % k)
 
 
-def to_dict(self, **kwargs) -> dict:
+def to_dict(self, serializable=False, **kwargs) -> dict:
     ret = {}
-    for item in self._vars:
-        ret[item] = getattr(self, item)
+    if serializable:
+        for item in self._vars:
+            ret[item] = getattr(self, item)
+            if isinstance(ret[item], datetime):
+                ret[item] = ret[item].strftime('%m-%d-%y %H:%M:%S')
+            elif isinstance(ret[item], Enum):
+                ret[item] = str(ret[item])
+    else:
+        for item in self._vars:
+            ret[item] = getattr(self, item)
     return ret
 
 
