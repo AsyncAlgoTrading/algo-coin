@@ -34,7 +34,7 @@ class ServerMessagesHandler(tornado.web.RequestHandler):
             for msg in msgs:
                 for kk in msg:
                     if isinstance(msg[kk], datetime):
-                        msg[kk] = msg[kk].strftime('%d/%m/%y %H:%M:%S')
+                        msg[kk] = msg[kk].strftime('%m/%d/%y %H:%M:%S')
                     else:
                         msg[kk] = str(msg[kk])
 
