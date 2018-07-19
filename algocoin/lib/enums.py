@@ -26,6 +26,7 @@ class TradingType(BaseEnum):
     SANDBOX = 'SANDBOX'
     LIVE = 'LIVE'
     BACKTEST = 'BACKTEST'
+    SIMULATION = 'SIMULATION'
 
 
 class ExchangeType(BaseEnum):
