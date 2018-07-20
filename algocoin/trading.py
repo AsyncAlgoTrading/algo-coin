@@ -19,6 +19,9 @@ class TradingEngine(object):
         # running live?
         self._live = options.type == TradingType.LIVE
 
+        # running simulation?
+        self._simulation = options.type == TradingType.SIMULATION
+
         # running sandbox?
         self._sandbox = options.type == TradingType.SANDBOX
 
@@ -39,18 +42,18 @@ class TradingEngine(object):
             # multiple exchanges
             # TODO
             # FIXME
-            self._ex = [ex_type_to_ex(o)(options.exchange_options) if self._live or self._sandbox else None for o in options.exchange_options.exchange_types]
+            self._ex = [ex_type_to_ex(o)(options.exchange_options) if self._live or self._simulation or self._sandbox else None for o in options.exchange_options.exchange_types]
             # FIXME
             # TODO
 
         else:
             # single exchange
-            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._sandbox else None
+            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._simulation or self._sandbox else None
 
         self._exchanges = []
 
         # if live or sandbox, get account information and balances
-        if self._live or self._sandbox:
+        if self._live or self._simulation or self._sandbox:
             accounts = self._ex.accounts()
 
             # extract max funds info
@@ -66,14 +69,14 @@ class TradingEngine(object):
         self._ec = Execution(options.execution_options, self._ex)
 
         # sanity check
-        assert not (self._live and self._sandbox and self._backtest)
+        assert not (self._live and self._simulation and self._sandbox and self._backtest)
 
         # running print callback for debug?
         if options.print:
             log.warn('WARNING: Running in print mode')
 
             # register a printer callback that prints every message
-            if self._live or self._sandbox:
+            if self._live or self._simulation or self._sandbox:
                 self._ex.registerCallback(
                     Print(onTrade=True, onReceived=True, onOpen=True, onDone=True, onChange=True, onError=False))
             if self._backtest:
@@ -109,7 +112,7 @@ class TradingEngine(object):
         self._trading = True
 
     def registerStrategy(self, strat: TradingStrategy):
-        if self._live or self._sandbox:
+        if self._live or self._simulation or self._sandbox:
             # register for exchange data
             self._ex.registerCallback(strat.callback())
 
@@ -124,7 +127,7 @@ class TradingEngine(object):
         strat.setEngine(self)
 
     def run(self):
-        if self._live or self._sandbox:
+        if self._live or self._simulation or self._sandbox:
             port = 8080
             application = ServerApplication(self)
             log.critical('\n\nServer listening on port: %s\n\n', port)
@@ -171,7 +174,7 @@ class TradingEngine(object):
             if resp.risk_check:
                 log.info('Risk check passed')
                 # if risk passes, let execution execute
-                if self._live or self._sandbox:
+                if self._live or self._simulation or self._sandbox:
                     resp = self._ec.request(resp)
 
                     # TODO

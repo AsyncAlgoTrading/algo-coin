@@ -115,13 +115,16 @@ def __init__struct(self, **kwargs) -> None:
             raise Exception('Attribute not found! %s' % k)
 
 
-def to_dict(self, serializable=False, **kwargs) -> dict:
+def to_dict(self, serializable=False, str_timestamp=False, **kwargs) -> dict:
     ret = {}
     if serializable:
         for item in self._vars:
             ret[item] = getattr(self, item)
             if isinstance(ret[item], datetime):
-                ret[item] = ret[item].strftime('%m-%d-%y %H:%M:%S')
+                if str_timestamp:
+                    ret[item] = ret[item].strftime('%y-%m-%d %H:%M:%S')
+                else:
+                    ret[item] = round(ret[item].timestamp())
             elif isinstance(ret[item], Enum):
                 ret[item] = str(ret[item])
     else:

@@ -30,6 +30,8 @@ def _parse_general(general, config) -> None:
     if 'TradingType' in general:
         if general['TradingType'].lower() == 'live':
             set_all_trading_types(TradingType.LIVE, config)
+        elif general['TradingType'].lower() == 'simulation':
+            set_all_trading_types(TradingType.SIMULATION, config)
         elif general['TradingType'].lower() == 'sandbox':
             set_all_trading_types(TradingType.SANDBOX, config)
         elif general['TradingType'].lower() == 'backtest':
@@ -52,6 +54,9 @@ def _parse_general(general, config) -> None:
 def _parse_exchange(exchange, config) -> None:
     if config.type == TradingType.LIVE:
         _parse_live_options(exchange, config)
+
+    elif config.type == TradingType.SIMULATION:
+        _parse_simulation_options(exchange, config)
 
     elif config.type == TradingType.SANDBOX:
         _parse_sandbox_options(exchange, config)
@@ -124,8 +129,7 @@ def _parse_currencies(currencies):
     return ret
 
 
-def _parse_live_options(argv, config: TradingEngineConfig) -> None:
-    log.critical("\n\nWARNING: Live trading. money will be lost ;^)\n\n")
+def _parse_options(argv, config: TradingEngineConfig) -> None:
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
     elif argv.get('exchanges'):
@@ -136,21 +140,21 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
 
     if argv.get('currency_pairs'):
         config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
+
+
+def _parse_live_options(argv, config: TradingEngineConfig) -> None:
+    log.critical("\n\nWARNING: Live trading. money will be lost ;^)\n\n")
+    _parse_options(argv, config)
+
+
+def _parse_simulation_options(argv, config) -> None:
+    log.critical("\n\nSimulation trading\n\n")
+    _parse_options(argv, config)
 
 
 def _parse_sandbox_options(argv, config) -> None:
     log.critical("\n\nSandbox trading\n\n")
-
-    if argv.get('exchange'):
-        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
-    elif argv.get('exchanges'):
-        config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
-    else:
-        config.exchange_options.exchange_type = str_to_exchange('')
-        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
-
-    if argv.get('currency_pairs'):
-        config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
+    _parse_options(argv, config)
 
 
 def _parse_backtest_options(argv, config) -> None:

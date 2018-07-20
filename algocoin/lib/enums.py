@@ -85,6 +85,14 @@ class PairType(BaseEnum):
     ZECBTC = (CurrencyType.ZEC, CurrencyType.BTC)
     ZECETH = (CurrencyType.ZEC, CurrencyType.ETH)  # Gemini
 
+    @staticmethod
+    def from_string(str):
+        s1 = str[:3]
+        c1 = CurrencyType(s1)
+        s2 = str[3:6]
+        c2 = CurrencyType(s2)
+        return PairType((c1, c2))
+
 
 class Side(BaseEnum):
     NONE = 'NONE'

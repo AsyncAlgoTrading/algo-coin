@@ -36752,6 +36752,7 @@ var DataOption;
 (function (DataOption) {
     DataOption["DELETE"] = "delete";
     DataOption["WRAP"] = "wrap";
+    DataOption["KEY"] = "key";
 })(DataOption = exports.DataOption || (exports.DataOption = {}));
 // TODO pull from perspective/types
 var TypeNames;
@@ -36795,11 +36796,6 @@ class PerspectiveHelper {
                 }
             }
         }
-        console.log(this._url);
-        console.log(this._preload_url);
-        console.log(this._datatype);
-        console.log(this._data_options);
-        console.log(this._psp_widgets);
     }
     start(delay) {
         if (this._datatype === 'http') {
@@ -36825,8 +36821,9 @@ class PerspectiveHelper {
             url = this._url;
         }
         for (let psp of Object.keys(this._psp_widgets)) {
-            let _delete = false;
-            let wrap = false;
+            let _delete;
+            let wrap;
+            let data_key;
             if (this._data_options && Object.keys(this._data_options).includes(psp)) {
                 //TODO
                 if (Object.keys(this._data_options[psp]).includes(DataOption.DELETE)) {
@@ -36835,11 +36832,14 @@ class PerspectiveHelper {
                 if (Object.keys(this._data_options[psp]).includes(DataOption.WRAP)) {
                     wrap = this._data_options[psp][DataOption.WRAP] || false;
                 }
+                if (Object.keys(this._data_options[psp]).includes(DataOption.KEY)) {
+                    data_key = this._data_options[psp][DataOption.KEY] || '';
+                }
             }
-            this._fetch_and_load_http(url, psp, wrap, _delete);
+            this._fetch_and_load_http(url, psp, data_key, wrap, _delete);
         }
     }
-    _fetch_and_load_http(url, psp_key, wrap = false, _delete = false) {
+    _fetch_and_load_http(url, psp_key, data_key, wrap, _delete) {
         var xhr1 = new XMLHttpRequest();
         xhr1.open('GET', url, true);
         xhr1.onload = () => {
@@ -36852,7 +36852,12 @@ class PerspectiveHelper {
                     if (_delete) {
                         this._psp_widgets[psp_key].pspNode.delete();
                     }
-                    this._psp_widgets[psp_key].pspNode.update(jsn);
+                    if (data_key && data_key !== true && data_key !== '') {
+                        this._psp_widgets[psp_key].pspNode.update(jsn[data_key]);
+                    }
+                    else {
+                        this._psp_widgets[psp_key].pspNode.update(jsn);
+                    }
                 }
             }
         };
@@ -36883,7 +36888,6 @@ var Private;
             return 'comm';
         }
         else {
-            console.log('assuming http');
             return 'http';
         }
     }
@@ -36978,14 +36982,18 @@ function main() {
         'performance-chart': {
             [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
             [perspective_widget_1.ViewOption.INDEX]: 'sequence',
+            [perspective_widget_1.ViewOption.ROW_PIVOTS]: '["time"]',
+            [perspective_widget_1.ViewOption.AGGREGATES]: '{"time": "last", "price": "last"}',
             [perspective_widget_1.ViewOption.COLUMN_PIVOTS]: '["currency_pair"]',
-            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]'
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]',
         },
         'performance-grid': {
             [perspective_widget_1.ViewOption.VIEW]: 'hypergrid',
-            [perspective_widget_1.ViewOption.INDEX]: 'sequence'
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
         },
-        'quote': {}
+        'quote': {
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
+        }
     };
     let psps_data_options = {
         'performance-chart': {
@@ -37001,7 +37009,12 @@ function main() {
             [perspective_widget_1.DataOption.WRAP]: false
         }
     };
-    let psps_schemas = {};
+    let psps_schemas = {
+        'performance-chart': {
+            'time': perspective_widget_1.TypeNames.DATE,
+            'price': perspective_widget_1.TypeNames.FLOAT
+        }
+    };
     let psps_helper1 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE', psps, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1', 500);
     /* main dock */
     let dock = new widgets_1.DockPanel();
@@ -57280,7 +57293,7 @@ exports = module.exports = __webpack_require__(5)();
 
 
 // module
-exports.push([module.i, ".pspwidget {\n  min-width: 50px;\n  min-height: 50px;\n  /*max-width: 350px;*/\n  display: flex;\n  flex-direction: column;\n  padding: 8px;\n  border: 1px solid var(--dark-bg-color);\n  border-top: none;\n  background: var(--dark-bg-color);\n  box-shadow: 1px 1px 2px var(--dark-drop-shadow);\n}\n\n.pspwidget > perspective-viewer {\n  width:100%;\n  height:100%;\n  /*border: 1px solid var(--dark-border2);*/\n  overflow: auto;\n  margin-left:1px;\n  padding:10px;\n}", ""]);
+exports.push([module.i, ".pspwidget {\n  min-width: 50px;\n  min-height: 50px;\n  /*max-width: 350px;*/\n  display: flex;\n  flex-direction: column;\n  padding: 8px;\n  border: 1px solid var(--dark-border);\n  border-top: none;\n  background: var(--dark-bg-color);\n  /*box-shadow: 1px 1px 2px var(--dark-drop-shadow);*/\n}\n\n.pspwidget > perspective-viewer {\n  width:100%;\n  height:100%;\n  /*border: 1px solid var(--dark-border2);*/\n  overflow: auto;\n  margin-left:1px;\n  padding:10px;\n}", ""]);
 
 // exports
 

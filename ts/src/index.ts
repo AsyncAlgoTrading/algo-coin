@@ -21,7 +21,7 @@ import "@jpmorganchase/perspective-viewer-hypergrid";
 import "@jpmorganchase/perspective-viewer-highcharts";
 
 import {
-  PSPWidget, PerspectiveHelper, ViewOption, DataOption
+  PSPWidget, PerspectiveHelper, ViewOption, DataOption, TypeNames
 } from './perspective-widget';
 
 const commands = new CommandRegistry();
@@ -93,14 +93,18 @@ function main(): void {
     'performance-chart': {
       [ViewOption.VIEW]: 'xy_line',
       [ViewOption.INDEX]: 'sequence',
+      [ViewOption.ROW_PIVOTS]: '["time"]',
+      [ViewOption.AGGREGATES]: '{"time": "last", "price": "last"}',
       [ViewOption.COLUMN_PIVOTS]: '["currency_pair"]',
-      [ViewOption.COLUMNS]: '["time", "price"]'
+      [ViewOption.COLUMNS]: '["time", "price"]',
     },
     'performance-grid': {
       [ViewOption.VIEW]: 'hypergrid',
-      [ViewOption.INDEX]: 'sequence'
+      [ViewOption.INDEX]: 'sequence',
     },
-    'quote': {}
+    'quote': {
+      [ViewOption.INDEX]: 'sequence',
+    }
   };
 
   let psps_data_options = {
@@ -118,7 +122,12 @@ function main(): void {
     } 
   };
 
-  let psps_schemas = {};
+  let psps_schemas = {
+    'performance-chart': {
+      'time': TypeNames.DATE,
+      'price': TypeNames.FLOAT
+    }
+  };
 
   let psps_helper1 = new PerspectiveHelper('/api/json/v1/messages?type=TRADE',
                                            psps,
