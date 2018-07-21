@@ -6,10 +6,11 @@ from .lib.logging import RISK as rlog
 
 class Risk(object):
     def __init__(self, options: RiskConfig) -> None:
+        self.trading_type = options.trading_type
         self.max_drawdown = options.max_drawdown
         self.max_risk = options.max_risk
         self.total_funds = options.total_funds
-        self.outstanding = 0.0  # type: float
+        self.outstanding = 0.0  # type: float TODO get from open orders
 
         self.max_running_outstanding = 0.0
         self.max_running_outstanding_incr = []  # type: List

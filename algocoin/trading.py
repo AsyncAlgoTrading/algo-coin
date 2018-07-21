@@ -174,7 +174,8 @@ class TradingEngine(object):
             if resp.risk_check:
                 log.info('Risk check passed')
                 # if risk passes, let execution execute
-                if self._live or self._simulation or self._sandbox:
+                if self._live or self._sandbox:
+                    # Trading
                     resp = self._ec.request(resp)
 
                     # TODO
@@ -202,7 +203,7 @@ class TradingEngine(object):
                         # let risk update according to execution details
                         self._rk.update(resp)
                 else:
-                    # backtesting
+                    # backtesting or simulation
                     resp = TradeResponse(request=req,
                                          side=req.side,
                                          volume=req.volume,

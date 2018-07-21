@@ -1,6 +1,6 @@
 import tornado.web
 import ujson
-from ...lib.enums import TickType
+from ...lib.enums import TickType, PairType
 
 
 class ServerMessagesHandler(tornado.web.RequestHandler):
@@ -16,18 +16,29 @@ class ServerMessagesHandler(tornado.web.RequestHandler):
         try:
             type = self.get_argument('type', None)
             page = int(self.get_argument('page', 0))
+            pairtype = self.get_argument('pair', '')
 
             try:
                 type = TickType(type)
             except ValueError:
                 pass
+            try:
+                pairtype = PairType.from_string(pairtype)
+            except ValueError:
+                pass
 
             if type is None:
-                msgs = self.te._ex.messages()[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages()
+                if pairtype:
+                    msgs = self.te._ex.messages(False, pairtype)[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages(False, pairtype)
+                else:
+                    msgs = self.te._ex.messages()[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages()
             else:
-                msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
+                if pairtype:
+                    msgs = self.te._ex.messages(True, pairtype).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True, pairtype).get(type, [])
+                else:
+                    msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
 
-            msgs = [x.to_dict(True) for x in msgs]
+            msgs = [x.to_dict(True, True) for x in msgs]
 
             self.write(ujson.dumps(msgs))
         except Exception as e:

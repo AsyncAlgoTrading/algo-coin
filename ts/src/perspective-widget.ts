@@ -172,6 +172,12 @@ constructor(url: string,  // The url to fetch data from
         }
       }
     }
+
+    console.log(this._url);
+    console.log(this._preload_url);
+    console.log(this._datatype);
+    console.log(this._data_options);
+    console.log(this._psp_widgets);
   }
 
   start(delay?: number): void {
@@ -228,11 +234,8 @@ constructor(url: string,  // The url to fetch data from
         if (Object.keys(jsn).length > 0){
           if (wrap){jsn = [jsn];}
           if(_delete){this._psp_widgets[psp_key].pspNode.delete();}
-          if(data_key && data_key !== true && data_key !== ''){
-            this._psp_widgets[psp_key].pspNode.update(jsn[data_key]);
-          } else {
-            this._psp_widgets[psp_key].pspNode.update(jsn);
-          }
+          if(data_key && data_key !== true && data_key !== ''){jsn = jsn[data_key];}
+          this._psp_widgets[psp_key].pspNode.update(jsn);
         }
       }
     };
@@ -266,6 +269,7 @@ namespace Private {
     } else if(url.indexOf('comm://') !== -1){
       return  'comm';
     } else{
+      console.log('assuming http');
       return 'http'
     }
   }

@@ -1,12 +1,14 @@
 from .lib.config import ExecutionConfig
 from .lib.exchange import Exchange
-from .lib.enums import Side, CurrencyType
-from .lib.structs import TradeRequest, TradeResponse, MarketData
+from .lib.enums import Side
+from .lib.structs import TradeRequest, TradeResponse
 from .lib.logging import EXEC as exlog
 
 
 class Execution(object):
     def __init__(self, options: ExecutionConfig, exchange: Exchange) -> None:
+        self.trading_type = options.trading_type
+
         self._ex = exchange
         self._exs = []
 

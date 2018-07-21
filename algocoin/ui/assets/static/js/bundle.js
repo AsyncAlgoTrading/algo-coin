@@ -36796,6 +36796,11 @@ class PerspectiveHelper {
                 }
             }
         }
+        console.log(this._url);
+        console.log(this._preload_url);
+        console.log(this._datatype);
+        console.log(this._data_options);
+        console.log(this._psp_widgets);
     }
     start(delay) {
         if (this._datatype === 'http') {
@@ -36853,11 +36858,9 @@ class PerspectiveHelper {
                         this._psp_widgets[psp_key].pspNode.delete();
                     }
                     if (data_key && data_key !== true && data_key !== '') {
-                        this._psp_widgets[psp_key].pspNode.update(jsn[data_key]);
+                        jsn = jsn[data_key];
                     }
-                    else {
-                        this._psp_widgets[psp_key].pspNode.update(jsn);
-                    }
+                    this._psp_widgets[psp_key].pspNode.update(jsn);
                 }
             }
         };
@@ -36888,6 +36891,7 @@ var Private;
             return 'comm';
         }
         else {
+            console.log('assuming http');
             return 'http';
         }
     }
@@ -36940,7 +36944,10 @@ function main() {
     let menu2 = new widgets_1.Menu({ commands });
     menu2.title.label = 'Data';
     menu2.title.mnemonic = 0;
-    menu2.addItem({ command: 'performance-chart:open' });
+    menu2.addItem({ command: 'btc-performance-chart:open' });
+    menu2.addItem({ command: 'eth-performance-chart:open' });
+    menu2.addItem({ command: 'ltc-performance-chart:open' });
+    menu2.addItem({ command: 'bch-performance-chart:open' });
     menu2.addItem({ command: 'performance-grid:open' });
     menu2.addItem({ command: 'quotes:open' });
     menu2.addItem({ type: 'separator' });
@@ -36972,19 +36979,37 @@ function main() {
         commands.processKeydownEvent(event);
     });
     /* perspectives */
-    let psp = new perspective_widget_1.PSPWidget('Perf-chart'); // chart
-    let psp2 = new perspective_widget_1.PSPWidget('Perf-grid'); // grid
-    let psp3 = new perspective_widget_1.PSPWidget('Quotes'); // quote
-    let psps = { 'performance-chart': psp,
-        'performance-grid': psp2,
-        'quote': psp3 };
+    let psp = new perspective_widget_1.PSPWidget('BTC-perf-chart'); // chart
+    let psp2 = new perspective_widget_1.PSPWidget('ETH-perf-chart'); // chart
+    let psp3 = new perspective_widget_1.PSPWidget('LTC-perf-chart'); // chart
+    let psp4 = new perspective_widget_1.PSPWidget('BCH-perf-chart'); // chart
+    let psp5 = new perspective_widget_1.PSPWidget('Perf-grid'); // grid
+    let psp6 = new perspective_widget_1.PSPWidget('Quotes'); // quote
+    let psps1 = { 'btc-performance-chart': psp };
+    let psps2 = { 'eth-performance-chart': psp2 };
+    let psps3 = { 'ltc-performance-chart': psp3 };
+    let psps4 = { 'bch-performance-chart': psp4 };
+    let psps5 = { 'performance-grid': psp5,
+        'quote': psp6 };
     let psps_view_options = {
-        'performance-chart': {
+        'btc-performance-chart': {
             [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
             [perspective_widget_1.ViewOption.INDEX]: 'sequence',
-            [perspective_widget_1.ViewOption.ROW_PIVOTS]: '["time"]',
-            [perspective_widget_1.ViewOption.AGGREGATES]: '{"time": "last", "price": "last"}',
-            [perspective_widget_1.ViewOption.COLUMN_PIVOTS]: '["currency_pair"]',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]',
+        },
+        'eth-performance-chart': {
+            [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]',
+        },
+        'ltc-performance-chart': {
+            [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]',
+        },
+        'bch-performance-chart': {
+            [perspective_widget_1.ViewOption.VIEW]: 'xy_line',
+            [perspective_widget_1.ViewOption.INDEX]: 'sequence',
             [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price"]',
         },
         'performance-grid': {
@@ -36996,7 +37021,19 @@ function main() {
         }
     };
     let psps_data_options = {
-        'performance-chart': {
+        'btc-performance-chart': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        },
+        'eth-performance-chart': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        },
+        'ltc-performance-chart': {
+            [perspective_widget_1.DataOption.DELETE]: false,
+            [perspective_widget_1.DataOption.WRAP]: false
+        },
+        'bch-performance-chart': {
             [perspective_widget_1.DataOption.DELETE]: false,
             [perspective_widget_1.DataOption.WRAP]: false
         },
@@ -37010,17 +37047,36 @@ function main() {
         }
     };
     let psps_schemas = {
-        'performance-chart': {
+        'btc-performance-chart': {
+            'time': perspective_widget_1.TypeNames.DATE,
+            'price': perspective_widget_1.TypeNames.FLOAT
+        },
+        'eth-performance-chart': {
+            'time': perspective_widget_1.TypeNames.DATE,
+            'price': perspective_widget_1.TypeNames.FLOAT
+        },
+        'ltc-performance-chart': {
+            'time': perspective_widget_1.TypeNames.DATE,
+            'price': perspective_widget_1.TypeNames.FLOAT
+        },
+        'bch-performance-chart': {
             'time': perspective_widget_1.TypeNames.DATE,
             'price': perspective_widget_1.TypeNames.FLOAT
         }
     };
-    let psps_helper1 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE', psps, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1', 500);
+    let psps_helper1 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE&pair=BTCUSD', psps1, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1&pair=BTCUSD', 500);
+    let psps_helper2 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE&pair=ETHUSD', psps2, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1&pair=ETHUSD', 500);
+    let psps_helper3 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE&pair=LTCUSD', psps3, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1&pair=LTCUSD', 500);
+    let psps_helper4 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE&pair=BCHUSD', psps4, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1&pair=BCHUSD', 500);
+    let psps_helper5 = new perspective_widget_1.PerspectiveHelper('/api/json/v1/messages?type=TRADE', psps5, psps_view_options, psps_data_options, psps_schemas, '/api/json/v1/messages?type=TRADE&page=-1', 500);
     /* main dock */
     let dock = new widgets_1.DockPanel();
-    dock.addWidget(psps['performance-chart']);
-    dock.addWidget(psps['performance-grid'], { mode: 'split-right', ref: psp });
-    dock.addWidget(psps['quote'], { mode: 'split-bottom', ref: psp });
+    dock.addWidget(psps1['btc-performance-chart']);
+    dock.addWidget(psps5['performance-grid'], { mode: 'split-right', ref: psp });
+    dock.addWidget(psps5['quote'], { mode: 'split-bottom', ref: psp });
+    dock.addWidget(psps2['eth-performance-chart'], { mode: 'split-right', ref: psp });
+    dock.addWidget(psps3['ltc-performance-chart'], { mode: 'split-bottom', ref: psp });
+    dock.addWidget(psps4['bch-performance-chart'], { mode: 'split-bottom', ref: psp2 });
     dock.id = 'dock';
     /* save/restore layouts */
     let savedLayouts = [];
@@ -37038,7 +37094,22 @@ function main() {
         rank: 0
     });
     palette.addItem({
-        command: 'performance-chart:open',
+        command: 'btc-performance-chart:open',
+        category: 'Dock Layout',
+        rank: 0
+    });
+    palette.addItem({
+        command: 'eth-performance-chart:open',
+        category: 'Dock Layout',
+        rank: 0
+    });
+    palette.addItem({
+        command: 'ltc-performance-chart:open',
+        category: 'Dock Layout',
+        rank: 0
+    });
+    palette.addItem({
+        command: 'bch-performance-chart:open',
         category: 'Dock Layout',
         rank: 0
     });
@@ -37082,12 +37153,36 @@ function main() {
             dock.restoreLayout(savedLayouts[0]);
         }
     });
-    commands.addCommand('performance-chart:open', {
+    commands.addCommand('btc-performance-chart:open', {
         label: 'Open Performance',
         mnemonic: 2,
         iconClass: 'fa fa-plus',
         execute: () => {
-            dock.addWidget(psps['performance-chart']);
+            dock.addWidget(psps1['btc-performance-chart']);
+        }
+    });
+    commands.addCommand('eth-performance-chart:open', {
+        label: 'Open Performance',
+        mnemonic: 2,
+        iconClass: 'fa fa-plus',
+        execute: () => {
+            dock.addWidget(psps2['eth-performance-chart']);
+        }
+    });
+    commands.addCommand('ltc-performance-chart:open', {
+        label: 'Open Performance',
+        mnemonic: 2,
+        iconClass: 'fa fa-plus',
+        execute: () => {
+            dock.addWidget(psps3['ltc-performance-chart']);
+        }
+    });
+    commands.addCommand('bch-performance-chart:open', {
+        label: 'Open Performance',
+        mnemonic: 2,
+        iconClass: 'fa fa-plus',
+        execute: () => {
+            dock.addWidget(psps4['bch-performance-chart']);
         }
     });
     commands.addCommand('performance-grid:open', {
@@ -37095,7 +37190,7 @@ function main() {
         mnemonic: 2,
         iconClass: 'fa fa-plus',
         execute: () => {
-            dock.addWidget(psps['performance-grid']);
+            dock.addWidget(psps5['performance-grid']);
         }
     });
     commands.addCommand('quotes:open', {
@@ -37103,7 +37198,7 @@ function main() {
         mnemonic: 2,
         iconClass: 'fa fa-plus',
         execute: () => {
-            dock.addWidget(psps['quote']);
+            dock.addWidget(psps5['quote']);
         }
     });
     /* hack for custom sizing */
@@ -37127,6 +37222,10 @@ function main() {
     widgets_1.Widget.attach(bar, document.body);
     widgets_1.Widget.attach(main, document.body);
     psps_helper1.start();
+    psps_helper2.start();
+    psps_helper3.start();
+    psps_helper4.start();
+    psps_helper5.start();
 }
 window.onload = main;
 
