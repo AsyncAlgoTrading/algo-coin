@@ -5,6 +5,9 @@ from ..utils import parse_date, str_to_currency_type, str_to_currency_pair_type,
 from ..structs import MarketData
 from ..enums import TickType
 
+from ._cpp_helpers import test
+test()
+
 
 class GDAXHelpersMixin(object):
     @staticmethod

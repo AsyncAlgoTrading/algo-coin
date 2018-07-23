@@ -15,8 +15,10 @@ for path, subdirs, files in os.walk('algocoin/src'):
     for name in files:
         fp = os.path.join(path, name)
         if fp.endswith('cpp'):
-            outputs.append(os.path.join(fp.replace('.cpp', '').replace('/src', '')))
+            outputs.append(fp.replace('.cpp', '').replace('/src', ''))
             sources.append(fp)
+
+print(outputs)
 
 setup(
     name='algocoin',
