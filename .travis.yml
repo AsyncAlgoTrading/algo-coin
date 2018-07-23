@@ -15,9 +15,7 @@ matrix:
     - os: osx
       before_install:
         - brew update && brew bundle
-        - brew install boost boost-python3
-      python:
-        - "3.7"
+        - brew install python3 boost boost-python3
 
 install:
     - pip install -r requirements.txt
