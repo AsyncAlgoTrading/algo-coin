@@ -161,7 +161,9 @@ constructor(url: string,  // The url to fetch data from
     for (let psp of Object.keys(this._psp_widgets)){
       // preload schema
       if(schema && Object.keys(schema).includes(psp)){
-        this._psp_widgets[psp].pspNode.load(schema[psp]);
+        this._psp_widgets[psp].pspNode.addEventListener('perspective-ready', ()=>{
+          this._psp_widgets[psp].pspNode.load(schema[psp]);
+        });
       }
 
       // preset view options
@@ -172,18 +174,17 @@ constructor(url: string,  // The url to fetch data from
         }
       }
     }
-
-    console.log(this._url);
-    console.log(this._preload_url);
-    console.log(this._datatype);
-    console.log(this._data_options);
-    console.log(this._psp_widgets);
   }
 
   start(delay?: number): void {
     if (this._datatype === 'http'){
       if (this._preload_url){
-        this.fetch_and_load(true);
+        if(delay){
+          setTimeout(() => {this.fetch_and_load(true);}, delay);
+
+        } else {
+          this.fetch_and_load(true);
+        }
       }
 
       if (this._repeat > 0){
@@ -269,8 +270,7 @@ namespace Private {
     } else if(url.indexOf('comm://') !== -1){
       return  'comm';
     } else{
-      console.log('assuming http');
-      return 'http'
+      return 'http';
     }
   }
 }
