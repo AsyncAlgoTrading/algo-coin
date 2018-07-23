@@ -27,6 +27,25 @@ backtest: ## Clean and make target, run backtest
 backtest_inline:  ## Clean and make target, run backtest, plot in terminal
 	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"
 
+boost:
+	brew install boost boost-python3
+	sudo ln -s /usr/local/lib/libboost_python37.dylib /usr/local/lib/libboost_python.dylib
+
+buildext: ## build the package extensions
+	python3 setup.py build_ext
+
+build: ## build the package
+	python3 setup.py build
+
+install: ## install the package
+	python3 setup.py install
+
+dist:  ## dist to pypi
+	python3 setup.py sdist upload -r pypi
+
+js:  ## build the js
+	npm install
+	npm run build
 
 tests: ## Clean and Make unit tests
 	python3 -m nose -v algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
@@ -51,16 +70,6 @@ clean: ## clean the repository
 	find . -name "*.pyc" | xargs rm -rf
 	rm -rf .coverage cover htmlcov logs build dist *.egg-info
 
-install: ## install the package
-	python3 setup.py install
-
-dist:  ## dist to pypi
-	python3 setup.py sdist upload -r pypi
-
-js:  ## build the js
-	npm install
-	npm run build
-
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
 help:
@@ -69,4 +78,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data dist js
+.PHONY: clean run runconfig sandbox backtest backtest_config test tests test_verbose help install docs data dist js build buildext boost

@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from distutils.extension import Extension
 from codecs import open
 from os import path
 
@@ -57,4 +58,9 @@ setup(
             'algocoin=algocoin:main',
         ],
     },
+
+    ext_modules=[
+        Extension("algocoin/test", ["algocoin/test.cpp"],
+                  libraries=["boost_python"])
+    ]
 )

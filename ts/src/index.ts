@@ -416,7 +416,6 @@ function main(): void {
     Widget.attach(bar, document.body);
     Widget.attach(main, document.body);
 
-    // FIXME use psp onload
     psps_helper1.start();
     psps_helper2.start();
     psps_helper3.start();
