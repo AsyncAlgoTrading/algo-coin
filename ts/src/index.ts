@@ -28,7 +28,7 @@ import {
 const commands = new CommandRegistry();
 
 function main(): void {
-  window.addEventListener('WebComponentsReady', () => {
+  // window.addEventListener('WebComponentsReady', () => {
 
     /* File Menu */
     let menu = new Menu({ commands });
@@ -421,7 +421,7 @@ function main(): void {
     psps_helper3.start();
     psps_helper4.start();
     psps_helper5.start();
-  });
+  // });
 }
 
 

@@ -1,12 +1,22 @@
 from setuptools import setup, find_packages
 from distutils.extension import Extension
 from codecs import open
-from os import path
+import os
+import os.path
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
+
+sources = []
+outputs = []
+for path, subdirs, files in os.walk('algocoin/src'):
+    for name in files:
+        fp = os.path.join(path, name)
+        if fp.endswith('cpp'):
+            outputs.append(os.path.join(fp.replace('.cpp', '').replace('/src', '')))
+            sources.append(fp)
 
 setup(
     name='algocoin',
@@ -60,7 +70,10 @@ setup(
     },
 
     ext_modules=[
-        Extension("algocoin/test", ["algocoin/test.cpp"],
-                  libraries=["boost_python"])
+        # Extension('algocoin/_extension', include_dirs=['algocoin/include'], sources=['algocoin/src/test.cpp'], libraries=['boost_python']),
+        Extension(x,
+                  include_dirs=["algocoin/include"],
+                  sources=[y],
+                  libraries=["boost_python"]) for x, y in zip(outputs, sources)
     ]
 )

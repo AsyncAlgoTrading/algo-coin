@@ -128,13 +128,13 @@ class TradingEngine(object):
 
     def run(self):
         if self._live or self._simulation or self._sandbox:
-            port = 8080
-            application = ServerApplication(self)
+            port = 8081
+            self.application = ServerApplication(self)
             log.critical('\n\nServer listening on port: %s\n\n', port)
-            application.listen(port)
-            t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
-            t.daemon = True  # So it terminates on exit
-            t.start()
+            self.application.listen(port)
+            self._t = threading.Thread(target=tornado.ioloop.IOLoop.current().start)
+            self._t.daemon = True  # So it terminates on exit
+            self._t.start()
 
             # run on exchange
             self._ex.run(self)
