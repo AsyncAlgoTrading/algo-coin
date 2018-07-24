@@ -18,16 +18,15 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq install libboost-python-dev; fi
 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python.so; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/x86_64-linux-gnu/libboost_python.so; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python-py27*; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/x86_64-linux-gnu/libboost_python-py27*; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python.so; fi
 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py34.so.1.54.0 /usr/lib/x86_64-linux-gnu/libboost_python.so; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py34.so.1.54.0 /usr/lib/libboost_python.so; fi
 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ls /usr/lib/x86_64-linux-gnu | grep libboost_python; fi
   
-
   # OSX
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install boost-python3; fi
  
@@ -45,3 +44,21 @@ branches:
 
 notifications:
   email: false
+
+# sudo: required
+# language: python
+# python:
+#   - "3.6"
+
+# services:
+#   - docker
+
+# script:
+#   - docker build .
+
+# branches:
+#   only:
+#   - master
+
+# notifications:
+#   email: false
