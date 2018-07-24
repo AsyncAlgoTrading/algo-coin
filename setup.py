@@ -18,8 +18,6 @@ for path, subdirs, files in os.walk('algocoin/src'):
             outputs.append(fp.replace('.cpp', '').replace('/src', ''))
             sources.append(fp)
 
-print(outputs)
-
 setup(
     name='algocoin',
     version='0.0.3',
