@@ -119,3 +119,9 @@ class TradeResult(BaseEnum):
     PARTIAL = 'PARTIAL'
     FILLED = 'FILLED'
     REJECTED = 'REJECTED'
+
+
+class InstrumentType(BaseEnum):
+    COIN = 'COIN'
+    OPTION = 'OPTION'
+    FUTURE = 'FUTURE'
