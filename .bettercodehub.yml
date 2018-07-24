@@ -5,10 +5,10 @@ languages:
 - name: python
   production:
     exclude:
-      - /tests/.*
+      - /algocoin/tests/.*
   test:
     include:
-      - /tests/.*
+      - /algocoin/tests/.*
 
 exclude:
 - /docs/.*
@@ -19,4 +19,5 @@ exclude:
 - /algocoin/lib/logging\.py
 - /algocoin/lib/define\.py
 - /algocoin/custom\_strategies\.py
+- /custom_strategies/.*
 - /algocoin/lib/strategies/.*
