@@ -19,10 +19,9 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq install libboost-python-dev; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python.so; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python-py27*; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s libboost_python-py36.so /usr/lib/libboost_python.so; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/x86_64-linux-gnu/libboost_python-py27.so.1.54.0; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo rm -f /usr/lib/libboost_python.a; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s libboost_python-py36.a /usr/lib/libboost_python.a; fi
- 
   # OSX
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install boost-python3; fi
  
