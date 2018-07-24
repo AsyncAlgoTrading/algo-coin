@@ -1,5 +1,3 @@
-language: python
-
 cache: pip
 
 matrix:
