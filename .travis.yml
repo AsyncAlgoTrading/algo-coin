@@ -1,3 +1,7 @@
+language: python
+python:
+  - "3.6"
+
 cache: pip
 
 matrix:
@@ -7,8 +11,6 @@ matrix:
         apt:
           packages:
             - libboost-all-dev
-      python:
-        - "3.6"
 
     - os: osx
       before_install:
