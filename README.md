@@ -15,7 +15,7 @@ Algorithmic Trading Bitcoin.
 [![Site](https://img.shields.io/badge/Site--grey.svg?colorB=FFFFFF)](http://paine.nyc/algo-coin)
 
 ## Overview 
-Lightweight, extensible program for algorithmically trading cryptocurrencies across multiple exchanges. 
+Lightweight, extensible program for algorithmically trading cryptocurrencies and derivatives across multiple exchanges. 
 
 ### System Architecture
 AlgoCoin is an event based trading system written in python. It comes with support for live trading across (and between) multiple exchanges, fully integrated backtesting support, slippage and transaction cost modeling, and robust reporting and risk mitigation through manual and programatic algorithm controls.
@@ -37,7 +37,8 @@ Eventual coverage:
 - CEX
 - HitBTC
 - LakeBTC
-
+- BitMEX (derivatives)
+- Deribit (derivatives)
 
 #### Sandboxes
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
@@ -46,18 +47,10 @@ Eventual coverage:
 #### Market Data (Websocket)
 [![GDAX](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
-[![BINANCE](https://img.shields.io/badge/Binance-ERR-brightred.svg)](https://img.shields.io/badge/Binance-ERR-brightred.svg)
-[![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
-[![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
-[![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
 
 #### Order Entry (REST)
 [![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
-[![BINANCE](https://img.shields.io/badge/Binance-ERR-brightred.svg)](https://img.shields.io/badge/Binance-ERR-brightred.svg)
-[![ITBIT](https://img.shields.io/badge/ItBit-ERR-brightred.svg)](https://img.shields.io/badge/ItBit-ERR-brightred.svg)
-[![KRAKEN](https://img.shields.io/badge/Kraken-ERR-brightred.svg)](https://img.shields.io/badge/Kraken-ERR-brightred.svg)
-[![POLONIEX](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)](https://img.shields.io/badge/Poloniex-ERR-brightred.svg)
 
 #### Markets Coverage
 | Exchange | Pairs |
