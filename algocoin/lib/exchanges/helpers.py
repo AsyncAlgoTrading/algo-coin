@@ -1,9 +1,8 @@
 from datetime import datetime
-from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType
+from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType, TickType
 from ..utils import parse_date, str_to_currency_type, str_to_currency_pair_type, str_to_side, \
     str_to_order_type
-from ..structs import MarketData
-from ..enums import TickType
+from ..structs import MarketData, Instrument
 
 from ._cpp_helpers import test
 test()
@@ -18,6 +17,8 @@ class GDAXHelpersMixin(object):
         typ = GDAXHelpersMixin.strToTradeType(jsn.get('type'))
         currency_pair = str_to_currency_pair_type(jsn.get('product_id'))
 
+        instrument = Instrument(underlying=currency_pair)
+
         order_type = str_to_order_type(jsn.get('order_type', ''))
         side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining_size', 0.0))
@@ -27,7 +28,7 @@ class GDAXHelpersMixin(object):
                          volume=volume,
                          price=price,
                          type=typ,
-                         currency_pair=currency_pair,
+                         instrument=instrument,
                          remaining=remaining_volume,
                          reason=reason,
                          side=side,
@@ -57,7 +58,7 @@ class GDAXHelpersMixin(object):
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GDAXHelpersMixin.currency_pair_to_string(req.currency_pair)
+        p['product_id'] = GDAXHelpersMixin.currency_pair_to_string(req.instrument.currency_pair)
         p['type'] = GDAXHelpersMixin.order_type_to_string(req.order_type)
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
@@ -132,12 +133,13 @@ class GeminiHelpersMixin(object):
 
         sequence = -1
         currency_pair = str_to_currency_type('BTC')
+        insturment = Instrument(underlying=currency_pair)
 
         ret = MarketData(time=time,
                          volume=volume,
                          price=price,
                          type=typ,
-                         currency_pair=currency_pair,
+                         instrument=insturment,
                          remaining=remaining_volume,
                          reason=reason,
                          side=side,

@@ -1,16 +1,17 @@
 CONFIG=./config/sandbox_gemini.cfg
 EXCHANGE=gemini
 CURRENCY=USD
+PYTHONPATH=`python3 -c "import sys,os; print(os.pathsep.join(sys.path)[1:])"`
 
 
 runconfig:  ## Clean and make target, run target
-	python3 -m algocoin --config=$(CONFIG)
+	PYTHONPATH=${PYTHONPATH} python3 -m algocoin --config=$(CONFIG)
 
 run:  clean ## Clean and make target, run target
-	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
+	PYTHONPATH=${PYTHONPATH} python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
 sandbox:  ## Clean and make target, run target
-	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
+	PYTHONPATH=${PYTHONPATH} python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
 data:  ## Fetch data for EXCHANGE
 	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
@@ -35,7 +36,8 @@ buildext: ## build the package extensions
 	python3 setup.py build_ext
 
 buildinplace: ## build the package extensions
-	python3 setup.py build_ext --inplace
+	python3 setup.py build_ext
+	cp -r build/`ls build | grep lib`/algocoin .
 
 build: ## build the package
 	python3 setup.py build
@@ -72,6 +74,7 @@ clean: ## clean the repository
 	find . -name "__pycache__" | xargs rm -rf
 	find . -name "*.pyc" | xargs rm -rf
 	rm -rf .coverage cover htmlcov logs build dist *.egg-info
+	find . -name "*.so"  | xargs rm -rf
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help

@@ -81,11 +81,11 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
         '''account info'''
         return self._accounts
 
-    def messages(self, by_type=False, pairtype=None) -> list:
+    def messages(self, by_type=False, instrument=None) -> list:
         if by_type:
-            if pairtype:
-                return {x: [y for y in self._messages[x] if y.currency_pair == pairtype] for x in self._messages}
+            if instrument:
+                return {x: [y for y in self._messages[x] if y.instrument == instrument] for x in self._messages}
             return self._messages
-        if pairtype:
-            return [x for x in self._messages_all if x.currency_pair == pairtype]
+        if instrument:
+            return [x for x in self._messages_all if x.instrument == instrument]
         return self._messages_all

@@ -35,7 +35,6 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
 
         val = self._client.get_accounts() if hasattr(self, '_client') else []
 
-        print(val)
         if isinstance(val, dict) and val.get('message') == 'Invalid API Key':
             raise Exception('Something went wrong with the API Key')
 
@@ -128,7 +127,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              side=req.side,
                              volume=float(order['filled_size']),
                              price=float(order['price']),
-                             currency_pair=req.currency_pair,
+                             instrument=req.instrument,
                              slippage=slippage,
                              transaction_cost=txn_cost,
                              status=status,
@@ -161,7 +160,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
                              side=req.side,
                              volume=float(order['filled_size']),
                              price=float(order['price']),
-                             currency=req.currency,
+                             instrument=req.instrument,
                              slippage=slippage,
                              transaction_cost=txn_cost,
                              status=status,

@@ -112,7 +112,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
                                side=Side.BUY,
                                # buy between .2 and 1 BTC
                                volume=max(min(1.0, data.volume), .2),
-                               currency=data.currency,
+                               instrument=data.instrument,
                                price=data.price)
             # slog.info("requesting buy : %s", req)
             self.requestBuy(self.onBuy, req)
@@ -123,7 +123,7 @@ class SMACrossesStrategyWithRegressionFollow(TradingStrategy):
             req = TradeRequest(data=data,
                                side=Side.SELL,
                                volume=self.bought_qty,
-                               currency=data.currency,
+                               instrument=data.instrument,
                                price=data.price)
             # slog.info("requesting sell : %s", req)
             self.requestSell(self.onSell, req)

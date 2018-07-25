@@ -30,10 +30,10 @@ class TestRisk:
         pass
 
     def test_request(self):
-        from ..lib.structs import TradeRequest
+        from ..lib.structs import TradeRequest, Instrument
         from ..lib.enums import Side, PairType, OrderType
 
-        req = TradeRequest(side=Side.BUY, currency_pair=PairType.BTCUSD, order_type=OrderType.MARKET, volume=100.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, instrument=Instrument(underlying=PairType.BTCUSD), order_type=OrderType.MARKET, volume=100.0, price=1.0)
         resp = self.risk.request(req)
 
         # FIXME
@@ -50,10 +50,10 @@ class TestRisk:
         # assert resp.risk_check == True
 
     def test_request2(self):
-        from ..lib.structs import TradeRequest
+        from ..lib.structs import TradeRequest, Instrument
         from ..lib.enums import Side, PairType, OrderType
 
-        req = TradeRequest(side=Side.BUY, currency_pair=PairType.BTCUSD, order_type=OrderType.MARKET, volume=50.0, price=1.0)
+        req = TradeRequest(side=Side.BUY, instrument=Instrument(underlying=PairType.BTCUSD), order_type=OrderType.MARKET, volume=50.0, price=1.0)
         resp = self.risk.request(req)
 
         # FIXME

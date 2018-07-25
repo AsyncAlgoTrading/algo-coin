@@ -2,6 +2,7 @@ import tornado.web
 import tornado.websocket
 import ujson
 from ...lib.enums import TickType, PairType
+from ...lib.structs import Instrument
 
 
 class ServerMessagesMixin(object):
@@ -12,17 +13,18 @@ class ServerMessagesMixin(object):
             pass
         try:
             pairtype = PairType.from_string(pairtype)
+            instrument = Instrument(underlying=pairtype)
         except ValueError:
-            pass
+            instrument = None
 
         if type is None:
-            if pairtype:
-                msgs = self.te._ex.messages(False, pairtype)[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages(False, pairtype)
+            if instrument:
+                msgs = self.te._ex.messages(False, instrument)[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages(False, instrument)
             else:
                 msgs = self.te._ex.messages()[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages()
         else:
-            if pairtype:
-                msgs = self.te._ex.messages(True, pairtype).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True, pairtype).get(type, [])
+            if instrument:
+                msgs = self.te._ex.messages(True, instrument).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True, instrument).get(type, [])
             else:
                 msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
         msgs = [x.to_dict(True, True) for x in msgs]

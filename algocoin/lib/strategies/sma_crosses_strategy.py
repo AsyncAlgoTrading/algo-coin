@@ -95,7 +95,7 @@ class SMACrossesStrategy(TradingStrategy):
             req = TradeRequest(side=Side.BUY,
                                # buy between .2 and 1 BTC
                                volume=max(min(1.0, data.volume), .2),
-                               currency_pair=data.currency_pair,
+                               instrument=data.instrument,
                                order_type=OrderType.MARKET,
                                price=data.price)
             # slog.info("requesting buy : %s", req)
@@ -106,7 +106,7 @@ class SMACrossesStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(side=Side.SELL,
                                volume=self.bought_qty,
-                               currency_pair=data.currency_pair,
+                               instrument=data.instrument,
                                order_type=OrderType.MARKET,
                                price=data.price)
             # slog.info("requesting sell : %s", req)

@@ -41,7 +41,7 @@ class TestExecution:
         from ..lib.exchanges.gdax import GDAXExchange
         from ..lib.enums import Side, ExchangeType, TradingType, PairType, OrderType
         from ..lib.config import ExecutionConfig, ExchangeConfig
-        from ..lib.structs import TradeRequest
+        from ..lib.structs import TradeRequest, Instrument
 
         with patch('os.environ'), patch('gdax.AuthenticatedClient'):
             exc = ExchangeConfig()
@@ -53,7 +53,7 @@ class TestExecution:
             e = Execution(ec, ex)
 
             req = TradeRequest(side=Side.BUY,
-                               currency_pair=PairType.BTCUSD,
+                               instrument=Instrument(underlying=PairType.BTCUSD),
                                order_type=OrderType.MARKET,
                                volume=1.0,
                                price=1.0)

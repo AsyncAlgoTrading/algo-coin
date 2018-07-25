@@ -98,12 +98,13 @@ class TestExchange:
     def test_trade_req_to_params_gdax(self):
         from ...lib.exchanges.gdax import GDAXExchange
         from ...lib.enums import PairType, OrderType, OrderSubType
+        from ...lib.structs import Instrument
 
         class tmp:
             def __init__(self, a=True):
                 self.price = 'test'
                 self.volume = 'test'
-                self.currency_pair = PairType.BTCUSD
+                self.instrument = Instrument(underlying=PairType.BTCUSD)
                 self.order_type = OrderType.LIMIT
                 self.order_sub_type = OrderSubType.POST_ONLY if a \
                     else OrderSubType.FILL_OR_KILL

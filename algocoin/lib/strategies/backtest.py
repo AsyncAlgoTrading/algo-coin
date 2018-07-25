@@ -84,7 +84,7 @@ class CustomStrategy(TradingStrategy):
             req = TradeRequest(side=Side.BUY,
                                # buy between .2 and 1 BTC
                                volume=max(min(1.0, data.volume), .2),
-                               currency_pair=data.currency_pair,
+                               instrument=data.instrument,
                                price=data.price,
                                order_type=OrderType.MARKET,
                                time=data.time)
@@ -95,7 +95,7 @@ class CustomStrategy(TradingStrategy):
                 self.bought > 0.0:
             req = TradeRequest(side=Side.SELL,
                                volume=self.bought_qty,
-                               currency_pair=data.currency_pair,
+                               instrument=data.instrument,
                                price=data.price,
                                order_type=OrderType.MARKET,
                                time=data.time)

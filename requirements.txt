@@ -1,5 +1,6 @@
 coverage>=4.5.1
 cycler>=0.10.0
+deribit-api
 gdax>=1.0.6
 Jinja2>=2.10
 krakenex>=0.1.3

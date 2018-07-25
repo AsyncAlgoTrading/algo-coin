@@ -5,8 +5,56 @@ from .enums import Side, \
                    OrderType, \
                    OrderSubType, \
                    TickType, \
-                   TradeResult
+                   TradeResult, \
+                   InstrumentType
 from .utils import struct, NOPRINT
+
+
+@struct
+class Instrument:
+    type = InstrumentType, InstrumentType.PAIR
+    underlying = PairType
+
+    @property
+    def instrument(self):
+        return self
+
+    @property
+    def currency_pair(self):
+        return self.underlying
+
+
+@struct
+class Option(Instrument):
+    type = InstrumentType, InstrumentType.OPTION
+    underlying = Instrument
+    expiration = datetime.datetime
+    strike = float
+    size = float
+
+    @property
+    def instrument(self):
+        return self.underlying
+
+    @property
+    def currency_pair(self):
+        return self.underlying.currency_pair
+
+
+@struct
+class Future(Instrument):
+    type = InstrumentType, InstrumentType.FUTURE
+    underlying = Instrument
+    expiration = datetime.datetime
+    size = float
+
+    @property
+    def instrument(self):
+        return self.underlying
+
+    @property
+    def currency_pair(self):
+        return self.underlying.currency_pair
 
 
 @struct
@@ -16,7 +64,7 @@ class MarketData:
     volume = float
     price = float
     type = TickType
-    currency_pair = PairType
+    instrument = Instrument
     side = Side
 
     # maybe specific
@@ -32,7 +80,7 @@ class TradeRequest:
 
     volume = float
     price = float
-    currency_pair = PairType
+    instrument = Instrument
 
     order_type = OrderType
     order_sub_type = OrderSubType, OrderSubType.NONE
@@ -50,7 +98,7 @@ class TradeResponse:
 
     volume = float
     price = float
-    currency_pair = PairType
+    instrument = Instrument
 
     slippage = float, 0.0
     transaction_cost = float, 0.0

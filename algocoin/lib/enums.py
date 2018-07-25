@@ -42,6 +42,8 @@ class ExchangeType(BaseEnum):
     KRAKEN = 'KRAKEN'
     LAKE = 'LAKE'
     POLONIEX = 'POLONIEX'
+    DERIBIT = 'DERIBIT'
+    BITMEX = 'BITMEX'
 
 
 class CurrencyType(BaseEnum):
@@ -123,5 +125,6 @@ class TradeResult(BaseEnum):
 
 class InstrumentType(BaseEnum):
     COIN = 'COIN'
+    PAIR = 'PAIR'
     OPTION = 'OPTION'
     FUTURE = 'FUTURE'

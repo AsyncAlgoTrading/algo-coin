@@ -1,7 +1,7 @@
 from .lib.config import BacktestConfig
 from .lib.data_source import StreamingDataSource
 from .lib.logging import LOG as log, DATA as dlog
-from .lib.structs import MarketData
+from .lib.structs import MarketData, Instrument
 from .lib.utils import parse_date
 from .lib.enums import PairType, TickType, Side
 
@@ -13,7 +13,7 @@ def line_to_data(line):
                           price=float(line[1]),
                           volume=float(line[2]),
                           type=TickType.TRADE,
-                          currency_pair=PairType.BTCUSD,
+                          instrument=Instrument(underlying=PairType.BTCUSD),
                           side=Side.NONE)
         return data
     return None

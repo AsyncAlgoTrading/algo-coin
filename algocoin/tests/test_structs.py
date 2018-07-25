@@ -21,22 +21,22 @@ class TestStructs:
         # teardown_class() after any methods in this class
 
     def test_MarketData(self):
-        from ..lib.structs import MarketData
+        from ..lib.structs import MarketData, Instrument
         from ..lib.enums import TickType, Side, PairType
         m = MarketData(time=datetime.now(),
                        volume=1.0,
                        price=1.0,
-                       currency_pair=PairType.BTCUSD,
+                       instrument=Instrument(underlying=PairType.BTCUSD),
                        type=TickType.TRADE,
                        side=Side.BUY)
         # TODO no fields yet
         assert m
 
     def test_TradeRequest(self):
-        from ..lib.structs import TradeRequest
+        from ..lib.structs import TradeRequest, Instrument
         from ..lib.enums import Side, OrderType, PairType
         t = TradeRequest(side=Side.BUY,
-                         currency_pair=PairType.BTCUSD,
+                         instrument=Instrument(underlying=PairType.BTCUSD),
                          order_type=OrderType.MARKET,
                          volume=1.0,
                          price=1.0)
@@ -50,16 +50,16 @@ class TestStructs:
         # order_sub_type = OrderSubType
 
     def test_TradeResponse(self):
-        from ..lib.structs import TradeRequest, TradeResponse, TradeResult
+        from ..lib.structs import TradeRequest, TradeResponse, TradeResult, Instrument
         from ..lib.enums import Side, OrderType, PairType
         req = TradeRequest(side=Side.BUY,
                            order_type=OrderType.MARKET,
-                           currency_pair=PairType.BTCUSD,
+                           instrument=Instrument(underlying=PairType.BTCUSD),
                            volume=1.0,
                            price=1.0)
         t = TradeResponse(request=req,
                           side=Side.BUY,
-                          currency_pair=PairType.BTCUSD,
+                          instrument=Instrument(underlying=PairType.BTCUSD),
                           volume=0.0,
                           price=0.0,
                           status=TradeResult.FILLED,
