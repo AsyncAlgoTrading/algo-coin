@@ -30,9 +30,9 @@ class HTTPHandler(tornado.web.RequestHandler):
         env = Environment(loader=FileSystemLoader(template_dirs))
 
         try:
-            template = env.get_template(self.template)
+            template = env.get_template(template)
         except TemplateNotFound:
-            raise TemplateNotFound(self.template)
+            raise TemplateNotFound(template)
 
         kwargs['current_user'] = self.current_user.decode('utf-8') if self.current_user else ''
         content = template.render(**kwargs)

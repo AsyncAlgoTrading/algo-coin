@@ -1,4 +1,4 @@
-from mock import patch
+from mock import patch, MagicMock
 from datetime import datetime
 
 
@@ -23,39 +23,47 @@ class TestExecution:
 
     def test_init(self):
         from ..execution import Execution
-        from ..lib.exchanges.gdax import GDAXExchange
-        from ..lib.config import ExecutionConfig, ExchangeConfig
-        from ..lib.enums import ExchangeType
+        from ..lib.config import ExecutionConfig
 
-        with patch('os.environ'), patch('gdax.AuthenticatedClient'):
-            exc = ExchangeConfig()
-            exc.exchange_type = ExchangeType.GDAX
-            ex = GDAXExchange(exc)
+        ex = MagicMock()
 
-            ec = ExecutionConfig()
-            e = Execution(ec, ex)
-            assert e
+        ec = ExecutionConfig()
+        e = Execution(ec, ex)
+        assert e
 
     def test_request(self):
         from ..execution import Execution
-        from ..lib.exchanges.gdax import GDAXExchange
-        from ..lib.enums import Side, ExchangeType, TradingType, PairType, OrderType
-        from ..lib.config import ExecutionConfig, ExchangeConfig
+        from ..lib.enums import Side, PairType, OrderType
+        from ..lib.config import ExecutionConfig
         from ..lib.structs import TradeRequest, Instrument
 
-        with patch('os.environ'), patch('gdax.AuthenticatedClient'):
-            exc = ExchangeConfig()
-            exc.exchange_type = ExchangeType.GDAX
-            exc.trading_type = TradingType.LIVE
-            ex = GDAXExchange(exc)
+        ex = MagicMock()
+        ec = ExecutionConfig()
+        e = Execution(ec, ex)
 
-            ec = ExecutionConfig()
-            e = Execution(ec, ex)
+        req = TradeRequest(side=Side.BUY,
+                           instrument=Instrument(underlying=PairType.BTCUSD),
+                           order_type=OrderType.MARKET,
+                           volume=1.0,
+                           price=1.0)
 
-            req = TradeRequest(side=Side.BUY,
-                               instrument=Instrument(underlying=PairType.BTCUSD),
-                               order_type=OrderType.MARKET,
-                               volume=1.0,
-                               price=1.0)
+        resp = e.request(req)
 
-            resp = e.request(req)
+        req = TradeRequest(side=Side.SELL,
+                           instrument=Instrument(underlying=PairType.BTCUSD),
+                           order_type=OrderType.MARKET,
+                           volume=1.0,
+                           price=1.0)
+
+        resp = e.request(req)
+
+        req = TradeRequest(side=Side.BUY,
+                           instrument=Instrument(underlying=PairType.BTCUSD),
+                           order_type=OrderType.MARKET,
+                           volume=1.0,
+                           price=1.0)
+
+        resp = e.request(req)
+
+        e.cancel(resp)
+        e.cancelAll()

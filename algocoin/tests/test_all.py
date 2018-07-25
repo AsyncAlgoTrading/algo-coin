@@ -4,7 +4,6 @@ from ..risk import *
 from ..trading import *
 from ..lib.callback import *
 from ..lib.config import *
-from ..lib.data import *
 from ..lib.data_source import *
 from ..lib.define import *
 from ..lib.enums import *
