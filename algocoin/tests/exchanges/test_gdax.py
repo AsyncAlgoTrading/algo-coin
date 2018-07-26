@@ -109,8 +109,8 @@ class TestExchange:
                 self.order_sub_type = OrderSubType.POST_ONLY if a \
                     else OrderSubType.FILL_OR_KILL
 
-        res1 = GDAXExchange.trade_req_to_params(tmp())
-        res2 = GDAXExchange.trade_req_to_params(tmp(False))
+        res1 = GDAXExchange.tradeReqToParams(tmp())
+        res2 = GDAXExchange.tradeReqToParams(tmp(False))
 
         assert(res1['price'] == 'test')
         assert(res1['size'] == 'test')

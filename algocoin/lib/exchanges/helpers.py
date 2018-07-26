@@ -1,3 +1,4 @@
+from abc import abstractstaticmethod
 from datetime import datetime
 from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType, TickType
 from ..utils import parse_date, str_to_currency_type, str_to_currency_pair_type, str_to_side, \
@@ -8,7 +9,45 @@ from ._cpp_helpers import test
 test()
 
 
-class GDAXHelpersMixin(object):
+class ExchangeHelpersMixin(object):
+    @abstractstaticmethod
+    def tickToData(jsn: dict) -> MarketData:
+        pass
+
+    @abstractstaticmethod
+    def strToTradeType(s: str) -> TickType:
+        pass
+
+    @abstractstaticmethod
+    def tradeReqToParams(req) -> dict:
+        pass
+
+    @staticmethod
+    def currencyToString(cur: CurrencyType) -> str:
+        if cur == CurrencyType.BTC:
+            return 'BTC'
+        if cur == CurrencyType.ETH:
+            return 'ETH'
+        if cur == CurrencyType.LTC:
+            return 'LTC'
+        if cur == CurrencyType.BCH:
+            return 'BCH'
+        else:
+            raise Exception('Pair not recognized: %s' % str(cur))
+
+    @abstractstaticmethod
+    def currencyPairToString(cur: PairType) -> str:
+        pass
+
+    @abstractstaticmethod
+    def orderTypeToString(typ: OrderType) -> str:
+        pass
+
+    def reasonToTradeType(s: str) -> TickType:
+        pass
+
+
+class GDAXHelpersMixin(ExchangeHelpersMixin):
     @staticmethod
     def tickToData(jsn: dict) -> MarketData:
         time = parse_date(jsn.get('time'))
@@ -54,12 +93,12 @@ class GDAXHelpersMixin(object):
             return TickType.ERROR
 
     @staticmethod
-    def trade_req_to_params(req) -> dict:
+    def tradeReqToParams(req) -> dict:
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GDAXHelpersMixin.currency_pair_to_string(req.instrument.currency_pair)
-        p['type'] = GDAXHelpersMixin.order_type_to_string(req.order_type)
+        p['product_id'] = GDAXHelpersMixin.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = GDAXHelpersMixin.orderTypeToString(req.order_type)
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
             p['time_in_force'] = 'FOK'
@@ -68,20 +107,7 @@ class GDAXHelpersMixin(object):
         return p
 
     @staticmethod
-    def currency_to_string(cur: CurrencyType) -> str:
-        if cur == CurrencyType.BTC:
-            return 'BTC'
-        if cur == CurrencyType.ETH:
-            return 'ETH'
-        if cur == CurrencyType.LTC:
-            return 'LTC'
-        if cur == CurrencyType.BCH:
-            return 'BCH'
-        else:
-            raise Exception('Pair not recognized: %s' % str(cur))
-
-    @staticmethod
-    def currency_pair_to_string(cur: PairType) -> str:
+    def currencyPairToString(cur: PairType) -> str:
         if cur == PairType.BTCUSD:
             return 'BTC-USD'
         if cur == PairType.BTCETH:
@@ -106,14 +132,14 @@ class GDAXHelpersMixin(object):
             raise Exception('Pair not recognized: %s' % str(cur))
 
     @staticmethod
-    def order_type_to_string(typ: OrderType) -> str:
+    def orderTypeToString(typ: OrderType) -> str:
         if typ == OrderType.LIMIT:
             return 'limit'
         elif typ == OrderType.MARKET:
             return 'market'
 
 
-class GeminiHelpersMixin(object):
+class GeminiHelpersMixin(ExchangeHelpersMixin):
     @staticmethod
     def tickToData(jsn: dict) -> MarketData:
         # print(jsn)
@@ -132,14 +158,14 @@ class GeminiHelpersMixin(object):
         remaining_volume = float(jsn.get('remaining', 'nan'))
 
         sequence = -1
-        currency_pair = str_to_currency_type('BTC')
-        insturment = Instrument(underlying=currency_pair)
+        currency_pair = str_to_currency_pair_type(jsn.get('symbol'))
+        instrument = Instrument(underlying=currency_pair)
 
         ret = MarketData(time=time,
                          volume=volume,
                          price=price,
                          type=typ,
-                         instrument=insturment,
+                         instrument=instrument,
                          remaining=remaining_volume,
                          reason=reason,
                          side=side,
@@ -169,12 +195,12 @@ class GeminiHelpersMixin(object):
             return TickType.OPEN
 
     @staticmethod
-    def trade_req_to_params(req) -> dict:
+    def tradeReqToParams(req) -> dict:
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GeminiHelpersMixin.currency_pair_to_string(req.currency_pair)
-        p['type'] = GeminiHelpersMixin.order_type_to_string(req.order_type)
+        p['product_id'] = GeminiHelpersMixin.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = GeminiHelpersMixin.orderTypeToString(req.order_type)
 
         if p['type'] == OrderType.MARKET:
             if req.side == Side.BUY:
@@ -189,7 +215,7 @@ class GeminiHelpersMixin(object):
         return p
 
     @staticmethod
-    def currency_pair_to_string(cur: PairType) -> str:
+    def currencyPairToString(cur: PairType) -> str:
         if cur == PairType.BTCUSD:
             return 'BTCUSD'
         if cur == PairType.ZECUSD:
@@ -206,28 +232,8 @@ class GeminiHelpersMixin(object):
             raise Exception('Pair not recognized: %s' % str(cur))
 
     @staticmethod
-    def order_type_to_string(typ: OrderType) -> str:
+    def orderTypeToString(typ: OrderType) -> str:
         if typ == OrderType.LIMIT:
             return 'limit'
         elif typ == OrderType.MARKET:
             return 'market'
-
-
-class ItBitHelpersMixin(object):
-    @staticmethod
-    def tickToData(jsn: dict) -> MarketData:
-        pass
-
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
-        return TickType.ERROR
-
-
-class KrakenHelpersMixin(object):
-    @staticmethod
-    def tickToData(jsn: dict) -> MarketData:
-        pass
-
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
-        return TickType.ERROR

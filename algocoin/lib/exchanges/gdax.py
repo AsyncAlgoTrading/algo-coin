@@ -47,7 +47,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
             self._accounts.append(account)
 
         self._subscription = [json.dumps({"type": "subscribe",
-                                         "product_id": GDAXExchange.currency_pair_to_string(x)}) for x in options.currency_pairs]
+                                         "product_id": GDAXExchange.currencyPairToString(x)}) for x in options.currency_pairs]
         self._heartbeat = json.dumps({"type": "heartbeat",
                                       "on": True})
 
@@ -88,7 +88,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
 
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
-        params = GDAXExchange.trade_req_to_params(req)
+        params = GDAXExchange.tradeReqToParams(req)
         log.warn("Buy params: %s", str(params))
         order = self._client.buy(**params)
         '''{
@@ -138,7 +138,7 @@ class GDAXExchange(GDAXHelpersMixin, Exchange):
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
-        params = GDAXExchange.trade_req_to_params(req)
+        params = GDAXExchange.tradeReqToParams(req)
         log.warn("Sell params: %s", str(params))
         order = self._client.sell(**params)
 

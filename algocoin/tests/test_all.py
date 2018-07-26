@@ -18,8 +18,6 @@ from ..lib.utils import *
 from ..lib.exchanges.gdax import *
 from ..lib.exchanges.gemini import *
 from ..lib.exchanges.helpers import *
-from ..lib.exchanges.itbit import *
-from ..lib.exchanges.kraken import *
 from ..lib.strategies.test_strat import *
 from ..lib.strategies.sma_crosses_strategy import *
 from ..lib.strategies.sma_crosses_strategy_with_regression_follow import *

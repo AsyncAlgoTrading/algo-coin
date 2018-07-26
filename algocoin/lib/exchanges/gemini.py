@@ -23,7 +23,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             self._key, self._secret, self._passphrase = get_keys_from_environment('GEMINI_SANDBOX')
             self._client = GeminiSession(self._key, self._secret, sandbox=True)
 
-        val = self._client.get_balances() if hasattr(self, '_client') else ['BACKTEST']
+        val = self._client.get_balances() if hasattr(self, '_client') else []
 
         self._accounts = []
         for i, jsn in enumerate(val):
@@ -75,7 +75,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
 
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
-        params = GeminiExchange.trade_req_to_params(req)
+        params = GeminiExchange.tradeReqToParams(req)
         # log.warn("Buy params: %s", str(params))
         order = self._client.new_order(params['product_id'],
                                        params['size'],
@@ -141,7 +141,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
 
     def sell(self, req: TradeRequest) -> TradeResponse:
         '''execute a sell order'''
-        params = GeminiExchange.trade_req_to_params(req)
+        params = GeminiExchange.tradeReqToParams(req)
         # log.warn("Sell params: %s", str(params))
         order = self._client.new_order(params['product_id'],
                                        params['size'],
