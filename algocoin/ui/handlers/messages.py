@@ -10,11 +10,12 @@ class ServerMessagesMixin(object):
         try:
             type = TickType(type)
         except ValueError:
-            pass
+            type = None
+
         try:
             pairtype = PairType.from_string(pairtype)
             instrument = Instrument(underlying=pairtype)
-        except ValueError:
+        except (ValueError, TypeError):
             instrument = None
 
         if type is None:
