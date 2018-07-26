@@ -20,5 +20,4 @@ from ..lib.exchanges.gemini import *
 from ..lib.exchanges.helpers import *
 from ..lib.strategies.test_strat import *
 from ..lib.strategies.sma_crosses_strategy import *
-from ..lib.strategies.sma_crosses_strategy_with_regression_follow import *
 from ..lib.strategies.backtest import *
