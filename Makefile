@@ -75,6 +75,7 @@ clean: ## clean the repository
 	find . -name "*.pyc" | xargs rm -rf
 	rm -rf .coverage cover htmlcov logs build dist *.egg-info
 	find . -name "*.so"  | xargs rm -rf
+	make -C ./docs clean
 
 # Thanks to Francoise at marmelab.com for this
 .DEFAULT_GOAL := help
