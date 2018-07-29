@@ -37017,12 +37017,12 @@ function main() {
         'performance-grid': {
             [perspective_widget_1.ViewOption.VIEW]: 'hypergrid',
             [perspective_widget_1.ViewOption.INDEX]: 'sequence',
-            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price", "volume", "currency_pair", "side"]',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price", "volume", "underlying", "side"]',
         },
         'quote': {
             [perspective_widget_1.ViewOption.VIEW]: 'hypergrid',
             [perspective_widget_1.ViewOption.INDEX]: 'sequence',
-            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price", "volume", "currency_pair", "side"]',
+            [perspective_widget_1.ViewOption.COLUMNS]: '["time", "price", "volume", "underlying", "side"]',
         }
     };
     let psps_data_options = {
@@ -37073,7 +37073,7 @@ function main() {
             'price': perspective_widget_1.TypeNames.FLOAT,
             'volume': perspective_widget_1.TypeNames.FLOAT,
             'sequence': perspective_widget_1.TypeNames.INTEGER,
-            'currency_pair': perspective_widget_1.TypeNames.STRING,
+            'underlying': perspective_widget_1.TypeNames.STRING,
             'side': perspective_widget_1.TypeNames.STRING,
             'order_type': perspective_widget_1.TypeNames.STRING
         },
@@ -37082,7 +37082,7 @@ function main() {
             'price': perspective_widget_1.TypeNames.FLOAT,
             'volume': perspective_widget_1.TypeNames.FLOAT,
             'sequence': perspective_widget_1.TypeNames.INTEGER,
-            'currency_pair': perspective_widget_1.TypeNames.STRING,
+            'underlying': perspective_widget_1.TypeNames.STRING,
             'side': perspective_widget_1.TypeNames.STRING,
             'order_type': perspective_widget_1.TypeNames.STRING
         }

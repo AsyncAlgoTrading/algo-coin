@@ -116,6 +116,7 @@ def __init__struct(self, **kwargs) -> None:
 
 
 def to_dict(self, serializable=False, str_timestamp=False, **kwargs) -> dict:
+    from .structs import Instrument
     ret = {}
     if serializable:
         for item in self._vars:
@@ -125,6 +126,8 @@ def to_dict(self, serializable=False, str_timestamp=False, **kwargs) -> dict:
                     ret[item] = ret[item].strftime('%y-%m-%d %H:%M:%S')
                 else:
                     ret[item] = round(ret[item].timestamp())
+            elif isinstance(ret[item], Instrument):
+                ret[item] = ret[item].to_dict(serializable, str_timestamp, **kwargs)
             elif isinstance(ret[item], Enum):
                 ret[item] = str(ret[item])
     else:

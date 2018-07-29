@@ -23,6 +23,9 @@ class Instrument:
     def currency_pair(self):
         return self.underlying
 
+    def __eq__(self, other):
+        return other.currency_pair == self.currency_pair
+
 
 @struct
 class Option(Instrument):
@@ -40,6 +43,13 @@ class Option(Instrument):
     def currency_pair(self):
         return self.underlying.currency_pair
 
+    def __eq__(self, other):
+        return (other.underlying == self.underlying) and \
+               (other.currency_pair == self.currency_pair) and \
+               (other.expiration == self.expiration) and \
+               (other.strike == self.strike) and \
+               (other.size == self.size)
+
 
 @struct
 class Future(Instrument):
@@ -55,6 +65,12 @@ class Future(Instrument):
     @property
     def currency_pair(self):
         return self.underlying.currency_pair
+
+    def __eq__(self, other):
+        return (other.underlying == self.underlying) and \
+               (other.currency_pair == self.currency_pair) and \
+               (other.expiration == self.expiration) and \
+               (other.size == self.size)
 
 
 @struct

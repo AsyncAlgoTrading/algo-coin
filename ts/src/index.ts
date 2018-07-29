@@ -125,12 +125,12 @@ function main(): void {
       'performance-grid': {
         [ViewOption.VIEW]: 'hypergrid',
         [ViewOption.INDEX]: 'sequence',
-        [ViewOption.COLUMNS]: '["time", "price", "volume", "currency_pair", "side"]',
+        [ViewOption.COLUMNS]: '["time", "price", "volume", "underlying", "side"]',
       },
       'quote': {
         [ViewOption.VIEW]: 'hypergrid',
         [ViewOption.INDEX]: 'sequence',
-        [ViewOption.COLUMNS]: '["time", "price", "volume", "currency_pair", "side"]',
+        [ViewOption.COLUMNS]: '["time", "price", "volume", "underlying", "side"]',
       }
     };
 
@@ -183,7 +183,7 @@ function main(): void {
         'price': TypeNames.FLOAT,
         'volume': TypeNames.FLOAT,
         'sequence': TypeNames.INTEGER,
-        'currency_pair': TypeNames.STRING,
+        'underlying': TypeNames.STRING,
         'side': TypeNames.STRING,
         'order_type': TypeNames.STRING
       },
@@ -192,7 +192,7 @@ function main(): void {
         'price': TypeNames.FLOAT,
         'volume': TypeNames.FLOAT,
         'sequence': TypeNames.INTEGER,
-        'currency_pair': TypeNames.STRING,
+        'underlying': TypeNames.STRING,
         'side': TypeNames.STRING,
         'order_type': TypeNames.STRING
       }

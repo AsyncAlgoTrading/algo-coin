@@ -29,6 +29,10 @@ class ServerMessagesMixin(object):
             else:
                 msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
         msgs = [x.to_dict(True, True) for x in msgs]
+
+        if len(msgs) > 0:
+            for msg in msgs:
+                msg['underlying'] = msg['instrument']['underlying']
         return msgs
 
 
