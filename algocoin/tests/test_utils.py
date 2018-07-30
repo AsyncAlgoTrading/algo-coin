@@ -182,3 +182,28 @@ class TestUtils:
         assert(str_to_exchange('kraken') == ExchangeType.KRAKEN)
         assert(str_to_exchange('lake') == ExchangeType.LAKE)
         assert(str_to_exchange('gdax') == ExchangeType.GDAX)
+
+    def test_str_to_currency_pair_type(self):
+        from ..lib.utils import str_to_currency_pair_type
+        from ..lib.enums import PairType
+
+        assert str_to_currency_pair_type('BTCUSD') == PairType.BTCUSD
+        assert str_to_currency_pair_type('USDBTC') == PairType.USDBTC
+        assert str_to_currency_pair_type('USDETH') == PairType.USDETH
+        assert str_to_currency_pair_type('USDLTC') == PairType.USDLTC
+        assert str_to_currency_pair_type('USDBCH') == PairType.USDBCH
+        assert str_to_currency_pair_type('USDZEC') == PairType.USDZEC
+        assert str_to_currency_pair_type('BTCUSD') == PairType.BTCUSD
+        assert str_to_currency_pair_type('BTCETH') == PairType.BTCETH
+        assert str_to_currency_pair_type('BTCLTC') == PairType.BTCLTC
+        assert str_to_currency_pair_type('BTCBCH') == PairType.BTCBCH
+        assert str_to_currency_pair_type('BTCZEC') == PairType.BTCZEC
+        assert str_to_currency_pair_type('ETHUSD') == PairType.ETHUSD
+        assert str_to_currency_pair_type('ETHBTC') == PairType.ETHBTC
+        assert str_to_currency_pair_type('LTCUSD') == PairType.LTCUSD
+        assert str_to_currency_pair_type('LTCBTC') == PairType.LTCBTC
+        assert str_to_currency_pair_type('BCHUSD') == PairType.BCHUSD
+        assert str_to_currency_pair_type('BCHBTC') == PairType.BCHBTC
+        assert str_to_currency_pair_type('ZECUSD') == PairType.ZECUSD
+        assert str_to_currency_pair_type('ZECBTC') == PairType.ZECBTC
+        assert str_to_currency_pair_type('ZECETH') == PairType.ZECETH
