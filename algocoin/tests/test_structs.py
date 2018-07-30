@@ -20,6 +20,14 @@ class TestStructs:
         pass
         # teardown_class() after any methods in this class
 
+    def test_to_dict(self):
+        from ..lib.structs import Instrument
+        from ..lib.enums import PairType, InstrumentType
+        i = Instrument(underlying=PairType.BTCUSD)
+        x = i.to_dict()
+        print(x)
+        assert x == {'type': InstrumentType.PAIR, 'underlying': PairType.BTCUSD}
+
     def test_MarketData(self):
         from ..lib.structs import MarketData, Instrument
         from ..lib.enums import TickType, Side, PairType

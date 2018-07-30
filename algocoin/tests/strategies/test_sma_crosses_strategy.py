@@ -22,8 +22,27 @@ class TestSMACrossesStrategy:
 
     def test_sma_strat_init(self):
         from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
+        from ...lib.enums import Side
         s = SMACrossesStrategy(1, 5)
         assert s
+
+        # unused
+        s.onChange(None)
+        s.onContinue(None)
+        s.onDone(None)
+        s.onHalt(None)
+        s.onOpen(None)
+        s.onReceived(None)
+
+        m = MagicMock()
+        m.price = 10000
+        m.volume = 1
+        m.side = Side.BUY
+        m.slippage = 0
+        m.transaction_cost = 0
+
+        resp = s.slippage(m)
+        resp = s.transactionCost(m)
 
     def test_sma_match(self):
         from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
@@ -144,3 +163,4 @@ class TestSMACrossesStrategy:
             self.test_sma_buy()
             self.test_sma_sell()
             self.s.onAnalyze(None)
+

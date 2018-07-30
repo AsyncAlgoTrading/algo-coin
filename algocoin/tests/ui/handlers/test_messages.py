@@ -26,7 +26,7 @@ class TestMessages:
         x.te._ex.messages = MagicMock()
         x.te._ex.messages.return_value = [MagicMock()]
         x.te._ex.messages.return_value[0].to_dict = MagicMock()
-        x.te._ex.messages.return_value[0].to_dict.return_value = {'test': 1}
+        x.te._ex.messages.return_value[0].to_dict.return_value = {'test': 1, 'instrument': {'underlying': 'test'}}
 
         x.get_data()
         x.get_data('test')
@@ -51,5 +51,5 @@ class TestMessages:
         x.te._ex.messages = MagicMock()
         x.te._ex.messages.return_value = [MagicMock()]
         x.te._ex.messages.return_value[0].to_dict = MagicMock()
-        x.te._ex.messages.return_value[0].to_dict.return_value = {'test': 1}
+        x.te._ex.messages.return_value[0].to_dict.return_value = {'test': 1, 'instrument': {'underlying': 'test'}}
         x.get()
