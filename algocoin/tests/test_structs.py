@@ -28,6 +28,12 @@ class TestStructs:
         print(x)
         assert x == {'type': InstrumentType.PAIR, 'underlying': PairType.BTCUSD}
 
+        x = i.to_dict(True)
+        assert x == {'type': 'InstrumentType.PAIR', 'underlying': 'BTCUSD'}
+
+        x = i.to_dict(True, True)
+        assert x == {'type': 'InstrumentType.PAIR', 'underlying': 'BTCUSD'}
+
     def test_MarketData(self):
         from ..lib.structs import MarketData, Instrument
         from ..lib.enums import TickType, Side, PairType
