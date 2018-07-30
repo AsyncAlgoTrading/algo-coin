@@ -47,7 +47,7 @@ currency_pairs=BTCUSD,ETHUSD,LTCUSD,BCHUSD,ETHBTC,LTCBTC,BCHBTC
 
 [strategy]
 strategies =
-    custom_strategies.movement.MovementStrategy, 1.5
+    algocoin.lib.strategies.test_strat.TestStrategy
 
 [risk]
 max_drawdown = 100.0
