@@ -25,7 +25,7 @@ class TestExchange:
         from ...lib.exchanges.gemini import GeminiExchange
         from ...lib.enums import ExchangeType
 
-        with patch('os.environ'), patch('algocoin.lib.oe.gemini.GeminiSession') as m:
+        with patch('os.environ'), patch('ccxt.gemini') as m:
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GEMINI
             m.get_balances.return_value = []
@@ -38,7 +38,7 @@ class TestExchange:
         from ...lib.exchanges.gemini import GeminiExchange
         from ...lib.enums import TickType, ExchangeType
 
-        with patch('os.environ'), patch('algocoin.lib.oe.gemini.GeminiSession'):
+        with patch('os.environ'), patch('ccxt.gemini'):
             ec = ExchangeConfig()
             ec.exchange_type = ExchangeType.GEMINI
             e = GeminiExchange(ec)

@@ -1,6 +1,6 @@
+import ccxt
 import json
 from websocket import create_connection
-from ..oe.gemini import GeminiSession
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType, TickType, TradeResult
 from ..exchange import Exchange
@@ -18,17 +18,24 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
 
         if options.trading_type == TradingType.LIVE:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GEMINI')
-            self._client = GeminiSession(api_key=self._key, api_secret=self._secret, sandbox=False)
+            self._client = ccxt.gemini({
+                'apiKey': self._key,
+                'secret': self._secret,
+            })
         elif options.trading_type == TradingType.SANDBOX:
             self._key, self._secret, self._passphrase = get_keys_from_environment('GEMINI_SANDBOX')
-            self._client = GeminiSession(self._key, self._secret, sandbox=True)
+            self._client = ccxt.gemini({
+                'apiKey': self._key,
+                'secret': self._secret,
+            })
+            self._client.urls['api'] = self._client.urls['test']
 
-        val = self._client.get_balances() if hasattr(self, '_client') else []
+        val = self._client.get_balances() if hasattr(self, '_client') else {}
 
         self._accounts = []
-        for i, jsn in enumerate(val):
+        for i, jsn in enumerate(val.get('info', [])):
             currency = str_to_currency_type(jsn.get('currency'))
-            balance = float(jsn.get('available', 'inf'))
+            balance = float(jsn.get('available', 0))
             id = str(i)
             account = Account(id=id, currency=currency, balance=balance)
             self._accounts.append(account)
@@ -69,14 +76,15 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                 return
         return self._accounts
 
-    def orderBook(self, level=1):
+    def orderBook(self, symbol='BTC', level=1):
         '''get order book'''
-        return self._client.getProductOrderBook(level=level)
+        return self._client.fetchOrderBook(symbol) if level == 1 else self._client.fetchL2OrderBook(symbol)
 
     def buy(self, req: TradeRequest) -> TradeResponse:
         '''execute a buy order'''
         params = GeminiExchange.tradeReqToParams(req)
         # log.warn("Buy params: %s", str(params))
+        # FIXME switch to ccxt
         order = self._client.new_order(params['product_id'],
                                        params['size'],
                                        params['price'],
@@ -143,6 +151,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
         '''execute a sell order'''
         params = GeminiExchange.tradeReqToParams(req)
         # log.warn("Sell params: %s", str(params))
+        # FIXME switch to ccxt
         order = self._client.new_order(params['product_id'],
                                        params['size'],
                                        params['price'],
