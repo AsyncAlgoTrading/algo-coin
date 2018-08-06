@@ -49,6 +49,8 @@ Eventual coverage:
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
 
 #### Order Entry (REST)
+Porting to use [ccxt](https://github.com/ccxt/ccxt)
+
 [![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
 [![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
 
