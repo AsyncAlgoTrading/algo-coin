@@ -1,4 +1,5 @@
 coverage>=4.5.1
+ccxt
 cycler>=0.10.0
 deribit-api
 gdax>=1.0.6
