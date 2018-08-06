@@ -105,6 +105,12 @@ class Side(BaseEnum):
     SELL = 'SELL'
 
 
+class OptionSide(BaseEnum):
+    NONE = 'NONE'
+    CALL = 'CALL'
+    PUT = 'PUT'
+
+
 class OrderType(BaseEnum):
     NONE = 'NONE'
     MARKET = 'MARKET'

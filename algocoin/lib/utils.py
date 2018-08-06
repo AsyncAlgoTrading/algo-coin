@@ -91,14 +91,14 @@ def config(cls):
 
 
 def __init__config(self, **kwargs) -> None:
+    for k, v in kwargs.items():
+        if k not in self._vars:
+            raise Exception('Attribute not found! %s' % k)
     for item in self._vars:
         if item not in kwargs:
             log.debug('WARNING %s unset!', item)
         else:
             setattr(self, item, kwargs.get(item))
-    for k, v in kwargs.items():
-        if k not in self._vars:
-            raise Exception('Attribute not found! %s' % k)
 
 
 def __init__struct(self, **kwargs) -> None:
@@ -110,6 +110,7 @@ def __init__struct(self, **kwargs) -> None:
             setattr(self, item, kwargs.get(item))
 
         getattr(self, item)  # make sure all are set.
+
     for k, v in kwargs.items():
         if k not in self._vars:
             raise Exception('Attribute not found! %s' % k)
@@ -359,3 +360,16 @@ def set_verbose(level):
         mlog.setLevel(logging.INFO)
         elog.setLevel(logging.INFO)
     log.info('running in verbose mode!')
+
+
+def trade_req_to_params(req) -> dict:
+    ret = {}
+    ret['symbol'] = str(req.instrument.underlying)
+    ret['side'] = 'buy' if req.side == Side.BUY else 'sell'
+    ret['type'] = 'market' if req.order_type == OrderType.MARKET else 'limit'
+    ret['amount'] = req.volume
+
+    if ret['type'] == 'limit':
+        ret['price'] = req.price
+
+    return ret

@@ -1,5 +1,6 @@
 import datetime
 from .enums import Side, \
+                   OptionSide, \
                    CurrencyType, \
                    PairType, \
                    OrderType, \
@@ -26,6 +27,9 @@ class Instrument:
     def __eq__(self, other):
         return other.currency_pair == self.currency_pair
 
+    def __str__(self):
+        return str(self.underlying)
+
 
 @struct
 class Option(Instrument):
@@ -34,6 +38,7 @@ class Option(Instrument):
     expiration = datetime.datetime
     strike = float
     size = float
+    side = OptionSide
 
     @property
     def instrument(self):
@@ -49,6 +54,14 @@ class Option(Instrument):
                (other.expiration == self.expiration) and \
                (other.strike == self.strike) and \
                (other.size == self.size)
+
+    def __str__(self):
+        # 180803C00187500-AAPL-CALL
+        return self.expiration.strftime('%y%m%d') + \
+               self.side.value[:1] + \
+               '{0:10.2f}'.format(self.strike).replace(' ', '0') + '-' + \
+               str(self.underlying) + '-' + \
+               '{0:8.2f}'.format(self.size).replace(' ', '0')
 
 
 @struct
@@ -71,6 +84,10 @@ class Future(Instrument):
                (other.currency_pair == self.currency_pair) and \
                (other.expiration == self.expiration) and \
                (other.size == self.size)
+
+    def __str__(self):
+        # 180803C00187500-AAPL-CALL
+        return self.expiration.strftime('%y%m%d') + '-' + str(self.underlying) + '-' + '{0:8.2f}'.format(self.size).replace(' ', '0')
 
 
 @struct

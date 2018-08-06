@@ -207,3 +207,22 @@ class TestUtils:
         assert str_to_currency_pair_type('ZECUSD') == PairType.ZECUSD
         assert str_to_currency_pair_type('ZECBTC') == PairType.ZECBTC
         assert str_to_currency_pair_type('ZECETH') == PairType.ZECETH
+
+    def test_trade_req_to_params(self):
+        from ..lib.utils import trade_req_to_params
+        from ..lib.structs import TradeRequest, Instrument
+        from ..lib.enums import Side, OrderType, PairType
+
+        t = TradeRequest(side=Side.BUY,
+                         volume=1.0,
+                         price=1.0,
+                         instrument=Instrument(underlying=PairType.BTCUSD),
+                         order_type=OrderType.LIMIT)
+
+        ret = trade_req_to_params(t)
+
+        assert ret['symbol'] == 'BTCUSD'
+        assert ret['side'] == 'buy'
+        assert ret['type'] == 'limit'
+        assert ret['amount'] == 1.0
+        assert ret['price'] == 1.0
