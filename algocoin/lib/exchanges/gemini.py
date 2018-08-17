@@ -1,6 +1,6 @@
 import ccxt
 import json
-from websocket import create_connection
+from websocket import create_connection, WebSocketTimeoutException
 from ..config import ExchangeConfig
 from ..enums import TradingType, ExchangeType, TickType, TradeResult
 from ..exchange import Exchange
@@ -30,7 +30,7 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             })
             self._client.urls['api'] = self._client.urls['test']
 
-        val = self._client.get_balances() if hasattr(self, '_client') else {}
+        val = self._client.fetchBalance() if hasattr(self, '_client') else {}
 
         self._accounts = []
         for i, jsn in enumerate(val.get('info', [])):
@@ -40,12 +40,8 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             account = Account(id=id, currency=currency, balance=balance)
             self._accounts.append(account)
 
-        # self._subscription = json.dumps({"type": "subscribe",
-        #                                  "product_id": "BTC-USD"})
-        # self._heartbeat = json.dumps({"type": "heartbeat",
-        #                               "on": True})
-
-        self._seqnum_enabled = False
+        self._subscription = [GeminiExchange.currencyPairToString(x) for x in options.currency_pairs]
+        self._seqnum_enabled = False  # FIXME?
 
     def run(self, engine) -> None:
         # DEBUG
@@ -55,13 +51,11 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
             if not self._running and not self._manual:
                 # startup and redundancy
                 log.info('Starting....')
-                self.ws = create_connection(self._md_url)
-                log.info('Connected!')
+                self.ws = [create_connection(self._md_url % x) for x in self._subscription]
+                for ws in self.ws:
+                    ws.settimeout(1)
 
-                # self.ws.send(self._subscription)
-                # log.info('Sending Subscription %s' % self._subscription)
-                # self.ws.send(self._heartbeat)
-                # log.info('Sending Heartbeat %s' % self._subscription)
+                log.info('Connected!')
 
                 self._running = True
 
@@ -194,32 +188,43 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
         return resp
 
     def receive(self) -> None:
-        jsn = json.loads(self.ws.recv())
-        if jsn.get('type') == 'heartbeat':
-            pass
-        else:
-            for item in jsn.get('events'):
-                res = self.tickToData(item)
+        '''gemini has its own receive method because it uses 1 connection per symbol instead of multiplexing'''
+        jsns = []
+        for i, x in enumerate(self._subscription):
+            try:
+                ret = self.ws[i].recv()
+                jsns.append((x, json.loads(ret)))
+            except WebSocketTimeoutException:
+                jsns.append((x, None))
 
-                if not self._running:
-                    pass
-
-                if res.type == TickType.TRADE:
-                    self._last = res
-                    self.callback(TickType.TRADE, res)
-                elif res.type == TickType.RECEIVED:
-                    self.callback(TickType.RECEIVED, res)
-                elif res.type == TickType.OPEN:
-                    self.callback(TickType.OPEN, res)
-                elif res.type == TickType.DONE:
-                    self.callback(TickType.DONE, res)
-                elif res.type == TickType.CHANGE:
-                    self.callback(TickType.CHANGE, res)
-                elif res.type == TickType.HEARTBEAT:
-                    # TODO anything?
+        for pair, jsn in jsns:
+            if jsn:
+                if jsn.get('type') == 'heartbeat':
                     pass
                 else:
-                    self.callback(TickType.ERROR, res)
+                    for item in jsn.get('events'):
+                        item['symbol'] = pair
+                        res = self.tickToData(item)
+
+                        if not self._running:
+                            pass
+
+                        if res.type == TickType.TRADE:
+                            self._last = res
+                            self.callback(TickType.TRADE, res)
+                        elif res.type == TickType.RECEIVED:
+                            self.callback(TickType.RECEIVED, res)
+                        elif res.type == TickType.OPEN:
+                            self.callback(TickType.OPEN, res)
+                        elif res.type == TickType.DONE:
+                            self.callback(TickType.DONE, res)
+                        elif res.type == TickType.CHANGE:
+                            self.callback(TickType.CHANGE, res)
+                        elif res.type == TickType.HEARTBEAT:
+                            # TODO anything?
+                            pass
+                        else:
+                            self.callback(TickType.ERROR, res)
 
     def cancel(self, resp: TradeResponse):
         '''cancel an order'''

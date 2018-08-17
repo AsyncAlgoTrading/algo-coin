@@ -158,6 +158,10 @@ class GeminiHelpersMixin(ExchangeHelpersMixin):
         remaining_volume = float(jsn.get('remaining', 'nan'))
 
         sequence = -1
+
+        if 'symbol' not in jsn:
+            print(jsn)
+            return
         currency_pair = str_to_currency_pair_type(jsn.get('symbol'))
         instrument = Instrument(underlying=currency_pair)
 

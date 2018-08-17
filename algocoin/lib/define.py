@@ -20,9 +20,9 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
     (ExchangeType.COINBASE, TradingType.LIVE): 'wss://ws-feed.pro.coinbase.com',
     (ExchangeType.COINBASE, TradingType.SIMULATION): 'wss://ws-feed.pro.coinbase.com',
 
-    (ExchangeType.GEMINI, TradingType.SANDBOX): 'wss://api.sandbox.gemini.com/v1/marketdata/btcusd?heartbeat=true',
-    (ExchangeType.GEMINI, TradingType.LIVE): 'wss://api.gemini.com/v1/marketdata/btcusd?heartbeat=true',
-    (ExchangeType.GEMINI, TradingType.SIMULATION): 'wss://api.gemini.com/v1/marketdata/btcusd?heartbeat=true',
+    (ExchangeType.GEMINI, TradingType.SANDBOX): 'wss://api.sandbox.gemini.com/v1/marketdata/%s?heartbeat=true',
+    (ExchangeType.GEMINI, TradingType.LIVE): 'wss://api.gemini.com/v1/marketdata/%s?heartbeat=true',
+    (ExchangeType.GEMINI, TradingType.SIMULATION): 'wss://api.gemini.com/v1/marketdata/%s?heartbeat=true',
 
     (ExchangeType.HITBTC, TradingType.SANDBOX): '',
     (ExchangeType.HITBTC, TradingType.LIVE): '',
