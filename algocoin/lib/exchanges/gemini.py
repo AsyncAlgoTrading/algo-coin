@@ -52,6 +52,9 @@ class GeminiExchange(GeminiHelpersMixin, Exchange):
                 # startup and redundancy
                 log.info('Starting....')
                 self.ws = [create_connection(self._md_url % x) for x in self._subscription]
+                for x in self._subscription:
+                    log.info('Sending Subscription %s' % x)
+
                 for ws in self.ws:
                     ws.settimeout(1)
 
