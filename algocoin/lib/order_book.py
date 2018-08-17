@@ -10,5 +10,3 @@ class OrderBook():
 
     def preload(self, orders):
         pass
-
-
