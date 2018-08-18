@@ -30,6 +30,9 @@ class Instrument:
     def __str__(self):
         return str(self.underlying)
 
+    def __hash__(self):
+        return hash(str(self.underlying))
+
 
 @struct
 class Option(Instrument):
@@ -105,6 +108,14 @@ class MarketData:
     reason = str, ''
     sequence = int, -1
     order_type = OrderType, OrderType.NONE
+
+    def __eq__(self, other):
+        return (self.price == other.price) and \
+               (self.instrument == other.instrument) and \
+               (self.side == other.side)
+
+    def __lt__(self, other):
+        return self.price < other.price
 
 
 @struct

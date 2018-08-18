@@ -8,17 +8,20 @@ class BaseEnum(Enum):
 
 
 class TickType(BaseEnum):
-    TRADE = 'TRADE'
-    RECEIVED = 'RECEIVED'
-    OPEN = 'OPEN'
-    DONE = 'DONE'
-    CHANGE = 'CHANGE'
-    ERROR = 'ERROR'
-    ANALYZE = 'ANALYZE'
-    HALT = 'HALT'
-    CONTINUE = 'CONTINUE'
-    EXIT = 'EXIT'
-    HEARTBEAT = 'HEARTBEAT'
+    # Messages
+    TRADE = 'TRADE'  # Match
+    RECEIVED = 'RECEIVED'  # Order received
+    OPEN = 'OPEN'  # New Order
+    DONE = 'DONE'  # Order completed, either filled or cancelled
+    CHANGE = 'CHANGE'  # Order modified
+
+    ERROR = 'ERROR'  # Internal error
+    ANALYZE = 'ANALYZE'  # Internal
+    HALT = 'HALT'  # Trading halt
+    CONTINUE = 'CONTINUE'  # Trading continue
+    EXIT = 'EXIT'  # System exit
+
+    HEARTBEAT = 'HEARTBEAT'  # Exchange heartbeat
 
 
 class TradingType(BaseEnum):
