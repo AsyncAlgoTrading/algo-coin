@@ -12,7 +12,8 @@ from algocoin.lib.enums import Side, \
                                OrderSubType, \
                                TickType, \
                                TradeResult, \
-                               InstrumentType
+                               InstrumentType, \
+                               ChangeReason
 
 
 def generateInstruments(pairs):
@@ -24,24 +25,27 @@ def initialMarketData(count, instruments=None):
     ret = []
     for _ in range(count):
         side = random.choice([Side.BUY, Side.SELL])
-        volume = random.randrange(0, 500) / 10
+        volume = random.randrange(0, 20) / 10
 
         if side == Side.BUY:
-            price = random.randrange(5000, 5500) / 10
-        if side == Side.SELL:
-            price = random.randrange(5501, 6000) / 10
+            price = random.randrange(500, 550) / 10
 
-        tick = random.choice([TickType.OPEN, TickType.CHANGE])
+        if side == Side.SELL:
+            price = random.randrange(551, 600) / 10
+
+        tick = random.choice([TickType.OPEN])
         instrument = random.choice(instruments)
 
         remaining = random.choice([0.0, random.randrange(0, 100)/10])
 
         if tick == TickType.DONE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         elif tick == TickType.CHANGE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         else:
-            reason = ''
+            reason = ChangeReason.NONE
 
         sequence = -1
         order_type = OrderType.NONE
@@ -67,16 +71,15 @@ def generateMarketData(count, instruments=None):
     for _ in range(count):
         side = random.choice([Side.BUY, Side.SELL])
 
-        volume = random.randrange(0, 500) / 10
+        volume = random.randrange(0, 20) / 10
 
         if side == Side.BUY:
-            price = random.randrange(5000, 5500) / 10
-        if side == Side.SELL:
-            price = random.randrange(5501, 6000) / 10
+            price = random.randrange(500, 550) / 10
 
-        tick = random.choice([TickType.TRADE,
-                              TickType.RECEIVED,
-                              TickType.OPEN,
+        if side == Side.SELL:
+            price = random.randrange(551, 600) / 10
+
+        tick = random.choice([TickType.OPEN,
                               TickType.DONE,
                               TickType.CHANGE])
         instrument = random.choice(instruments)
@@ -84,11 +87,13 @@ def generateMarketData(count, instruments=None):
         remaining = random.choice([0.0, random.randrange(0, 100)/10])
 
         if tick == TickType.DONE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         elif tick == TickType.CHANGE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         else:
-            reason = ''
+            reason = ChangeReason.NONE
 
         sequence = -1
         order_type = OrderType.NONE
@@ -115,6 +120,11 @@ if __name__ == '__main__':
     ob = OrderBook(instruments)
 
     for item in initialMarketData(50, instruments):
+        ob.push(item)
+
+    print(str(ob))
+
+    for item in generateMarketData(50, instruments):
         ob.push(item)
 
     print(str(ob))

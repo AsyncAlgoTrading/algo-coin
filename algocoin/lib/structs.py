@@ -7,7 +7,9 @@ from .enums import Side, \
                    OrderSubType, \
                    TickType, \
                    TradeResult, \
-                   InstrumentType
+                   InstrumentType, \
+                   RiskReason, \
+                   ChangeReason
 from .utils import struct, NOPRINT
 
 
@@ -105,7 +107,7 @@ class MarketData:
 
     # maybe specific
     remaining = float, float('nan')
-    reason = str, ''
+    reason = ChangeReason, ChangeReason.NONE
     sequence = int, -1
     order_type = OrderType, OrderType.NONE
 
@@ -132,7 +134,7 @@ class TradeRequest:
 
     time = datetime.datetime, datetime.datetime.now()  # FIXME
     risk_check = bool, False
-    risk_reason = str, ''
+    risk_reason = RiskReason, RiskReason.NONE
 
 
 @struct

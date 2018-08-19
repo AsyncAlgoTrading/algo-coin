@@ -127,6 +127,12 @@ class OrderSubType(BaseEnum):
     # ALL_OR_NOTHING = 3
 
 
+class ChangeReason(BaseEnum):
+    NONE = 'NONE'
+    CANCELLED = 'CANCELLED'
+    FILLED = 'FILLED'
+
+
 class TradeResult(BaseEnum):
     NONE = 'NONE'
     PENDING = 'PENDING'
@@ -140,3 +146,9 @@ class InstrumentType(BaseEnum):
     PAIR = 'PAIR'
     OPTION = 'OPTION'
     FUTURE = 'FUTURE'
+
+
+class RiskReason(BaseEnum):
+    NONE = 'NONE'
+    PARTIAL = 'PARTIAL'
+    FULL = 'FULL'

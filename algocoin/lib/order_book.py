@@ -1,20 +1,58 @@
 # from abc import ABCMeta
 from .structs import Instrument
-from .enums import Side
+from .enums import Side, TickType
 from heapq import heappush, heappop
+
+
+class Order(object):
+    def __init__(self, price, volume):
+        self.price = price
+        self.volume = volume
+
+    def __lt__(self, other):
+        return self.price < other.price
 
 
 class Book(object):
     def __init__(self, instrument: Instrument):
         self._instrument = instrument
         self._bid = []
+        self._bidd = {}
+
         self._ask = []
+        self._askk = {}
 
     def push(self, order) -> None:
         if order.side == Side.BUY:
-            heappush(self._bid, order)
+            if order.type == TickType.DONE:
+                if order.price not in self._bidd:
+                    print('Something wrong')
+
+            elif order.type == TickType.CHANGE:
+                if order.price not in self._bidd:
+                    print('Something wrong')
+
+            elif order.type == TickType.OPEN:
+                self._bid.append(Order(order.price, order.volume))
+                self._bidd[order.price] = self._bid[-1]
+            else:
+                self._bid.append(Order(order.price, order.volume))
+                self._bidd[order.price] = self._bid[-1]
         else:
-            heappush(self._ask, order)
+            if order.type == TickType.DONE:
+                if order.price not in self._askk:
+                    print('Something wrong')
+
+            elif order.type == TickType.CHANGE:
+                if order.price not in self._askk:
+                    print('Something wrong')
+
+            elif order.type == TickType.OPEN:
+                self._ask.append(Order(order.price, order.volume))
+                self._askk[order.price] = self._ask[-1]
+            else:
+                self._ask.append(Order(order.price, order.volume))
+                self._askk[order.price] = self._ask[-1]
 
     def pop(self, order) -> None:
         pass

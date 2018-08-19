@@ -1,6 +1,6 @@
 from abc import abstractstaticmethod
 from datetime import datetime
-from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType, TickType
+from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType, TickType, ChangeReason
 from ..utils import parse_date, str_to_currency_type, str_to_currency_pair_type, str_to_side, \
     str_to_order_type
 from ..structs import MarketData, Instrument
@@ -62,6 +62,14 @@ class GDAXHelpersMixin(ExchangeHelpersMixin):
         side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining_size', 0.0))
         reason = jsn.get('reason', '')
+
+        if reason == 'canceled':
+            reason = ChangeReason.CANCELLED
+        elif reason == '':
+            reason = ChangeReason.NONE
+        else:
+            print(reason)
+
         sequence = int(jsn.get('sequence'))
         ret = MarketData(time=time,
                          volume=volume,
@@ -157,11 +165,20 @@ class GeminiHelpersMixin(ExchangeHelpersMixin):
         side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining', 'nan'))
 
+        if reason == 'canceled':
+            reason = ChangeReason.CANCELLED
+        elif reason == '':
+            reason = ChangeReason.NONE
+        else:
+            print(reason)
+            reason = ChangeReason.NONE
+
         sequence = -1
 
         if 'symbol' not in jsn:
             print(jsn)
             return
+
         currency_pair = str_to_currency_pair_type(jsn.get('symbol'))
         instrument = Instrument(underlying=currency_pair)
 

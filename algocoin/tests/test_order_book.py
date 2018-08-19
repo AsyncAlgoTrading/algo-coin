@@ -12,7 +12,8 @@ from algocoin.lib.enums import Side, \
                                OrderSubType, \
                                TickType, \
                                TradeResult, \
-                               InstrumentType
+                               InstrumentType, \
+                               ChangeReason
 
 
 def generateInstruments(pairs):
@@ -37,11 +38,11 @@ def initialMarketData(count, instruments=None):
         remaining = random.choice([0.0, random.randrange(0, 100)/10])
 
         if tick == TickType.DONE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
         elif tick == TickType.CHANGE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
         else:
-            reason = ''
+            reason = ChangeReason.NONE
 
         sequence = -1
         order_type = OrderType.NONE
@@ -84,11 +85,11 @@ def generateMarketData(count, instruments=None):
         remaining = random.choice([0.0, random.randrange(0, 100)/10])
 
         if tick == TickType.DONE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
         elif tick == TickType.CHANGE:
-            reason = random.choice(['', 'cancelled', 'done'])
+            reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
         else:
-            reason = ''
+            reason = ChangeReason.NONE
 
         sequence = -1
         order_type = OrderType.NONE
