@@ -113,18 +113,92 @@ def generateMarketData(count, instruments=None):
 
     return ret
 
-if __name__ == '__main__':
+
+def simulation1():
     pairs = [PairType.BTCUSD, PairType.ETHUSD]
     instruments = generateInstruments(pairs)
-
     ob = OrderBook(instruments)
-
     for item in initialMarketData(50, instruments):
         ob.push(item)
-
     print(str(ob))
 
     for item in generateMarketData(50, instruments):
         ob.push(item)
 
     print(str(ob))
+
+
+def simulation2():
+    pairs = [PairType.BTCUSD]
+    instruments = generateInstruments(pairs)
+    ob = OrderBook(instruments)
+
+    p = 0.0
+    while p < 2.1:
+        m = MarketData(time=datetime.now(),
+                       volume=1.0,
+                       price=p,
+                       type=TickType.OPEN,
+                       instrument=instruments[0],
+                       side=Side.BUY,
+                       remaining=0.0,
+                       reason=ChangeReason.NONE,
+                       sequence=-1,
+                       order_type=OrderType.NONE)
+        if p > 1.0:
+            m.side = Side.SELL
+        ob.push(m)
+        p += .1
+
+    print(ob)
+
+    p = 0.0
+    while p < 2.1:
+        if round(p * 10) % 2 < 1:
+            m = MarketData(time=datetime.now(),
+                           volume=1.0,
+                           price=p,
+                           type=TickType.OPEN,
+                           instrument=instruments[0],
+                           side=Side.BUY,
+                           remaining=0.0,
+                           reason=ChangeReason.NONE,
+                           sequence=-1,
+                           order_type=OrderType.NONE)
+            if p > 1.0:
+                m.side = Side.SELL
+            ob.push(m)
+        p += .1
+
+    print(ob)
+
+    p = 0.0
+    while p < 2.1:
+        m = MarketData(time=datetime.now(),
+                       volume=1.0,
+                       price=p,
+                       type=TickType.CHANGE,
+                       instrument=instruments[0],
+                       side=Side.BUY,
+                       remaining=0.0,
+                       reason=ChangeReason.CANCELLED,
+                       sequence=-1,
+                       order_type=OrderType.NONE)
+        if p > 1.0:
+            m.side = Side.SELL
+
+        if round(p * 10) % 2 < 1:
+            m.type = TickType.CHANGE
+            m.reason = ChangeReason.FILLED
+        ob.push(m)
+        p += .1
+
+    print(ob)
+
+
+if __name__ == '__main__':
+    import sys
+    if '-2' in sys.argv:
+        simulation2()
+    else:
+        simulation1()
