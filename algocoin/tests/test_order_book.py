@@ -25,22 +25,25 @@ def initialMarketData(count, instruments=None):
     ret = []
     for _ in range(count):
         side = random.choice([Side.BUY, Side.SELL])
-        volume = random.randrange(0, 500) / 10
+        volume = random.randrange(0, 20) / 10
 
         if side == Side.BUY:
-            price = random.randrange(5000, 5500) / 10
-        if side == Side.SELL:
-            price = random.randrange(5501, 6000) / 10
+            price = random.randrange(500, 550) / 10
 
-        tick = random.choice([TickType.OPEN, TickType.CHANGE])
+        if side == Side.SELL:
+            price = random.randrange(551, 600) / 10
+
+        tick = random.choice([TickType.OPEN])
         instrument = random.choice(instruments)
 
         remaining = random.choice([0.0, random.randrange(0, 100)/10])
 
         if tick == TickType.DONE:
             reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         elif tick == TickType.CHANGE:
             reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         else:
             reason = ChangeReason.NONE
 
@@ -68,16 +71,15 @@ def generateMarketData(count, instruments=None):
     for _ in range(count):
         side = random.choice([Side.BUY, Side.SELL])
 
-        volume = random.randrange(0, 500) / 10
+        volume = random.randrange(0, 20) / 10
 
         if side == Side.BUY:
-            price = random.randrange(5000, 5500) / 10
-        if side == Side.SELL:
-            price = random.randrange(5501, 6000) / 10
+            price = random.randrange(500, 550) / 10
 
-        tick = random.choice([TickType.TRADE,
-                              TickType.RECEIVED,
-                              TickType.OPEN,
+        if side == Side.SELL:
+            price = random.randrange(551, 600) / 10
+
+        tick = random.choice([TickType.OPEN,
                               TickType.DONE,
                               TickType.CHANGE])
         instrument = random.choice(instruments)
@@ -86,8 +88,10 @@ def generateMarketData(count, instruments=None):
 
         if tick == TickType.DONE:
             reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         elif tick == TickType.CHANGE:
             reason = random.choice([ChangeReason.NONE, ChangeReason.CANCELLED, ChangeReason.FILLED])
+
         else:
             reason = ChangeReason.NONE
 
@@ -121,3 +125,85 @@ class TestDataSource:
             ob.push(item)
 
         print(str(ob))
+
+    def test_order_book_sequence(self):
+        pairs = [PairType.BTCUSD]
+        instruments = generateInstruments(pairs)
+        ob = OrderBook(instruments)
+
+        p = 0.0
+        while p < 2.1:
+            m = MarketData(time=datetime.now(),
+                           volume=1.0,
+                           price=p,
+                           type=TickType.OPEN,
+                           instrument=instruments[0],
+                           side=Side.BUY,
+                           remaining=0.0,
+                           reason=ChangeReason.NONE,
+                           sequence=-1,
+                           order_type=OrderType.NONE)
+            if p > 1.0:
+                m.side = Side.SELL
+            ob.push(m)
+            p += .1
+
+        print(ob)
+
+        p = 0.0
+        while p < 2.1:
+            if round(p * 10) % 2 < 1:
+                m = MarketData(time=datetime.now(),
+                               volume=1.0,
+                               price=p,
+                               type=TickType.OPEN,
+                               instrument=instruments[0],
+                               side=Side.BUY,
+                               remaining=0.0,
+                               reason=ChangeReason.NONE,
+                               sequence=-1,
+                               order_type=OrderType.NONE)
+                if p > 1.0:
+                    m.side = Side.SELL
+                ob.push(m)
+            p += .1
+
+        print(ob)
+
+        p = 0.0
+        while p < 2.1:
+            m = MarketData(time=datetime.now(),
+                           volume=1.0,
+                           price=p,
+                           type=TickType.CHANGE,
+                           instrument=instruments[0],
+                           side=Side.BUY,
+                           remaining=0.0,
+                           reason=ChangeReason.CANCELLED,
+                           sequence=-1,
+                           order_type=OrderType.NONE)
+            if p > 1.0:
+                m.side = Side.SELL
+
+            if round(p * 10) % 2 < 1:
+                m.type = TickType.CHANGE
+                m.reason = ChangeReason.FILLED
+            ob.push(m)
+            p += .1
+
+        print(ob)
+
+        print(ob._ob[instruments[0]]._bidd.keys())
+        print(ob._ob[instruments[0]]._bid)
+        # TODO check floating point error
+        assert ob._ob[instruments[0]]._bidd[0.0] == 1.0
+        assert ob._ob[instruments[0]]._bidd[0.2] == 1.0
+        assert ob._ob[instruments[0]]._bidd[0.4] == 1.0
+        assert ob._ob[instruments[0]]._bidd[0.6] == 1.0
+        assert ob._ob[instruments[0]]._bidd[0.8] == 1.0
+        assert ob._ob[instruments[0]]._bidd[1.0] == 1.0
+        assert ob._ob[instruments[0]]._askk[1.2] == 1.0
+        assert ob._ob[instruments[0]]._askk[1.4] == 1.0
+        assert ob._ob[instruments[0]]._askk[1.6] == 1.0
+        assert ob._ob[instruments[0]]._askk[1.8] == 1.0
+        assert ob._ob[instruments[0]]._askk[1.8] == 1.0

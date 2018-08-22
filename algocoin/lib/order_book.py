@@ -23,63 +23,66 @@ class Book(object):
         self._askk = {}
 
     def push(self, order) -> None:
+        price = round(order.price, 2)
+        volume = round(order.volume, 4)
+
         if order.side == Side.BUY:
             if order.type == TickType.DONE:
-                if order.price not in self._bidd:
+                if price not in self._bidd:
                     pass
                 else:
-                    self._bidd[order.price].volume -= order.volume
-                    if self._bidd[order.price].volume < 1e-5:
-                        self._bid.remove(self._bidd[order.price])
-                        del self._bidd[order.price]
+                    self._bidd[price].volume -= volume
+                    if self._bidd[price].volume < 1e-5:
+                        self._bid.remove(self._bidd[price])
+                        del self._bidd[price]
 
             elif order.type == TickType.CHANGE:
-                if order.price not in self._bidd:
+                if price not in self._bidd:
                     pass
                 else:
-                    self._bidd[order.price].volume -= order.volume
-                    if self._bidd[order.price].volume < 1e-5:
-                        self._bid.remove(self._bidd[order.price])
-                        del self._bidd[order.price]
+                    self._bidd[price].volume -= volume
+                    if self._bidd[price].volume < 1e-5:
+                        self._bid.remove(self._bidd[price])
+                        del self._bidd[price]
 
             elif order.type == TickType.OPEN:
                 if order.price in self._bidd:
-                    self._bidd[order.price].volume += order.volume
+                    self._bidd[price].volume += volume
                 else:
-                    self._bid.append(Order(order.price, order.volume))
-                    self._bidd[order.price] = self._bid[-1]
+                    self._bid.append(Order(price, volume))
+                    self._bidd[price] = self._bid[-1]
             else:
-                self._bid.append(Order(order.price, order.volume))
-                self._bidd[order.price] = self._bid[-1]
+                self._bid.append(Order(price, volume))
+                self._bidd[price] = self._bid[-1]
         else:
             if order.type == TickType.DONE:
-                if order.price not in self._askk:
+                if price not in self._askk:
                     pass
                 else:
-                    self._askk[order.price].volume -= order.volume
-                    if self._askk[order.price].volume < 1e-5:
-                        self._ask.remove(self._askk[order.price])
-                        del self._askk[order.price]
+                    self._askk[price].volume -= volume
+                    if self._askk[price].volume < 1e-5:
+                        self._ask.remove(self._askk[price])
+                        del self._askk[price]
 
             elif order.type == TickType.CHANGE:
-                if order.price not in self._askk:
+                if price not in self._askk:
                     pass
                 else:
-                    self._askk[order.price].volume -= order.volume
-                    if self._askk[order.price].volume < 1e-5:
-                        self._ask.remove(self._askk[order.price])
-                        del self._askk[order.price]
+                    self._askk[price].volume -= order.volume
+                    if self._askk[price].volume < 1e-5:
+                        self._ask.remove(self._askk[price])
+                        del self._askk[price]
 
             elif order.type == TickType.OPEN:
-                if order.price in self._askk:
-                    self._askk[order.price].volume += order.volume
+                if price in self._askk:
+                    self._askk[price].volume += volume
                 else:
-                    self._ask.append(Order(order.price, order.volume))
-                    self._askk[order.price] = self._ask[-1]
+                    self._ask.append(Order(price, volume))
+                    self._askk[price] = self._ask[-1]
 
             else:
-                self._ask.append(Order(order.price, order.volume))
-                self._askk[order.price] = self._ask[-1]
+                self._ask.append(Order(price, volume))
+                self._askk[price] = self._ask[-1]
 
     def pop(self, order) -> None:
         pass
