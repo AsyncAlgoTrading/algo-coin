@@ -18,6 +18,9 @@ for path, subdirs, files in os.walk('algocoin/src'):
             outputs.append(fp.replace('.cpp', '').replace('/src', ''))
             sources.append(fp)
 
+with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+    requires = f.read().split()
+
 setup(
     name='algocoin',
     version='0.0.3',
@@ -28,6 +31,7 @@ setup(
     author='Tim Paine',
     author_email='timothy.k.paine@gmail.com',
     license='GPL',
+    install_requires=requires,
 
     classifiers=[
         'Development Status :: 3 - Alpha',
