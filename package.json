@@ -3,9 +3,9 @@
   "name": "algocoin",
   "version": "0.0.1",
   "dependencies": {
-    "@jpmorganchase/perspective-viewer": "^0.1.17",
-    "@jpmorganchase/perspective-viewer-highcharts": "^0.1.17",
-    "@jpmorganchase/perspective-viewer-hypergrid": "^0.1.17",
+    "@jpmorganchase/perspective-viewer": "^0.2.2",
+    "@jpmorganchase/perspective-viewer-highcharts": "^0.2.2",
+    "@jpmorganchase/perspective-viewer-hypergrid": "^0.2.2",
     "@phosphor/commands": "^1.5.0",
     "@phosphor/dragdrop": "^1.3.0",
     "@phosphor/messaging": "^1.2.2",

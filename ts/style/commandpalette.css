@@ -9,21 +9,32 @@
 
 .p-CommandPalette {
   font-family: sans-serif;
+}
+
+body.dark .p-CommandPalette {
   background: var(--dark-bg-color);
 }
 
+body.light .p-CommandPalette {
+  background: var(--light-bg-color);
+}
 
 .p-CommandPalette-search {
   padding: 8px;
 }
 
-
 .p-CommandPalette-wrapper {
   padding: 4px 6px;
   background: black;
+}
+
+body.dark .p-CommandPalette-wrapper {
   border: 1px solid var(--dark-border);
 }
 
+body.light .p-CommandPalette-wrapper {
+  border: 1px solid var(--light-border);
+}
 
 .p-CommandPalette-input {
   width: 100%;
@@ -35,13 +46,20 @@
 
 .p-CommandPalette-header {
   padding: 4px;
-  color: var(--dark-color);
   font-size: 12px;
   font-weight: 600;
-  background: var(--dark-bg-color);
   cursor: pointer;
 }
 
+body.dark .p-CommandPalette-header {
+  color: var(--dark-color);
+  background: var(--dark-bg-color);
+}
+
+body.light .p-CommandPalette-header {
+  color: var(--light-color);
+  background: var(--light-bg-color);
+}
 
 .p-CommandPalette-header:hover::before {
   content: '\2026'; /* ellipsis */
@@ -58,35 +76,56 @@
 
 .p-CommandPalette-item {
   padding: 4px 8px;
-  color: var(--dark-color);
   font-size: 13px;
   font-weight: 500;
 }
 
+body.dark .p-CommandPalette-item {
+  color: var(--dark-color);
+}
+
+body.light .p-CommandPalette-item {
+  color: var(--light-color);
+}
 
 .p-CommandPalette-emptyMessage {
   padding: 4px;
-  color: var(--dark-color);
   font-size: 12px;
   font-weight: 600;
   text-align: center;
 }
 
+body.dark .p-CommandPalette-emptyMessage {
+  color: var(--dark-color);
+}
 
-.p-CommandPalette-item.p-mod-disabled {
+body.light .p-CommandPalette-emptyMessage {
+  color: var(--light-color);
+}
+
+body.dark .p-CommandPalette-item.p-mod-disabled {
   color: var(--dark-color-disabled);
 }
 
+body.light .p-CommandPalette-item.p-mod-disabled {
+  color: var(--light-color-disabled);
+}
 
-.p-CommandPalette-item.p-mod-active {
+body.dark .p-CommandPalette-item.p-mod-active {
   background: var(--dark-bg-hover);
 }
 
+body.light .p-CommandPalette-item.p-mod-active {
+  background: var(--light-bg-hover);
+}
 
-.p-CommandPalette-item:hover:not(.p-mod-active):not(.p-mod-disabled) {
+body.dark .p-CommandPalette-item:hover:not(.p-mod-active):not(.p-mod-disabled) {
   background: var(--dark-bg-hover);
 }
 
+body.light .p-CommandPalette-item:hover:not(.p-mod-active):not(.p-mod-disabled) {
+  background: var(--light-bg-hover);
+}
 
 .p-CommandPalette-itemIcon {
   display: none;
@@ -94,18 +133,28 @@
 
 
 .p-CommandPalette-itemLabel > mark {
-  background-color: transparent;
   font-weight: bold;
+  background-color: transparent;
 }
 
 
-.p-CommandPalette-item.p-mod-disabled mark {
+body.dark .p-CommandPalette-item.p-mod-disabled mark {
   color: var(--dark-color-disabled);
 }
 
+body.light .p-CommandPalette-item.p-mod-disabled mark {
+  color: var(--light-color-disabled);
+}
 
 .p-CommandPalette-itemCaption {
-  color: var(--dark-color);
   font-size: 11px;
   font-weight: 400;
+}
+
+body.dark .p-CommandPalette-itemCaption {
+  color: var(--dark-color);
+}
+
+body.light .p-CommandPalette-itemCaption {
+  color: var(--light-color);
 }

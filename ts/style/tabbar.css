@@ -8,8 +8,8 @@
 
 
 .p-TabBar {
-  min-height: 24px;
-  max-height: 24px;
+  min-height: 45px;
+  max-height: 45px;
 }
 
 
@@ -17,14 +17,18 @@
   min-width: 0;
   min-height: 0;
   align-items: flex-end;
+}
+
+body.dark .p-TabBar-content {
   border-bottom: 1px solid var(--dark-border);
 }
 
+body.light .p-TabBar-content {
+  border-bottom: 1px solid var(--light-border);
+}
 
 .p-TabBar-tab {
   padding: 0px 10px;
-  background: var(--dark-bg-color2);
-  border: 1px solid var(--dark-border);
   border-bottom: none;
   font: 12px Helvetica, Arial, sans-serif;
   flex: 0 1 125px;
@@ -35,31 +39,54 @@
   line-height: 20px;
 }
 
-
-.p-TabBar-tab.p-mod-current {
-  background: var(--dark-bg-color);
+body.dark .p-TabBar-tab {
+  background: var(--dark-bg-color2);
+  border: 1px solid var(--dark-border);
 }
 
+body.light .p-TabBar-tab {
+  background: var(--light-bg-color2);
+  border: 1px solid var(--light-border);
+}
 
-.p-TabBar-tab:hover:not(.p-mod-current) {
+body.dark .p-TabBar-tab:hover:not(.p-mod-current) {
   background: var(--dark-bg-hover);
 }
 
+body.light .p-TabBar-tab:hover:not(.p-mod-current) {
+  background: var(--light-bg-hover);
+}
 
 .p-TabBar-tab:first-child {
   margin-left: 0;
 }
 
 
+.p-TabBar-tab {
+  min-height: 45px;
+  max-height: 45px;
+}
+
 .p-TabBar-tab.p-mod-current {
-  min-height: 23px;
-  max-height: 23px;
+  min-height: 45px;
+  max-height: 45px;
   transform: translateY(1px);
 }
 
+body.dark .p-TabBar-tab.p-mod-current {
+  background: var(--dark-bg-color);
+}
 
-.p-TabBar-tabIcon:hover {
+body.light .p-TabBar-tab.p-mod-current {
+  background: var(--light-bg-color);
+}
+
+body.dark .p-TabBar-tabIcon:hover {
   color: var(--dark-color-disabled);
+}
+
+body.light .p-TabBar-tabIcon:hover {
+  color: var(--light-color-disabled);
 }
 
 .p-TabBar-tabLabel,
@@ -72,8 +99,12 @@
   margin-left: 4px;
 }
 
-.p-TabBar-tab.p-mod-closable > .p-TabBar-tabCloseIcon:hover {
+body.dark .p-TabBar-tab.p-mod-closable > .p-TabBar-tabCloseIcon:hover {
   color: var(--dark-color-disabled);
+}
+
+body.light .p-TabBar-tab.p-mod-closable > .p-TabBar-tabCloseIcon:hover {
+  color: var(--light-color-disabled);
 }
 
 .p-TabBar-tab.p-mod-closable > .p-TabBar-tabCloseIcon:before {
@@ -87,6 +118,13 @@
   max-height: 23px;
   min-width: 125px;
   border: none;
-  box-shadow: 1px 1px 2px var(--dark-drop-shadow);
   transform: translateX(-40%) translateY(-58%);
+}
+
+body.dark .p-TabBar-tab.p-mod-drag-image {
+  box-shadow: 1px 1px 2px var(--dark-drop-shadow);
+}
+
+body.light .p-TabBar-tab.p-mod-drag-image {
+  box-shadow: 1px 1px 2px var(--light-drop-shadow);
 }

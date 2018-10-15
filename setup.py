@@ -18,7 +18,7 @@ for path, subdirs, files in os.walk('algocoin/src'):
             outputs.append(fp.replace('.cpp', '').replace('/src', ''))
             sources.append(fp)
 
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+with open(os.path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requires = f.read().split()
 
 setup(

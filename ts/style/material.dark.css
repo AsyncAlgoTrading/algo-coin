@@ -16,7 +16,20 @@ div.pspwidget ul {
 
 div.pspwidget perspective-hypergrid {
   color: #eee;
-  background-color: @coolgrey700;
+  background-color: var(--dark-bg-color);
+}
+
+div.pspwidget perspective-hypergrid th {
+  background-color: var(--dark-bg-color);
+  background-color: var(--dark-bg-color);
+}
+
+div.pspwidget perspective-hypergrid td.hover {
+    background-color: var(--highlight-darkred);
+}
+
+div.pspwidget perspective-hypergrid tr.hover {
+    background-color: var(--dark-bg-color2);
 }
 
 div.pspwidget perspective-viewer:not([settings]) {
@@ -77,7 +90,7 @@ div.pspwidget perspective-viewer #app ul,
 div.pspwidget perspective-viewer #app #filters {
   border-right: 0px;
   background: none;
-  color: #666;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app #filters {
@@ -94,7 +107,7 @@ div.pspwidget perspective-viewer #app perspective-row .date::before {
 
 div.pspwidget perspective-viewer #app perspective-row li#psp_row {
   margin-bottom: 0px;
-  color: #666;
+  color: var(--dark-color);
   margin-right: 0px;
 }
 
@@ -152,7 +165,7 @@ div.pspwidget perspective-viewer #app #side_panel #active_columns perspective-ro
 div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-row .row_draggable {
   background: none;
   border-right: 0px;
-  color: #666;
+  color: var(--dark-color);
   margin-left: 48px;
   padding: 4px 3px 4px 0px;
 }
@@ -210,7 +223,7 @@ div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-
 }
 
 div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-row #name {
-  color: #AAA;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-row #name:before {
@@ -262,17 +275,17 @@ div.pspwidget perspective-viewer ::-webkit-scrollbar-track {
 
 div.pspwidget perspective-viewer ::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background-color: #666;
+  background-color: var(--dark-bg-color);
 }
 
 div.pspwidget perspective-viewer.dragging #top_panel .dropping {
-  background-color: #135D78 !important;
-  color: white !important;
+  background-color: var(--dark-bg-color);
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer.dragging #side_panel #active_columns perspective-row[drop-target] .row_draggable {
-  background-color: #135D78 !important;
-  color: white !important;
+  background-color: var(--dark-bg-color);
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer[view=heatmap] image.highcharts-boost-canvas {
@@ -297,12 +310,12 @@ div.pspwidget perspective-viewer image.highcharts-boost-canvas {
 }
 
 div.pspwidget perspective-viewer #app {
-  background-color: #2A2C2F;
+  background-color: var(--dark-bg-color);
   border-top-color: #242526 !important;
 }
 
 div.pspwidget perspective-viewer #app select:focus {
-  color: #FFF !important;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app .highcharts-heatmap-gradient-full {
@@ -346,7 +359,7 @@ div.pspwidget perspective-viewer #app .highcharts-yaxis-grid path.highcharts-gri
 }
 
 div.pspwidget perspective-viewer #app #pivot_chart {
-  background-color: #2F3136;
+  background-color: var(--dark-bg-color);
 }
 
 div.pspwidget perspective-viewer #app #pivot_chart tspan,
@@ -360,7 +373,7 @@ div.pspwidget perspective-viewer #app #pivot_chart image {
 }
 
 div.pspwidget perspective-viewer #app #drop_target {
-  background-color: #2F3136;
+  background-color: var(--dark-bg-color);
 }
 
 div.pspwidget perspective-viewer #app input,
@@ -368,22 +381,22 @@ div.pspwidget perspective-viewer #app select,
 div.pspwidget perspective-viewer #app ul,
 div.pspwidget perspective-viewer #app #filters {
   border-right: 0px;
-  background-color: #2A2C2F;
+  background-color: var(--dark-bg-color);
   color: #fff;
   border-color: #666;
 }
 
 div.pspwidget perspective-viewer #app input::placeholder {
-  color: #666;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app label {
-  color: #666;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app #filters {
   border-bottom: 1px solid #666;
-  color: #666;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app perspective-row #psp_row {
@@ -431,7 +444,7 @@ div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-
 }
 
 div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-row #name {
-  color: #666;
+  color: var(--dark-color);
 }
 
 div.pspwidget perspective-viewer #app #side_panel #inactive_columns perspective-row:hover.active #name {

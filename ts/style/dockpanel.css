@@ -8,9 +8,26 @@
 
 
 .p-DockPanel-overlay {
-  background: var(--dark-overlay);
-  border: 1px dashed var(--dark-border);
   transition-property: top, left, right, bottom;
   transition-duration: 150ms;
   transition-timing-function: ease;
+}
+
+body.dark .p-DockPanel-widget {
+  background-color: var(--dark-bg-color);
+}
+
+
+body.light .p-DockPanel-widget {
+  background-color: var(--light-bg-color);
+}
+
+body.dark .p-DockPanel-overlay {
+  background: var(--dark-overlay);
+  border: 1px dashed var(--dark-border);
+}
+
+body.light .p-DockPanel-overlay {
+  background: var(--light-overlay);
+  border: 1px dashed var(--light-border);
 }

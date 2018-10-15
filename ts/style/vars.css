@@ -1,15 +1,37 @@
 :root {
-    --dark-bg-color: #2F3136;
-    --dark-bg-color2: #2a2c2f;
-    --dark-bg-color3: #1a1c1f;
-    --dark-bg-hover: #636363;
+    --dark-bg-color: #242526;
+    --dark-bg-color2: #161616;
 
-    --dark-color: white;
+    --light-bg-color: #ddd;
+    --light-bg-color2: #fff;
+
+    --dark-bg-hover: #636363;
+    --light-bg-hover: #636363;
+
+    --dark-color: lightgrey;
+    --light-color: #2b2b2b;
+
     --dark-color-disabled: rgba(255, 255, 255, 0.25);
+    --light-color-disabled: rgba(255, 255, 255, 0.25);
+
     --dark-border: #666;
+    --light-border: #666;
+
     --dark-border2: #3b3e44;
+    --light-border2: #3b3e44;
+
     --dark-overlay: rgba(0, 0, 0, 0.6);
+    --light-overlay: rgba(0, 0, 0, 0.4);
+
     --dark-drop-shadow: rgba(255, 255, 255, 0.2);
+    --light-drop-shadow: rgba(255, 255, 255, 0.8);
 
     --light-border: black;
+
+    --highlight-orange: #ff9800;
+    --highlight-blue: #00bcd4;
+    --highlight-teal: #2BB0AF;
+    --highlight-green: #4caf50;
+    --highlight-purple: #9c27b0;
+    --highlight-red:#f44336;
 }

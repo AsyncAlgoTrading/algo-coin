@@ -67,6 +67,10 @@ class GDAXHelpersMixin(ExchangeHelpersMixin):
             reason = ChangeReason.CANCELLED
         elif reason == '':
             reason = ChangeReason.NONE
+        elif reason == 'filled':
+            # FIXME
+            reason = ChangeReason.NONE
+            # reason = ChangeReason.FILLED
         else:
             print(reason)
 
