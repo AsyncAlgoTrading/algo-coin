@@ -7,7 +7,7 @@ from ..enums import TradingType, ExchangeType
 from ..exchange import Exchange
 from ..structs import TradeRequest, TradeResponse, Account
 from ..utils import get_keys_from_environment, str_to_currency_type
-from ..enums import CurrencyType, TradeResult
+from ..enums import TradeResult
 from ..logging import LOG as log
 from .helpers import GDAXHelpersMixin
 

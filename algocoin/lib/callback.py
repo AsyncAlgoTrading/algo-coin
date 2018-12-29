@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from .structs import MarketData
-from .logging import LOG as log, DATA as dlog, ERROR as elog
+from .logging import LOG as log, DATA as dlog
 
 
 class Callback(metaclass=ABCMeta):

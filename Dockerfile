@@ -19,7 +19,7 @@ RUN cd boost_1_67_0 && CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/local/includ
 RUN ln -s /usr/local/lib/libboost_python37.so /usr/local/lib/libboost_python.so
 RUN ln -s /usr/local/lib/libboost_numpy37.so /usr/local/lib/libboost_numpy.so
 
-RUN python3 -m pip install codecov nose mock
+RUN python3 -m pip install codecov nose mock flake8 pylint
 RUN python3 -m pip install -r requirements.txt
 
 RUN DOCKER=true make test

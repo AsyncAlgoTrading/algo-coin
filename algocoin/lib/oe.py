@@ -1,9 +1,8 @@
 import ccxt
 from .config import ExchangeConfig
 from .exchange import Exchange
-from .enums import TradingType, ExchangeType, CurrencyType, PairType, Side, OrderType, OrderSubType, TradeResult, InstrumentType
+from .enums import TradingType, ExchangeType
 from .structs import TradeRequest, TradeResponse
-from .exchanges.helpers import GDAXHelpersMixin, GeminiHelpersMixin
 from .utils import get_keys_from_environment, trade_req_to_params
 from .logging import LOG as log
 
@@ -43,7 +42,7 @@ class OrderEntry(object):
         '''execute a buy order'''
         params = trade_req_to_params(req)
         log.warn("Buy params: %s", str(params))
-        order = self._client.create_order(**params)
+        # order = self._client.create_order(**params)
 
         # def create_order(self, symbol, type, side, amount, price=None, params={}):
 

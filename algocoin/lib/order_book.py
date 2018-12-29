@@ -1,7 +1,7 @@
 # from abc import ABCMeta
 from .structs import Instrument
 from .enums import Side, TickType
-from heapq import heappush, heappop
+# from heapq import heappush, heappop
 
 
 class Order(object):

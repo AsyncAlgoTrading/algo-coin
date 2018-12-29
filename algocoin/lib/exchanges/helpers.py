@@ -1,7 +1,7 @@
 from abc import abstractstaticmethod
 from datetime import datetime
 from ..enums import OrderType, OrderSubType, Side, PairType, CurrencyType, TickType, ChangeReason
-from ..utils import parse_date, str_to_currency_type, str_to_currency_pair_type, str_to_side, \
+from ..utils import parse_date, str_to_currency_pair_type, str_to_side, \
     str_to_order_type
 from ..structs import MarketData, Instrument
 

@@ -61,6 +61,10 @@ test: clean build ## run the tests for travis CI
 test_verbose: ## run the tests with full output
 	python3 -m nose -vv -s ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
 
+lint: ## run linter
+	pylint algocoin || echo
+	flake8 algocoin 
+
 annotate: ## MyPy type annotation check
 	mypy -s algocoin 
 

@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from pydoc import locate
 from .config import TradingEngineConfig, BacktestConfig, StrategyConfig
-from .enums import TradingType, PairType
+from .enums import TradingType
 from .exceptions import ConfigException
 from .utils import str_to_exchange, exchange_to_file, set_verbose, str_to_currency_pair_type
 from .logging import LOG as log

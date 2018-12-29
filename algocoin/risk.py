@@ -1,5 +1,5 @@
 from .lib.config import RiskConfig
-from .lib.structs import TradeRequest, TradeResponse, MarketData, Instrument
+from .lib.structs import TradeRequest, TradeResponse, Instrument
 from .lib.enums import Side, TradeResult, OrderType, RiskReason
 from .lib.logging import RISK as rlog
 

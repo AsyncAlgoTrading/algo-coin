@@ -1,7 +1,7 @@
 from .enums import ExchangeType, TradingType
 
 
-EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
+EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.SIMULATION): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
@@ -50,7 +50,7 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {
 
 }.get((name, typ), None)
 
-EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {
+EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
 
@@ -93,7 +93,7 @@ EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {
 
 }.get((name, typ), None)
 
-ACCOUNTS = lambda name, typ: {
+ACCOUNTS = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
 
