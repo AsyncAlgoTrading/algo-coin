@@ -53,13 +53,13 @@ js:  ## build the js
 	npm run build
 
 tests: ## Clean and Make unit tests
-	python3 -m nose -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	python3 -m nose2 -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
 
 test: clean build lint ## run the tests for travis CI
-	@ python3 -m nose -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	@ python3 -m nose2 -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
 
 test_verbose: ## run the tests with full output
-	python3 -m nose -vv -s ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --cover-erase --cover-package=`find algocoin -name "*.py" | sed "s=\./==g" | sed "s=/=.=g" | sed "s/.py//g" | tr '\n' ',' | rev | cut -c2- | rev`
+	@ python3 -m nose2 -vv ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
 
 lint: ## run linter
 	pylint algocoin || echo
