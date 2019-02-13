@@ -53,10 +53,10 @@ js:  ## build the js
 	npm run build
 
 tests: ## Clean and Make unit tests
-	python3 -m nose2 -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
+	python3 -m pytest ./build/`ls ./build | grep lib`/algocoin/tests --cov=algocoin
 
 test: clean build lint ## run the tests for travis CI
-	@ python3 -m nose2 -v ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
+	@ python3 -m pytest ./build/`ls ./build | grep lib`/algocoin/tests --cov=algocoin
 
 test_verbose: ## run the tests with full output
 	@ python3 -m nose2 -vv ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
