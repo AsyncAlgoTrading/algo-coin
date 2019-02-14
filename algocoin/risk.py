@@ -10,16 +10,16 @@ class Risk(object):
         self.max_drawdown = options.max_drawdown
         self.max_risk = options.max_risk
         self.total_funds = options.total_funds
-        self.outstanding = 0.0  # type: float TODO get from open orders
+        self.outstanding = 0.0  # type: float  # TODO get from open orders
 
         self.max_running_outstanding = 0.0
-        self.max_running_outstanding_incr = []  # type: List
+        self.max_running_outstanding_incr = []  # type: list
 
         self.max_running_drawdown = 0.0  # type: float
-        self.max_running_drawdown_incr = []  # type: List
+        self.max_running_drawdown_incr = []  # type: list
 
         self.max_running_risk = 0.0  # type: float
-        self.max_running_risk_incr = []  # type: List
+        self.max_running_risk_incr = []  # type: list
 
     def _constructResp(self,
                        side: Side,

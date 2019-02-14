@@ -289,22 +289,22 @@ def str_to_order_type(s: str) -> OrderType:
 
 
 def str_to_exchange(exchange: str) -> ExchangeType:
-        if 'bitfinex' in exchange:
-            return ExchangeType.BITFINEX
-        elif 'bitstamp' in exchange:
-            return ExchangeType.BITSTAMP
-        elif 'gemini' in exchange:
-            return ExchangeType.GEMINI
-        elif 'hitbtc' in exchange:
-            return ExchangeType.HITBTC
-        elif 'itbit' in exchange:
-            return ExchangeType.ITBIT
-        elif 'kraken' in exchange:
-            return ExchangeType.KRAKEN
-        elif 'lake' in exchange:
-            return ExchangeType.LAKE
-        else:
-            return ExchangeType.GDAX
+    if 'bitfinex' in exchange:
+        return ExchangeType.BITFINEX
+    elif 'bitstamp' in exchange:
+        return ExchangeType.BITSTAMP
+    elif 'gemini' in exchange:
+        return ExchangeType.GEMINI
+    elif 'hitbtc' in exchange:
+        return ExchangeType.HITBTC
+    elif 'itbit' in exchange:
+        return ExchangeType.ITBIT
+    elif 'kraken' in exchange:
+        return ExchangeType.KRAKEN
+    elif 'lake' in exchange:
+        return ExchangeType.LAKE
+    else:
+        return ExchangeType.GDAX
 
 
 def exchange_to_file(exchange: ExchangeType) -> str:

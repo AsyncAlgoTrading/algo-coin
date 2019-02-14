@@ -10,7 +10,7 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
     def __init__(self, options: ExchangeConfig) -> None:
         super(Exchange, self).__init__(options)
         self._lastseqnum = -1
-        self._missingseqnum = set()  # type: Set
+        self._missingseqnum = set()  # type: set
         self._seqnum_enabled = False
         self._md_url = EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type)
         self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
