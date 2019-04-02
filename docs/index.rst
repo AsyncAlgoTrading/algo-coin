@@ -7,7 +7,7 @@ algo-coin
 ===================================
 Lightweight, extensible program for algorithmically trading cryptocurrencies across multiple exchanges. 
 
-|build-status| |waffle| |codecov| |gitter| |bch| |pypiv| |pypil| |docs| |site|
+|build-status| |codecov| |gitter| |bch| |pypiv| |pypil| |docs| |site|
 
 
 .. toctree::
@@ -25,11 +25,6 @@ Introduction
     :alt: Build Status
     :scale: 100%
     :target: https://travis-ci.org/timkpaine/algo-coin
-
-.. |waffle| image:: https://badge.waffle.io/timkpaine/algo-coin.svg?label=ready&title=Ready
-    :alt: Waffle
-    :scale: 100%
-    :target: http://waffle.io/timkpaine/algo-coin
 
 .. |codecov| image:: https://codecov.io/gh/timkpaine/algo-coin/branch/master/graph/badge.svg
     :alt: Codecov
