@@ -1,12 +1,13 @@
 import tornado.web
 import tornado.websocket
 import ujson
+from perspective import PerspectiveHTTPMixin
 from ...lib.enums import TickType, PairType
 from ...lib.structs import Instrument
 
 
-class ServerMessagesMixin(object):
-    def get_data(self, type=None, page=0, pairtype=None):
+class ServerMessagesMixin(PerspectiveHTTPMixin):
+    def get_data(self, type=None, page=0, pairtype=None, **psp_kwargs):
         try:
             type = TickType(type)
         except ValueError:
@@ -33,7 +34,10 @@ class ServerMessagesMixin(object):
         if len(msgs) > 0:
             for msg in msgs:
                 msg['underlying'] = msg['instrument']['underlying']
-        return msgs
+
+        psp_kwargs['data'] = msgs
+        super(ServerMessagesMixin, self).loadData(**psp_kwargs)
+        return super(ServerMessagesMixin, self).getData()
 
 
 class ServerMessagesHandler(ServerMessagesMixin, tornado.web.RequestHandler):
@@ -42,15 +46,15 @@ class ServerMessagesHandler(ServerMessagesMixin, tornado.web.RequestHandler):
         tornado.web.RequestHandler
     '''
 
-    def initialize(self, trading_engine):
+    def initialize(self, trading_engine, psp_kwargs):
         self.te = trading_engine
+        self.psp_kwargs = psp_kwargs
 
     def get(self):
         type = self.get_argument('type', None)
         page = int(self.get_argument('page', 0))
         pairtype = self.get_argument('pair', '')
-        msgs = self.get_data(type, page, pairtype)
-        self.write(ujson.dumps({'data': msgs}))
+        self.write(self.get_data(type, page, pairtype, **self.psp_kwargs))
 
 
 class ServerMessagesWSHandler(ServerMessagesMixin, tornado.web.RequestHandler):

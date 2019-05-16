@@ -25,7 +25,11 @@ class ServerApplication(tornado.web.Application):
         super(ServerApplication, self).__init__([
             (r"/", HTMLOpenHandler, {'template': 'index.html'}),
             (r"/api/json/v1/accounts", ServerAccountsHandler, {'trading_engine': trading_engine}),
-            (r"/api/json/v1/messages", ServerMessagesHandler, {'trading_engine': trading_engine}),
+            (r"/api/json/v1/messages", ServerMessagesHandler, {'trading_engine': trading_engine,
+                                                               'psp_kwargs': {'view': 'y_line',
+                                                                              'columns': 'price',
+                                                                              'rowpivots': 'time',
+                                                                              'columnpivots': ['type', 'side']}}),
             (r"/api/ws/v1/messages", ServerMessagesWSHandler, {'trading_engine': trading_engine}),
             (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": static}),
             (r"/(.*)", HTMLOpenHandler, {'template': '404.html'})
