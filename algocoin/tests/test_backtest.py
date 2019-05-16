@@ -1,6 +1,6 @@
 class TestBacktest:
     def setup(self):
-        from ..lib.config import BacktestConfig
+        from ..config import BacktestConfig
         self.config = BacktestConfig()
         self.config.file = 'test'
 
@@ -12,7 +12,7 @@ class TestBacktest:
 
     @classmethod
     def setup_class(cls):
-        from ..lib.callback import Callback
+        from ..callback import Callback
 
         class CallbackTester(Callback):
             def __init__(self):

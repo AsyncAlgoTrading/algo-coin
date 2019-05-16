@@ -21,9 +21,9 @@ class TestExchange:
         # teardown_class() after any methods in this class
 
     def test_init(self):
-        from ...lib.config import ExchangeConfig
-        from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import ExchangeType
+        from ...config import ExchangeConfig
+        from ...exchanges.gdax import GDAXExchange
+        from ...enums import ExchangeType
 
         with patch('os.environ'), patch('gdax.AuthenticatedClient') as m:
             ec = ExchangeConfig()
@@ -34,9 +34,9 @@ class TestExchange:
             assert e
 
     def test_receive(self):
-        from ...lib.config import ExchangeConfig
-        from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import TickType, ExchangeType
+        from ...config import ExchangeConfig
+        from ...exchanges.gdax import GDAXExchange
+        from ...enums import TickType, ExchangeType
 
         with patch('os.environ'), patch('gdax.AuthenticatedClient'):
             ec = ExchangeConfig()
@@ -96,9 +96,9 @@ class TestExchange:
     #             assert e._missingseqnum == set()
 
     def test_trade_req_to_params_gdax(self):
-        from ...lib.exchanges.gdax import GDAXExchange
-        from ...lib.enums import PairType, OrderType, OrderSubType
-        from ...lib.structs import Instrument
+        from ...exchanges.gdax import GDAXExchange
+        from ...enums import PairType, OrderType, OrderSubType
+        from ...structs import Instrument
 
         class tmp:
             def __init__(self, a=True):

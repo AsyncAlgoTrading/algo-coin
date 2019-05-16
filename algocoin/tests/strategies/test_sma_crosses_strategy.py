@@ -21,8 +21,8 @@ class TestSMACrossesStrategy:
         # teardown_class() after any methods in this class
 
     def test_sma_strat_init(self):
-        from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import Side
+        from ...strategies.sma_crosses_strategy import SMACrossesStrategy
+        from ...enums import Side
         s = SMACrossesStrategy(1, 5)
         assert s
 
@@ -45,10 +45,10 @@ class TestSMACrossesStrategy:
         resp = s.transactionCost(m)
 
     def test_sma_match(self):
-        from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import TickType, Side, PairType
-        from ...lib.structs import MarketData, Instrument
-        from ...lib.utils import parse_date
+        from ...strategies.sma_crosses_strategy import SMACrossesStrategy
+        from ...enums import TickType, Side, PairType
+        from ...structs import MarketData, Instrument
+        from ...utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
         s._te = MagicMock()
@@ -70,10 +70,10 @@ class TestSMACrossesStrategy:
         assert s.long_av == 7
 
     def test_sma_buy(self):
-        from ...lib.strategies.sma_crosses_strategy import SMACrossesStrategy
-        from ...lib.enums import TickType, Side, TradeResult, PairType
-        from ...lib.structs import MarketData, TradeResponse, Instrument
-        from ...lib.utils import parse_date
+        from ...strategies.sma_crosses_strategy import SMACrossesStrategy
+        from ...enums import TickType, Side, TradeResult, PairType
+        from ...structs import MarketData, TradeResponse, Instrument
+        from ...utils import parse_date
 
         s = SMACrossesStrategy(1, 5)
 
@@ -127,9 +127,9 @@ class TestSMACrossesStrategy:
     def test_sma_sell(self):
         self.test_sma_buy()
 
-        from ...lib.enums import TickType, Side, PairType
-        from ...lib.structs import MarketData, Instrument
-        from ...lib.utils import parse_date
+        from ...enums import TickType, Side, PairType
+        from ...structs import MarketData, Instrument
+        from ...utils import parse_date
 
         data = MarketData(type=TickType.TRADE,
                           time=parse_date('1479272400'),

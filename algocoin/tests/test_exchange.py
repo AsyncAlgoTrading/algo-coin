@@ -18,8 +18,8 @@ class TestExchange:
         # teardown_class() after any methods in this class
 
     def test_init(self):
-        from ..lib.config import ExchangeConfig
-        from ..lib.exchange import Exchange
+        from ..config import ExchangeConfig
+        from ..exchange import Exchange
 
         ec = ExchangeConfig()
 

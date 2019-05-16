@@ -21,7 +21,7 @@ class TestSMACrossesStrategy:
         # teardown_class() after any methods in this class
 
     def test_sma_strat_init(self):
-        from ...lib.strategies.test_strat import TestStrategy
+        from ...strategies.test_strat import TestStrategy
         s = TestStrategy()
         assert s
 
@@ -38,7 +38,7 @@ class TestSMACrossesStrategy:
         resp = s.transactionCost(m)
 
     def test_sma_buy(self):
-        from ...lib.strategies.test_strat import TestStrategy
+        from ...strategies.test_strat import TestStrategy
         s = TestStrategy()
 
         s.onBuy(MagicMock())

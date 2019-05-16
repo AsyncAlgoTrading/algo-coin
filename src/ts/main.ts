@@ -25,11 +25,17 @@ function main(): void {
   showLoader();
   hideLoader(1000);
 
-  const daily = new PerspectiveDataLoader("Data");
-  dock.addWidget(daily);
+  const accounts = new PerspectiveDataLoader("Accounts");
+  dock.addWidget(accounts);
 
-  const data = new DataLoader([daily], "/api/json/v1/messages", {pair: "BTCUSD", type: "TRADE"});
-  data.start();
+  const data = new PerspectiveDataLoader("Data");
+  dock.addWidget(data);
+
+  const dataLoader = new DataLoader([data], "/api/json/v1/messages", {pair: "BTCUSD", type: "TRADE"});
+  dataLoader.start();
+
+  const accountsLoader = new DataLoader([accounts], "/api/json/v1/accounts");
+  accountsLoader.start();
 
   /* save/restore layouts */
   // let savedLayouts: DockPanel.ILayoutConfig[] = [];
@@ -38,17 +44,15 @@ function main(): void {
   /* hack for custom sizing */
   // const layout = dock.saveLayout();
   // const sizes: number[] = (layout.main as DockLayout.ISplitAreaConfig).sizes;
-  // sizes[0] = 0.75;
-  // sizes[1] = 0.25;
+  // sizes[0] = 0.25;
+  // sizes[1] = 0.75;
   // dock.restoreLayout(layout);
 
   /* main area setup */
   BoxPanel.setStretch(dock, 1);
-
   main.addWidget(dock);
 
   window.onresize = () => { main.update(); };
-
   Widget.attach(header, document.body);
   Widget.attach(bar, document.body);
   Widget.attach(main, document.body);

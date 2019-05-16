@@ -2,8 +2,8 @@ import tornado.web
 import tornado.websocket
 import ujson
 from perspective import PerspectiveHTTPMixin
-from ...lib.enums import TickType, PairType
-from ...lib.structs import Instrument
+from ...enums import TickType, PairType
+from ...structs import Instrument
 
 
 class ServerMessagesMixin(PerspectiveHTTPMixin):

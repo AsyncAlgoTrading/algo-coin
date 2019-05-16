@@ -1,18 +1,21 @@
 import tornado.web
-import ujson
+from perspective import PerspectiveHTTPMixin
 
 
-class ServerAccountsHandler(tornado.web.RequestHandler):
+class ServerAccountsHandler(PerspectiveHTTPMixin, tornado.web.RequestHandler):
     '''Server Handler
     Extends:
         tornado.web.RequestHandler
     '''
 
-    def initialize(self, trading_engine):
+    def initialize(self, trading_engine, **psp_kwargs):
         self.te = trading_engine
+        self.psp_kwargs = psp_kwargs
 
     def get(self):
         try:
-            self.write(ujson.dumps([a.to_dict() for a in self.te._ex.accounts()]))
+            self.psp_kwargs['data'] = [a.to_dict() for a in self.te._ex.accounts()]
+            self.loadData(**self.psp_kwargs)
+            self.write(self.getData())
         except Exception as e:
             self.write(e)

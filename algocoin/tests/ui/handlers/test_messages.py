@@ -45,7 +45,7 @@ class TestMessages:
         req = MagicMock()
         req.body = ''
 
-        x = ServerMessagesHandler(self.app, req, trading_engine=MagicMock())
+        x = ServerMessagesHandler(self.app, req, trading_engine=MagicMock(), psp_kwargs={})
         x._transforms = []
 
         x.te._ex.messages = MagicMock()

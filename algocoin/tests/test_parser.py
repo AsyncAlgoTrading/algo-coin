@@ -4,7 +4,7 @@ import os.path
 
 class TestRisk:
     def setup(self):
-        from ..lib.config import RiskConfig
+        from ..config import RiskConfig
         from ..risk import Risk
 
         rc = RiskConfig()
@@ -32,7 +32,7 @@ class TestRisk:
 
     def test_config_file(self):
 
-        from ..lib.parser import parse_file_config
+        from ..parser import parse_file_config
         import tempfile
 
         t = tempfile.NamedTemporaryFile('w', delete=False)
@@ -47,7 +47,7 @@ currency_pairs=BTCUSD,ETHUSD,LTCUSD,BCHUSD,ETHBTC,LTCBTC,BCHBTC
 
 [strategy]
 strategies =
-    algocoin.lib.strategies.test_strat.TestStrategy
+    algocoin.strategies.test_strat.TestStrategy
 
 [risk]
 max_drawdown = 100.0

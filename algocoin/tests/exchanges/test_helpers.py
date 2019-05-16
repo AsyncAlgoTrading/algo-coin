@@ -1,6 +1,6 @@
 from mock import patch, MagicMock
-from ...lib.exchanges.helpers import GDAXHelpersMixin, GeminiHelpersMixin
-from ...lib.enums import TickType, CurrencyType, PairType
+from ...exchanges.helpers import GDAXHelpersMixin, GeminiHelpersMixin
+from ...enums import TickType, CurrencyType, PairType
 
 
 class TestExchangeHelpers:

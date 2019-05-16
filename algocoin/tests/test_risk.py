@@ -1,6 +1,6 @@
 class TestRisk:
     def setup(self):
-        from ..lib.config import RiskConfig
+        from ..config import RiskConfig
         from ..risk import Risk
 
         rc = RiskConfig()
@@ -30,8 +30,8 @@ class TestRisk:
         pass
 
     def test_request(self):
-        from ..lib.structs import TradeRequest, Instrument
-        from ..lib.enums import Side, PairType, OrderType
+        from ..structs import TradeRequest, Instrument
+        from ..enums import Side, PairType, OrderType
 
         req = TradeRequest(side=Side.BUY, instrument=Instrument(underlying=PairType.BTCUSD), order_type=OrderType.MARKET, volume=100.0, price=1.0)
         resp = self.risk.request(req)
@@ -51,8 +51,8 @@ class TestRisk:
         # assert resp.risk_check == True
 
     def test_request2(self):
-        from ..lib.structs import TradeRequest, Instrument
-        from ..lib.enums import Side, PairType, OrderType
+        from ..structs import TradeRequest, Instrument
+        from ..enums import Side, PairType, OrderType
 
         req = TradeRequest(side=Side.SELL, instrument=Instrument(underlying=PairType.BTCUSD), order_type=OrderType.MARKET, volume=50.0, price=1.0)
         resp = self.risk.request(req)

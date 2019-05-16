@@ -18,7 +18,7 @@ class TestCallback:
         pass
 
     def test_null_callback(self):
-        from ..lib.callback import NullCallback
+        from ..callback import NullCallback
 
         nc = NullCallback()
         assert nc.onTrade(None) is None
@@ -32,7 +32,7 @@ class TestCallback:
         assert nc.onContinue(None) is None
 
     def test_print_callback(self):
-        from ..lib.callback import Print
+        from ..callback import Print
         pc = Print(onError=False)
         assert pc.onError == False
         assert pc.onTrade('test-print_onTrade') == None

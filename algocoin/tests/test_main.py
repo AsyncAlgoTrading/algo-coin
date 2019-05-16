@@ -22,7 +22,7 @@ class TestMain:
 
     def test_parse_command_line(self):
         from ..main import parse_command_line_config
-        from ..lib.enums import TradingType
+        from ..enums import TradingType
 
         argv = ['', '--live']
         ret = parse_command_line_config(argv)
@@ -43,5 +43,5 @@ class TestMain:
     def test_main(self):
         from ..main import main
         with patch('algocoin.main.TradingEngine'), \
-             patch('algocoin.lib.strategies.test_strat.TestStrategy'):
+             patch('algocoin.strategies.test_strat.TestStrategy'):
             main(['', '--live'])

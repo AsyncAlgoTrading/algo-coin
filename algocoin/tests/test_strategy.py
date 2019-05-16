@@ -1,5 +1,5 @@
 # for coverage
-from ..lib.strategy import *
+from ..strategy import *
 
 
 class TestStrategy:

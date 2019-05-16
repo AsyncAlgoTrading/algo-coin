@@ -1,6 +1,6 @@
 # for coverage
-from ..lib.config import *
-from ..lib.enums import TradingType, ExchangeType
+from ..config import *
+from ..enums import TradingType, ExchangeType
 
 
 class TestConfig:

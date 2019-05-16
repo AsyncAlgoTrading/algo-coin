@@ -1,8 +1,8 @@
-from .lib.config import ExecutionConfig
-from .lib.exchange import Exchange
-from .lib.enums import Side
-from .lib.structs import TradeRequest, TradeResponse
-from .lib.logging import EXEC as exlog
+from .config import ExecutionConfig
+from .exchange import Exchange
+from .enums import Side
+from .structs import TradeRequest, TradeResponse
+from .logging import EXEC as exlog
 
 
 class Execution(object):

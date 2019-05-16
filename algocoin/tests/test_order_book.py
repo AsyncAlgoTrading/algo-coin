@@ -1,19 +1,18 @@
 import random
 from datetime import datetime
-from pprint import pprint
 
-from algocoin.lib.order_book import OrderBook
-from algocoin.lib.structs import MarketData, Instrument
-from algocoin.lib.enums import Side, \
-                               OptionSide, \
-                               CurrencyType, \
-                               PairType, \
-                               OrderType, \
-                               OrderSubType, \
-                               TickType, \
-                               TradeResult, \
-                               InstrumentType, \
-                               ChangeReason
+from algocoin.order_book import OrderBook
+from algocoin.structs import MarketData, Instrument
+from algocoin.enums import Side, \
+                           OptionSide, \
+                           CurrencyType, \
+                           PairType, \
+                           OrderType, \
+                           OrderSubType, \
+                           TickType, \
+                           TradeResult, \
+                           InstrumentType, \
+                           ChangeReason
 
 
 def generateInstruments(pairs):

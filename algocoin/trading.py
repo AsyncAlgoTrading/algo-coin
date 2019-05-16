@@ -2,15 +2,15 @@ import threading
 import tornado
 from typing import Callable
 from .backtest import Backtest
-from .lib.callback import Print
-from .lib.config import TradingEngineConfig
-from .lib.enums import TradingType, Side, CurrencyType, TradeResult, OrderType
+from .callback import Print
+from .config import TradingEngineConfig
+from .enums import TradingType, Side, CurrencyType, TradeResult, OrderType
 from .execution import Execution
 from .risk import Risk
-from .lib.strategy import TradingStrategy
-from .lib.structs import TradeRequest, TradeResponse
-from .lib.utils import ex_type_to_ex
-from .lib.logging import LOG as log, SLIP as sllog, TXNS as tlog
+from .strategy import TradingStrategy
+from .structs import TradeRequest, TradeResponse
+from .utils import ex_type_to_ex
+from .logging import LOG as log, SLIP as sllog, TXNS as tlog
 from .ui.server import ServerApplication
 
 
@@ -55,7 +55,6 @@ class TradingEngine(object):
         # if live or sandbox, get account information and balances
         if self._live or self._simulation or self._sandbox:
             accounts = self._ex.accounts()
-
             # extract max funds info
             for account in accounts:
                 if account.currency == CurrencyType.USD:

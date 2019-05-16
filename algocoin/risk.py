@@ -1,7 +1,7 @@
-from .lib.config import RiskConfig
-from .lib.structs import TradeRequest, TradeResponse, Instrument
-from .lib.enums import Side, TradeResult, OrderType, RiskReason
-from .lib.logging import RISK as rlog
+from .config import RiskConfig
+from .structs import TradeRequest, TradeResponse, Instrument
+from .enums import Side, TradeResult, OrderType, RiskReason
+from .logging import RISK as rlog
 
 
 class Risk(object):

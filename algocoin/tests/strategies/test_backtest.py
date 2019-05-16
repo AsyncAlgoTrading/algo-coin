@@ -21,8 +21,8 @@ class TestSMACrossesStrategy:
         # teardown_class() after any methods in this class
 
     def test_sma_strat_init(self):
-        from ...lib.strategies.backtest import CustomStrategy
-        from ...lib.enums import Side
+        from ...strategies.backtest import CustomStrategy
+        from ...enums import Side
         s = CustomStrategy(5)
         assert s
 
@@ -63,7 +63,7 @@ class TestSMACrossesStrategy:
         assert m.price == 9974.0025
 
     def test_sma_buy(self):
-        from ...lib.strategies.backtest import CustomStrategy
+        from ...strategies.backtest import CustomStrategy
         s = CustomStrategy(5)
 
         s.onBuy(MagicMock())

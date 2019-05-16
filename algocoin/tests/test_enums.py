@@ -18,7 +18,7 @@ class TestEnums:
         # teardown_class() after any methods in this class
 
     def test_trading_type(self):
-        from ..lib.enums import TradingType
+        from ..enums import TradingType
         t0 = TradingType.NONE
         t1 = TradingType.SANDBOX
         t2 = TradingType.LIVE
@@ -33,7 +33,7 @@ class TestEnums:
         assert t3 == TradingType('BACKTEST')
 
     def test_exchange_type(self):
-        from ..lib.enums import ExchangeType
+        from ..enums import ExchangeType
         t0 = ExchangeType.NONE
         t1 = ExchangeType.BITSTAMP
         t2 = ExchangeType.BITFINEX
@@ -72,7 +72,7 @@ class TestEnums:
         assert t11 == ExchangeType('COINBASE')
 
     def test_currency_type(self):
-        from ..lib.enums import CurrencyType
+        from ..enums import CurrencyType
         t0 = CurrencyType.USD
         t1 = CurrencyType.BTC
         t2 = CurrencyType.ETH
@@ -87,7 +87,7 @@ class TestEnums:
         assert t3 == CurrencyType('LTC')
 
     def test_side(self):
-        from ..lib.enums import Side
+        from ..enums import Side
         t0 = Side.NONE
         t1 = Side.BUY
         t2 = Side.SELL
@@ -99,7 +99,7 @@ class TestEnums:
         assert t2 == Side('SELL')
 
     def test_order_type(self):
-        from ..lib.enums import OrderType
+        from ..enums import OrderType
         t0 = OrderType.NONE
         t1 = OrderType.MARKET
         t2 = OrderType.LIMIT
@@ -111,7 +111,7 @@ class TestEnums:
         assert t2 == OrderType('LIMIT')
 
     def test_order_sub_type(self):
-        from ..lib.enums import OrderSubType
+        from ..enums import OrderSubType
         t0 = OrderSubType.NONE
         t1 = OrderSubType.POST_ONLY
         t2 = OrderSubType.FILL_OR_KILL

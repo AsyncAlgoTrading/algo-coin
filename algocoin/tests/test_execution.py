@@ -23,7 +23,7 @@ class TestExecution:
 
     def test_init(self):
         from ..execution import Execution
-        from ..lib.config import ExecutionConfig
+        from ..config import ExecutionConfig
 
         ex = MagicMock()
 
@@ -33,9 +33,9 @@ class TestExecution:
 
     def test_request(self):
         from ..execution import Execution
-        from ..lib.enums import Side, PairType, OrderType
-        from ..lib.config import ExecutionConfig
-        from ..lib.structs import TradeRequest, Instrument
+        from ..enums import Side, PairType, OrderType
+        from ..config import ExecutionConfig
+        from ..structs import TradeRequest, Instrument
 
         ex = MagicMock()
         ec = ExecutionConfig()

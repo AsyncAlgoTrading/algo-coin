@@ -21,8 +21,8 @@ class TestStructs:
         # teardown_class() after any methods in this class
 
     def test_to_dict(self):
-        from ..lib.structs import Instrument
-        from ..lib.enums import PairType, InstrumentType
+        from ..structs import Instrument
+        from ..enums import PairType, InstrumentType
         i = Instrument(underlying=PairType.BTCUSD)
         x = i.to_dict()
         print(x)
@@ -35,8 +35,8 @@ class TestStructs:
         assert x == {'type': 'InstrumentType.PAIR', 'underlying': 'BTCUSD'}
 
     def test_MarketData(self):
-        from ..lib.structs import MarketData, Instrument
-        from ..lib.enums import TickType, Side, PairType
+        from ..structs import MarketData, Instrument
+        from ..enums import TickType, Side, PairType
         m = MarketData(time=datetime.now(),
                        volume=1.0,
                        price=1.0,
@@ -47,8 +47,8 @@ class TestStructs:
         assert m
 
     def test_TradeRequest(self):
-        from ..lib.structs import TradeRequest, Instrument
-        from ..lib.enums import Side, OrderType, PairType
+        from ..structs import TradeRequest, Instrument
+        from ..enums import Side, OrderType, PairType
         t = TradeRequest(side=Side.BUY,
                          instrument=Instrument(underlying=PairType.BTCUSD),
                          order_type=OrderType.MARKET,
@@ -64,8 +64,8 @@ class TestStructs:
         # order_sub_type = OrderSubType
 
     def test_TradeResponse(self):
-        from ..lib.structs import TradeRequest, TradeResponse, TradeResult, Instrument
-        from ..lib.enums import Side, OrderType, PairType
+        from ..structs import TradeRequest, TradeResponse, TradeResult, Instrument
+        from ..enums import Side, OrderType, PairType
         req = TradeRequest(side=Side.BUY,
                            order_type=OrderType.MARKET,
                            instrument=Instrument(underlying=PairType.BTCUSD),

@@ -18,8 +18,8 @@ class TestDefine:
         # teardown_class() after any methods in this class
 
     def test_exchange_endpoint(self):
-        from ..lib.define import EXCHANGE_MARKET_DATA_ENDPOINT
-        from ..lib.enums import ExchangeType, TradingType
+        from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
+        from ..enums import ExchangeType, TradingType
 
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.BITSTAMP, TradingType.SANDBOX) \
             == ''

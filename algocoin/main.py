@@ -1,5 +1,5 @@
 from .trading import TradingEngine
-from .lib.parser import parse_command_line_config
+from .parser import parse_command_line_config
 
 
 def main(argv: list) -> None:

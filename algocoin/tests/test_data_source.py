@@ -15,9 +15,9 @@ class TestDataSource:
         pass
 
     def test_StreamingDataSource(self):
-        from ..lib.data_source import StreamingDataSource
-        from ..lib.callback import Callback
-        from ..lib.enums import TickType
+        from ..data_source import StreamingDataSource
+        from ..callback import Callback
+        from ..enums import TickType
 
         try:
             x = StreamingDataSource()
