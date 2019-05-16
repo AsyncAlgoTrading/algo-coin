@@ -76,3 +76,8 @@ custom_strategies
 
 node_modules
 package-lock.json
+yarn.lock
+logo.ai
+logo.png
+coverage
+experiments

@@ -50,7 +50,7 @@ class ServerMessagesHandler(ServerMessagesMixin, tornado.web.RequestHandler):
         page = int(self.get_argument('page', 0))
         pairtype = self.get_argument('pair', '')
         msgs = self.get_data(type, page, pairtype)
-        self.write(ujson.dumps(msgs))
+        self.write(ujson.dumps({'data': msgs}))
 
 
 class ServerMessagesWSHandler(ServerMessagesMixin, tornado.web.RequestHandler):

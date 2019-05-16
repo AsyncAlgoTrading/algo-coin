@@ -129,6 +129,7 @@ class OrderSubType(BaseEnum):
 
 class ChangeReason(BaseEnum):
     NONE = 'NONE'
+    OPENED = 'OPENED'
     CANCELLED = 'CANCELLED'
     FILLED = 'FILLED'
 

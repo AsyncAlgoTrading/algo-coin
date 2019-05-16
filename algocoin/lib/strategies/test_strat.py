@@ -50,7 +50,7 @@ class TestStrategy(TradingStrategy):
         if not self.active:
             req = TradeRequest(side=Side.BUY,
                                volume=1.0,
-                               currency=data.currency,
+                               instrument=data.instrument,
                                order_type=OrderType.MARKET,
                                price=data.price)
             slog.info("requesting buy : %s", req)
@@ -61,7 +61,7 @@ class TestStrategy(TradingStrategy):
             if self.bought_qty:
                 req = TradeRequest(side=Side.SELL,
                                    volume=self.bought_qty,
-                                   currency=data.currency,
+                                   instrument=data.instrument,
                                    order_type=OrderType.MARKET,
                                    price=data.price)
                 slog.info("requesting sell : %s", req)

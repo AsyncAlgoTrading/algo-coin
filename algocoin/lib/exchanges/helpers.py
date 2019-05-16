@@ -72,7 +72,7 @@ class GDAXHelpersMixin(ExchangeHelpersMixin):
             reason = ChangeReason.NONE
             # reason = ChangeReason.FILLED
         else:
-            print(reason)
+            reason = ChangeReason.NONE
 
         sequence = int(jsn.get('sequence'))
         ret = MarketData(time=time,
@@ -174,7 +174,6 @@ class GeminiHelpersMixin(ExchangeHelpersMixin):
         elif reason == '':
             reason = ChangeReason.NONE
         else:
-            print(reason)
             reason = ChangeReason.NONE
 
         sequence = -1

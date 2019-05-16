@@ -49,21 +49,23 @@ dist:  ## dist to pypi
 	python3 setup.py sdist upload -r pypi
 
 js:  ## build the js
-	npm install
-	npm run build
+	yarn
+	yarn build
 
 tests: ## Clean and Make unit tests
 	python3 -m pytest -v ./build/`ls ./build | grep lib`/algocoin/tests --cov=algocoin
+	yarn test
 
 test: clean build lint ## run the tests for travis CI
 	@ python3 -m pytest -v ./build/`ls ./build | grep lib`/algocoin/tests --cov=algocoin
+	yarn test
 
 test_verbose: ## run the tests with full output
 	@ python3 -m nose2 -vv ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
 
 lint: ## run linter
-	pylint algocoin || echo
 	flake8 algocoin 
+	yarn lint
 
 annotate: ## MyPy type annotation check
 	mypy -s algocoin 
