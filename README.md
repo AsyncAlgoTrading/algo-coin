@@ -23,41 +23,29 @@ AlgoCoin is an event based trading system written in python. It comes with suppo
 Like Zipline, the inspriation for this system, AlgoCoin exposes a single algorithm class which is utilized for both live trading and backtesting. The algorithm class is simple enough to write and test algorithms quickly, but extensible enough to allow for complex slippage and transaction cost modeling, as well as mid- and post- trade analysis.  
 
 ### Markets
-Eventual coverage:
-
-- GDAX (Coinbase Pro)
-- Gemini 
-- Binance
-- Bitfinex
-- ItBit
-- Kraken
-- Poloniex
-- Bitstamp
-- CEX
-- HitBTC
-- LakeBTC
-- BitMEX (derivatives)
-- Deribit (derivatives)
-
-#### Sandboxes
-[![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
-[![GDAX](https://img.shields.io/badge/GDAX-ERR-brightreg.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
-
-#### Market Data (Websocket)
-[![GDAX](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)](https://img.shields.io/badge/GDAX-OK-brightgreen.svg)
-[![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
-
-#### Order Entry (REST)
-Porting to use [ccxt](https://github.com/ccxt/ccxt)
-
-[![GDAX](https://img.shields.io/badge/GDAX-ERR-brightred.svg)](https://img.shields.io/badge/GDAX-ERR-brightred.svg)
-[![GEMINI](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)](https://img.shields.io/badge/Gemini-OK-brightgreen.svg)
+AlgoCoin will support all exchanges and currencies covered by [ccxt](https://github.com/ccxt/ccxt)
 
 #### Markets Coverage
-| Exchange | Pairs |
-| -------- | :---: |
-| Gemini   | BTC-USD, ZEC-USD, ZEC-BTC, ZEC-ETH, ETH-BTC, ETH-USD |
-| GDAX     | BTC-USD, BTC-ETH, BTC-LTC, BTC-BCH, ETH-USD, LTC-USD, BCH-USD, ETH-BTC, LTC-BTC, BCH-BTC |
+- USD
+- USDC
+- BAT
+- BCH
+- BTC
+- CVC
+- DAI
+- DNT
+- EOS
+- ETC
+- ETH
+- GNT
+- LOOM
+- LTC
+- MANA
+- REP
+- XLM
+- XRP
+- ZEC
+- ZRX
 
 ---
 
@@ -123,5 +111,6 @@ When you want to run live, set `TradingEngineConfig.type` to Live. You will want
 ---
 
 ## Contributing
+TODO
 
 ---
