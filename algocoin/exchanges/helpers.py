@@ -261,3 +261,107 @@ class GeminiHelpersMixin(ExchangeHelpersMixin):
             return 'limit'
         elif typ == OrderType.MARKET:
             return 'market'
+
+
+class CCXTHelpersMixin(ExchangeHelpersMixin):
+    @staticmethod
+    def tickToData(jsn: dict) -> MarketData:
+        time = parse_date(jsn.get('time'))
+        price = float(jsn.get('price', 'nan'))
+        volume = float(jsn.get('size', 'nan'))
+        typ = CCXTHelpersMixin.strToTradeType(jsn.get('type'))
+        currency_pair = str_to_currency_pair_type(jsn.get('product_id'))
+
+        instrument = Instrument(underlying=currency_pair)
+
+        order_type = str_to_order_type(jsn.get('order_type', ''))
+        side = str_to_side(jsn.get('side', ''))
+        remaining_volume = float(jsn.get('remaining_size', 0.0))
+        reason = jsn.get('reason', '')
+
+        if reason == 'canceled':
+            reason = ChangeReason.CANCELLED
+        elif reason == '':
+            reason = ChangeReason.NONE
+        elif reason == 'filled':
+            # FIXME
+            reason = ChangeReason.NONE
+            # reason = ChangeReason.FILLED
+        else:
+            reason = ChangeReason.NONE
+
+        sequence = int(jsn.get('sequence'))
+        ret = MarketData(time=time,
+                         volume=volume,
+                         price=price,
+                         type=typ,
+                         instrument=instrument,
+                         remaining=remaining_volume,
+                         reason=reason,
+                         side=side,
+                         order_type=order_type,
+                         sequence=sequence)
+        return ret
+
+    @staticmethod
+    def strToTradeType(s: str) -> TickType:
+        if s == 'match':
+            return TickType.TRADE
+        elif s == 'received':
+            return TickType.RECEIVED
+        elif s == 'open':
+            return TickType.OPEN
+        elif s == 'done':
+            return TickType.DONE
+        elif s == 'change':
+            return TickType.CHANGE
+        elif s == 'heartbeat':
+            return TickType.HEARTBEAT
+        else:
+            return TickType.ERROR
+
+    @staticmethod
+    def tradeReqToParams(req) -> dict:
+        p = {}
+        p['price'] = str(req.price)
+        p['size'] = str(req.volume)
+        p['product_id'] = CCXTHelpersMixin.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = CCXTHelpersMixin.orderTypeToString(req.order_type)
+
+        if req.order_sub_type == OrderSubType.FILL_OR_KILL:
+            p['time_in_force'] = 'FOK'
+        elif req.order_sub_type == OrderSubType.POST_ONLY:
+            p['post_only'] = '1'
+        return p
+
+    @staticmethod
+    def currencyPairToString(cur: PairType) -> str:
+        if cur == PairType.BTCUSD:
+            return 'BTC-USD'
+        if cur == PairType.BTCETH:
+            return 'BTC-ETH'
+        if cur == PairType.BTCLTC:
+            return 'BTC-LTC'
+        if cur == PairType.BTCBCH:
+            return 'BTC-BCH'
+        if cur == PairType.ETHUSD:
+            return 'ETH-USD'
+        if cur == PairType.LTCUSD:
+            return 'LTC-USD'
+        if cur == PairType.BCHUSD:
+            return 'BCH-USD'
+        if cur == PairType.ETHBTC:
+            return 'ETH-BTC'
+        if cur == PairType.LTCBTC:
+            return 'LTC-BTC'
+        if cur == PairType.BCHBTC:
+            return 'BCH-BTC'
+        else:
+            raise Exception('Pair not recognized: %s' % str(cur))
+
+    @staticmethod
+    def orderTypeToString(typ: OrderType) -> str:
+        if typ == OrderType.LIMIT:
+            return 'limit'
+        elif typ == OrderType.MARKET:
+            return 'market'

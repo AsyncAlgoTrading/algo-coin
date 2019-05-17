@@ -156,6 +156,7 @@ class TestUtils:
         assert(str_to_currency_type('ETH') == CurrencyType.ETH)
         assert(str_to_currency_type('LTC') == CurrencyType.LTC)
         assert(str_to_currency_type('USD') == CurrencyType.USD)
+        assert(str_to_currency_type('ZRX') == CurrencyType.ZRX)
 
     def test_str_to_side(self):
         from ..utils import str_to_side
@@ -182,31 +183,19 @@ class TestUtils:
         assert(str_to_exchange('kraken') == ExchangeType.KRAKEN)
         assert(str_to_exchange('lake') == ExchangeType.LAKE)
         assert(str_to_exchange('gdax') == ExchangeType.GDAX)
+        assert(str_to_exchange('ccxt') == ExchangeType.CCXT)
 
     def test_str_to_currency_pair_type(self):
         from ..utils import str_to_currency_pair_type
-        from ..enums import PairType
+        from ..enums import PairType, CurrencyType
 
-        assert str_to_currency_pair_type('BTCUSD') == PairType.BTCUSD
-        assert str_to_currency_pair_type('USDBTC') == PairType.USDBTC
-        assert str_to_currency_pair_type('USDETH') == PairType.USDETH
-        assert str_to_currency_pair_type('USDLTC') == PairType.USDLTC
-        assert str_to_currency_pair_type('USDBCH') == PairType.USDBCH
-        assert str_to_currency_pair_type('USDZEC') == PairType.USDZEC
-        assert str_to_currency_pair_type('BTCUSD') == PairType.BTCUSD
-        assert str_to_currency_pair_type('BTCETH') == PairType.BTCETH
-        assert str_to_currency_pair_type('BTCLTC') == PairType.BTCLTC
-        assert str_to_currency_pair_type('BTCBCH') == PairType.BTCBCH
-        assert str_to_currency_pair_type('BTCZEC') == PairType.BTCZEC
-        assert str_to_currency_pair_type('ETHUSD') == PairType.ETHUSD
-        assert str_to_currency_pair_type('ETHBTC') == PairType.ETHBTC
-        assert str_to_currency_pair_type('LTCUSD') == PairType.LTCUSD
-        assert str_to_currency_pair_type('LTCBTC') == PairType.LTCBTC
-        assert str_to_currency_pair_type('BCHUSD') == PairType.BCHUSD
-        assert str_to_currency_pair_type('BCHBTC') == PairType.BCHBTC
-        assert str_to_currency_pair_type('ZECUSD') == PairType.ZECUSD
-        assert str_to_currency_pair_type('ZECBTC') == PairType.ZECBTC
-        assert str_to_currency_pair_type('ZECETH') == PairType.ZECETH
+        for c1, v1 in CurrencyType.__members__.items():
+            for c2, v2 in CurrencyType.__members__.items():
+                if c1 == c2:
+                    continue
+                assert str_to_currency_pair_type(c1 + '/' + c2) == PairType.from_string(c1 + '/' + c2)
+                assert str_to_currency_pair_type(c1 + '-' + c2) == PairType.from_string(c1, c2)
+                assert str_to_currency_pair_type(c1 + c2) == PairType.from_string(c1, c2)
 
     def test_trade_req_to_params(self):
         from ..utils import trade_req_to_params

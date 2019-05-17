@@ -61,7 +61,8 @@ test: clean build lint ## run the tests for travis CI
 	yarn test
 
 test_verbose: ## run the tests with full output
-	@ python3 -m nose2 -vv ./build/`ls ./build | grep lib`/algocoin/tests --with-coverage --coverage=algocoin
+	@ python3 -m pytest -vv ./build/`ls ./build | grep lib`/algocoin/tests --cov=algocoin
+	yarn test
 
 lint: ## run linter
 	flake8 algocoin 

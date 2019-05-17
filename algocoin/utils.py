@@ -177,10 +177,10 @@ def struct(cls):
 
         new_cls_dict[k] = v
     new_cls_dict['__init__'] = __init__struct
-    new_cls_dict['__repr__'] = __repr__
+    new_cls_dict['__repr__'] = __repr__ if not hasattr(cls, '__repr__') else cls.__repr__
     new_cls_dict['_vars'] = vars
     new_cls_dict['_excludes'] = excludes
-    new_cls_dict['to_dict'] = to_dict
+    new_cls_dict['to_dict'] = to_dict if not hasattr(cls, 'to_dict') else cls.to_dict
     return type(cls)(cls.__name__, cls.__bases__, new_cls_dict)
 
 
@@ -204,6 +204,10 @@ def ex_type_to_ex(ex: ExchangeType):
     elif ex == ExchangeType.KRAKEN:
         from .exchanges.kraken import KrakenExchange
         return KrakenExchange
+    elif ex == ExchangeType.CCXT:
+        from .exchanges.ccxt import CCXTExchange
+        return CCXTExchange
+
     raise Exception('Exchange type not implemented : %s ' % ex)
 
 
@@ -216,58 +220,13 @@ def get_keys_from_environment(prefix: str) -> tuple:
 
 def str_to_currency_type(s: str) -> CurrencyType:
     s = s.upper()
-    if 'BTC' in s:
-        return CurrencyType.BTC
-    if 'ETH' in s:
-        return CurrencyType.ETH
-    if 'LTC' in s:
-        return CurrencyType.LTC
-    return CurrencyType.USD
+    if s not in CurrencyType.members():
+        raise Exception(f'CurrencyType not recognized {s}')
+    return CurrencyType(s)
 
 
 def str_to_currency_pair_type(s: str) -> PairType:
-    s = s.strip().upper().replace('-', '')
-    if s == 'BTCUSD':
-        return PairType.BTCUSD
-    elif s == 'USDBTC':
-        return PairType.USDBTC
-    elif s == 'USDETH':
-        return PairType.USDETH
-    elif s == 'USDLTC':
-        return PairType.USDLTC
-    elif s == 'USDBCH':
-        return PairType.USDBCH
-    elif s == 'USDZEC':
-        return PairType.USDZEC
-    elif s == 'BTCUSD':
-        return PairType.BTCUSD
-    elif s == 'BTCETH':
-        return PairType.BTCETH
-    elif s == 'BTCLTC':
-        return PairType.BTCLTC
-    elif s == 'BTCBCH':
-        return PairType.BTCBCH
-    elif s == 'BTCZEC':
-        return PairType.BTCZEC
-    elif s == 'ETHUSD':
-        return PairType.ETHUSD
-    elif s == 'ETHBTC':
-        return PairType.ETHBTC
-    elif s == 'LTCUSD':
-        return PairType.LTCUSD
-    elif s == 'LTCBTC':
-        return PairType.LTCBTC
-    elif s == 'BCHUSD':
-        return PairType.BCHUSD
-    elif s == 'BCHBTC':
-        return PairType.BCHBTC
-    elif s == 'ZECUSD':
-        return PairType.ZECUSD
-    elif s == 'ZECBTC':
-        return PairType.ZECBTC
-    elif s == 'ZECETH':
-        return PairType.ZECETH
-    raise Exception('PairType not recognized %s' % s)
+    return PairType.from_string(s)
 
 
 def str_to_side(s: str) -> Side:
@@ -289,22 +248,9 @@ def str_to_order_type(s: str) -> OrderType:
 
 
 def str_to_exchange(exchange: str) -> ExchangeType:
-    if 'bitfinex' in exchange:
-        return ExchangeType.BITFINEX
-    elif 'bitstamp' in exchange:
-        return ExchangeType.BITSTAMP
-    elif 'gemini' in exchange:
-        return ExchangeType.GEMINI
-    elif 'hitbtc' in exchange:
-        return ExchangeType.HITBTC
-    elif 'itbit' in exchange:
-        return ExchangeType.ITBIT
-    elif 'kraken' in exchange:
-        return ExchangeType.KRAKEN
-    elif 'lake' in exchange:
-        return ExchangeType.LAKE
-    else:
-        return ExchangeType.GDAX
+    if exchange.upper() not in ExchangeType.members():
+        raise Exception(f'Exchange not recognized: {exchange}')
+    return ExchangeType(exchange.upper())
 
 
 def exchange_to_file(exchange: ExchangeType) -> str:

@@ -52,7 +52,6 @@ function main(): void {
   /* Title bar */
   const header = new Header([accounts, data]);
 
-
   window.onresize = () => { main.update(); };
   Widget.attach(header, document.body);
   Widget.attach(bar, document.body);

@@ -37,6 +37,7 @@ class ExchangeType(BaseEnum):
     BITSTAMP = 'BITSTAMP'
     BITFINEX = 'BITFINEX'
     CEX = 'CEX'
+    CCXT = 'CCXT'
     GDAX = 'GDAX'
     COINBASE = 'COINBASE'
     GEMINI = 'GEMINI'
@@ -51,55 +52,62 @@ class ExchangeType(BaseEnum):
 
 class CurrencyType(BaseEnum):
     USD = 'USD'
-    BTC = 'BTC'
-    ETH = 'ETH'
-    LTC = 'LTC'
+    USDC = 'USDC'
+    BAT = 'BAT'
     BCH = 'BCH'
+    BTC = 'BTC'
+    CVC = 'CVC'
+    DAI = 'DAI'
+    DNT = 'DNT'
+    EOS = 'EOS'
+    ETC = 'ETC'
+    ETH = 'ETH'
+    GNT = 'GNT'
+    LOOM = 'LOOM'
+    LTC = 'LTC'
+    MANA = 'MANA'
+    REP = 'REP'
+    XLM = 'XLM'
+    XRP = 'XRP'
     ZEC = 'ZEC'
+    ZRX = 'ZRX'
 
 
-class PairType(BaseEnum):
-    # USD Pairs
-    USDBTC = (CurrencyType.USD, CurrencyType.BTC)
-    USDETH = (CurrencyType.USD, CurrencyType.ETH)
-    USDLTC = (CurrencyType.USD, CurrencyType.LTC)
-    USDBCH = (CurrencyType.USD, CurrencyType.BCH)
-    USDZEC = (CurrencyType.USD, CurrencyType.ZEC)
+def _joiner(l):
+    for i, a in enumerate(l):
+        for j, b in enumerate(l):
+            if i != j:
+                yield (a, b)
 
-    # BTC Pairs
-    BTCUSD = (CurrencyType.BTC, CurrencyType.USD)
-    BTCETH = (CurrencyType.BTC, CurrencyType.ETH)
-    BTCLTC = (CurrencyType.BTC, CurrencyType.LTC)
-    BTCBCH = (CurrencyType.BTC, CurrencyType.BCH)
-    BTCZEC = (CurrencyType.BTC, CurrencyType.ZEC)
 
-    # ETH Pairs
-    ETHUSD = (CurrencyType.ETH, CurrencyType.USD)
-    ETHBTC = (CurrencyType.ETH, CurrencyType.BTC)
-
-    # LTC Pairs
-    LTCUSD = (CurrencyType.LTC, CurrencyType.USD)
-    LTCBTC = (CurrencyType.LTC, CurrencyType.BTC)
-
-    # BCH Pairs
-    BCHUSD = (CurrencyType.BCH, CurrencyType.USD)
-    BCHBTC = (CurrencyType.BCH, CurrencyType.BTC)
-
-    # ZEC Pairs
-    ZECUSD = (CurrencyType.ZEC, CurrencyType.USD)
-    ZECBTC = (CurrencyType.ZEC, CurrencyType.BTC)
-    ZECETH = (CurrencyType.ZEC, CurrencyType.ETH)  # Gemini
-
+class _PairType(BaseEnum):
     def __str__(self):
         return str(self.value[0].value) + str(self.value[1].value)
 
     @staticmethod
-    def from_string(str):
-        s1 = str[:3]
-        c1 = CurrencyType(s1)
-        s2 = str[3:6]
-        c2 = CurrencyType(s2)
+    def from_string(first, second=''):
+        if second:
+            c1 = CurrencyType(first)
+            c2 = CurrencyType(second)
+            return PairType((c1, c2))
+        first = first.strip().upper().replace('-', '/')
+        if '/' not in first:
+            for i in range(len(first)):
+                if i == 0:
+                    continue
+                try:
+                    c1 = CurrencyType(first[:i])
+                    c2 = CurrencyType(first[i:])
+                    return PairType.from_string(c1, c2)
+                except ValueError:
+                    continue
+        first, second = first.split('/')
+        c1 = CurrencyType(first)
+        c2 = CurrencyType(second)
         return PairType((c1, c2))
+
+
+PairType = _PairType('PairType', {x[0].value + x[1].value: (x[0], x[1]) for x in _joiner(CurrencyType.__members__.values())})
 
 
 class Side(BaseEnum):

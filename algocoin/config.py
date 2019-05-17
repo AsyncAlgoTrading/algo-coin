@@ -8,6 +8,8 @@ class ExchangeConfig:
     exchange_types = [ExchangeType], []
     trading_type = TradingType, TradingType.NONE
     currency_pairs = [PairType], [PairType.BTCUSD]
+    ccxt_exchange = ExchangeType, ExchangeType.NONE
+    ccxt_exchanges = [ExchangeType], []
 
 
 @config

@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from pydoc import locate
 from .config import TradingEngineConfig, BacktestConfig, StrategyConfig
-from .enums import TradingType
+from .enums import TradingType, ExchangeType
 from .exceptions import ConfigException
 from .utils import str_to_exchange, exchange_to_file, set_verbose, str_to_currency_pair_type
 from .logging import LOG as log
@@ -132,11 +132,28 @@ def _parse_currencies(currencies):
 def _parse_options(argv, config: TradingEngineConfig) -> None:
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
+
+        # For CCXT, get underlying exchange
+        if config.exchange_options.exchange_type == ExchangeType.CCXT:
+            config.exchange_options.ccxt_exchange = str_to_exchange(argv['ccxt_exchange'])
+
     elif argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
+
+        # For CCXT, get underlying exchange
+        j = 0
+        ccxt_exs = []
+        for i, exchange in enumerate(config.exchange_options.exchange_types):
+            if exchange == ExchangeType.CCXT:
+                exc = str_to_exchange(argv['ccxt_exchanges'][i])
+                j += 1
+            else:
+                exc = ExchangeType.NONE
+            ccxt_exs.append(exc)
+        config.exchange_options.ccxt_exchanges = ccxt_exs
+
     else:
-        config.exchange_options.exchange_type = str_to_exchange('')
-        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
+        raise Exception('No exchange set!')
 
     if argv.get('currency_pairs'):
         config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))
@@ -164,11 +181,28 @@ def _parse_backtest_options(argv, config) -> None:
     if argv.get('exchange'):
         config.backtest_options.file = exchange_to_file(str_to_exchange(argv['exchange']))
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
+
+        # For CCXT, get underlying exchange
+        if config.exchange_options.exchange_type == ExchangeType.CCXT:
+            config.exchange_options.ccxt_exchange = str_to_exchange(argv['ccxt_exchange'])
+
     elif argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
+
+        # For CCXT, get underlying exchange
+        j = 0
+        ccxt_exs = []
+        for i, exchange in enumerate(config.exchange_options.exchange_types):
+            if exchange == ExchangeType.CCXT:
+                exc = str_to_exchange(argv['ccxt_exchanges'][i])
+                j += 1
+            else:
+                exc = ExchangeType.NONE
+            ccxt_exs.append(exc)
+        config.exchange_options.ccxt_exchanges = ccxt_exs
+
     else:
-        config.exchange_options.exchange_type = str_to_exchange('')
-        log.critical('No Exchange set, using default: %s', config.exchange_options.exchange_type)
+        raise Exception('No exchange set!')
 
     if argv.get('currency_pairs'):
         config.exchange_options.currency_pairs = _parse_currencies(argv.get('currency_pairs'))

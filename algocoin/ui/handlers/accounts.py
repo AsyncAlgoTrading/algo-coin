@@ -14,7 +14,7 @@ class ServerAccountsHandler(PerspectiveHTTPMixin, tornado.web.RequestHandler):
 
     def get(self):
         try:
-            self.psp_kwargs['data'] = [a.to_dict() for a in self.te._ex.accounts()]
+            self.psp_kwargs['data'] = [a.to_dict(True) for a in self.te._ex.accounts()]
             self.loadData(**self.psp_kwargs)
             self.write(self.getData())
         except Exception as e:

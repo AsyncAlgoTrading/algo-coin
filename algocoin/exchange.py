@@ -12,6 +12,7 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
         self._lastseqnum = -1
         self._missingseqnum = set()  # type: set
         self._seqnum_enabled = False
+
         self._md_url = EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type)
         self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
         self._manual = False
@@ -46,7 +47,10 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
             self._lastseqnum = number
 
     def receive(self) -> None:
-        res = self.tickToData(json.loads(self.ws.recv()))
+        self.receive_async(json.loads(self.ws.recv()))
+
+    def receive_async(self, data) -> None:
+        res = self.tickToData(data)
 
         if self._seqnum_enabled and res.type != TickType.HEARTBEAT:
             self.seqnum(res.sequence)

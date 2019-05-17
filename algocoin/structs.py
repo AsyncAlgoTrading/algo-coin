@@ -163,6 +163,3 @@ class Account:
 
     def __repr__(self) -> str:
         return "<" + self.id + " - " + str(self.currency) + " - " + str(self.balance) + ">"
-
-    def to_dict(self) -> str:
-        return {'currency': str(self.currency), 'id': self.id, 'balance': str(self.balance)}

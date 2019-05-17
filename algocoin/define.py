@@ -9,12 +9,17 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
     (ExchangeType.BITFINEX, TradingType.LIVE): '',
 
+    (ExchangeType.CCXT, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
+    (ExchangeType.CCXT, TradingType.LIVE): 'wss://ws-feed.gdax.com',
+    (ExchangeType.CCXT, TradingType.SIMULATION): 'wss://ws-feed.gdax.com',
+
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): '',
 
     (ExchangeType.GDAX, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
     (ExchangeType.GDAX, TradingType.LIVE): 'wss://ws-feed.gdax.com',
     (ExchangeType.GDAX, TradingType.SIMULATION): 'wss://ws-feed.gdax.com',
+
 
     (ExchangeType.COINBASE, TradingType.SANDBOX): 'wss://ws-feed.pro.pro.coinbase.com',
     (ExchangeType.COINBASE, TradingType.LIVE): 'wss://ws-feed.pro.coinbase.com',
@@ -56,6 +61,11 @@ EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {  # noqa: E731
 
     (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
     (ExchangeType.BITFINEX, TradingType.LIVE): '',
+
+    (ExchangeType.CCXT, TradingType.SANDBOX): 'https://api-public.sandbox.gdax.com',
+    (ExchangeType.CCXT, TradingType.LIVE): 'https://api.gdax.com',
+    (ExchangeType.CCXT, TradingType.SIMULATION): 'https://api.gdax.com',
+
 
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): '',
