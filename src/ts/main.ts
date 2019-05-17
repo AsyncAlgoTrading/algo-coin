@@ -11,9 +11,6 @@ function main(): void {
   const main = new TabPanel();
   main.id = "main";
 
-  /* Title bar */
-  const header = new Header();
-
   /* File bar */
   const bar = new MenuBar();
   bar.id = "menuBar";
@@ -51,6 +48,10 @@ function main(): void {
   /* main area setup */
   BoxPanel.setStretch(dock, 1);
   main.addWidget(dock);
+
+  /* Title bar */
+  const header = new Header([accounts, data]);
+
 
   window.onresize = () => { main.update(); };
   Widget.attach(header, document.body);

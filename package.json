@@ -3,7 +3,6 @@
   "name": "algocoin",
   "version": "0.0.1",
   "dependencies": {
-    "@finos/perspective-phosphor": "^0.3.0-rc.1",
     "@phosphor/commands": "^1.5.0",
     "@phosphor/dragdrop": "^1.3.0",
     "@phosphor/messaging": "^1.2.2",
@@ -13,8 +12,8 @@
   "devDependencies": {
     "@finos/perspective-webpack-plugin": "^0.3.0-rc.1",
     "@types/jest": "^23.3.9",
-    "css-loader": "^0.26.1",
     "cpx": "^1.5.0",
+    "css-loader": "^0.26.1",
     "file-loader": "^0.11.1",
     "jest": "^24.8.0",
     "jest-transform-css": "^2.0.0",

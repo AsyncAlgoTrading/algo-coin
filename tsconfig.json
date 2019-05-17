@@ -15,9 +15,7 @@
       "dom"
     ],
    "types": [
-      "jest",
-      "@finos/perspective-viewer",
-      "@finos/perspective-phosphor"
+      "jest"
     ]
   },
   "include": ["src/ts/*"]
