@@ -38,7 +38,7 @@ class TestEnums:
         t1 = ExchangeType.BITSTAMP
         t2 = ExchangeType.BITFINEX
         t3 = ExchangeType.CEX
-        t4 = ExchangeType.GDAX
+        t4 = ExchangeType.COINBASE
         t5 = ExchangeType.GEMINI
         t6 = ExchangeType.HITBTC
         t7 = ExchangeType.ITBIT
@@ -50,7 +50,7 @@ class TestEnums:
         assert t1 == ExchangeType.BITSTAMP
         assert t2 == ExchangeType.BITFINEX
         assert t3 == ExchangeType.CEX
-        assert t4 == ExchangeType.GDAX
+        assert t4 == ExchangeType.COINBASE
         assert t5 == ExchangeType.GEMINI
         assert t6 == ExchangeType.HITBTC
         assert t7 == ExchangeType.ITBIT
@@ -62,7 +62,7 @@ class TestEnums:
         assert t1 == ExchangeType('BITSTAMP')
         assert t2 == ExchangeType('BITFINEX')
         assert t3 == ExchangeType('CEX')
-        assert t4 == ExchangeType('GDAX')
+        assert t4 == ExchangeType('COINBASE')
         assert t5 == ExchangeType('GEMINI')
         assert t6 == ExchangeType('HITBTC')
         assert t7 == ExchangeType('ITBIT')

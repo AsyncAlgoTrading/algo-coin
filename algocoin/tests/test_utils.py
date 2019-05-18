@@ -92,14 +92,14 @@ class TestUtils:
     def test_ex_type_to_ex(self):
         from ..utils import ex_type_to_ex
         from ..enums import ExchangeType
-        from ..exchanges.gdax import GDAXExchange
-        assert ex_type_to_ex(ExchangeType.GDAX) == GDAXExchange
+        from ..exchanges.coinbase import CoinbaseExchange
+        assert ex_type_to_ex(ExchangeType.COINBASE) == CoinbaseExchange
 
     def test_exchange_to_file(self):
         from ..utils import exchange_to_file
         from ..enums import ExchangeType
 
-        assert(exchange_to_file(ExchangeType.GDAX),
+        assert(exchange_to_file(ExchangeType.COINBASE),
                "./data/exchange/coinbaseUSD.csv")
         assert(exchange_to_file(ExchangeType.BITSTAMP),
                "./data/exchange/bitstampUSD.csv")
@@ -182,7 +182,7 @@ class TestUtils:
         assert(str_to_exchange('itbit') == ExchangeType.ITBIT)
         assert(str_to_exchange('kraken') == ExchangeType.KRAKEN)
         assert(str_to_exchange('lake') == ExchangeType.LAKE)
-        assert(str_to_exchange('gdax') == ExchangeType.GDAX)
+        assert(str_to_exchange('coinbase') == ExchangeType.COINBASE)
         assert(str_to_exchange('ccxt') == ExchangeType.CCXT)
 
     def test_str_to_currency_pair_type(self):

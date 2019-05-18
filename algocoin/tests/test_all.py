@@ -15,7 +15,8 @@ from ..parser import *
 from ..strategy import *
 from ..structs import *
 from ..utils import *
-from ..exchanges.gdax import *
+from ..exchanges.ccxt import *
+from ..exchanges.coinbase import *
 from ..exchanges.gemini import *
 from ..exchanges.helpers import *
 from ..strategies.test_strat import *

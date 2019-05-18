@@ -1,7 +1,8 @@
+from functools import lru_cache
 from .enums import ExchangeType, TradingType
 
 
-EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {  # noqa: E731
+EXCHANGE_MARKET_DATA_ENDPOINT = lru_cache(None)(lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.SIMULATION): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
@@ -9,16 +10,12 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
     (ExchangeType.BITFINEX, TradingType.LIVE): '',
 
-    (ExchangeType.CCXT, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
-    (ExchangeType.CCXT, TradingType.LIVE): 'wss://ws-feed.gdax.com',
-    (ExchangeType.CCXT, TradingType.SIMULATION): 'wss://ws-feed.gdax.com',
-
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): '',
 
-    (ExchangeType.GDAX, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
-    (ExchangeType.GDAX, TradingType.LIVE): 'wss://ws-feed.gdax.com',
-    (ExchangeType.GDAX, TradingType.SIMULATION): 'wss://ws-feed.gdax.com',
+    (ExchangeType.COINBASE, TradingType.SANDBOX): 'wss://ws-feed.sandbox.gdax.com',
+    (ExchangeType.COINBASE, TradingType.LIVE): 'wss://ws-feed-public.sandbox.pro.coinbase.com',
+    (ExchangeType.COINBASE, TradingType.SIMULATION): 'wss://ws-feed-public.sandbox.pro.coinbase.com',
 
 
     (ExchangeType.COINBASE, TradingType.SANDBOX): 'wss://ws-feed.pro.pro.coinbase.com',
@@ -53,19 +50,14 @@ EXCHANGE_MARKET_DATA_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.DERIBIT, TradingType.LIVE): 'wss://www.deribit.com/ws/api/v1/',
     (ExchangeType.DERIBIT, TradingType.SIMULATION): 'wss://www.deribit.com/ws/api/v1/',
 
-}.get((name, typ), None)
+}.get((name, typ), None))
 
-EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {  # noqa: E731
+EXCHANGE_ORDER_ENDPOINT = lru_cache(None)(lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',
     (ExchangeType.BITSTAMP, TradingType.LIVE): '',
 
     (ExchangeType.BITFINEX, TradingType.SANDBOX): '',
     (ExchangeType.BITFINEX, TradingType.LIVE): '',
-
-    (ExchangeType.CCXT, TradingType.SANDBOX): 'https://api-public.sandbox.gdax.com',
-    (ExchangeType.CCXT, TradingType.LIVE): 'https://api.gdax.com',
-    (ExchangeType.CCXT, TradingType.SIMULATION): 'https://api.gdax.com',
-
 
     (ExchangeType.CEX, TradingType.SANDBOX): '',
     (ExchangeType.CEX, TradingType.LIVE): '',
@@ -101,7 +93,7 @@ EXCHANGE_ORDER_ENDPOINT = lambda name, typ: {  # noqa: E731
     (ExchangeType.DERIBIT, TradingType.LIVE): 'https://www.deribit.com',
     (ExchangeType.DERIBIT, TradingType.SIMULATION): 'https://www.deribit.com',
 
-}.get((name, typ), None)
+}.get((name, typ), None))
 
 ACCOUNTS = lambda name, typ: {  # noqa: E731
     (ExchangeType.BITSTAMP, TradingType.SANDBOX): '',

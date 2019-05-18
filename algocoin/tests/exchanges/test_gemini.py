@@ -73,7 +73,7 @@ class TestExchange:
                                                    }]}
                     e.receive()
 
-    def test_trade_req_to_params_gdax(self):
+    def test_trade_req_to_params_gemini(self):
         from ...exchanges.gemini import GeminiExchange
         from ...enums import PairType, OrderType, OrderSubType
         from ...structs import Instrument

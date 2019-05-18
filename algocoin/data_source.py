@@ -9,9 +9,6 @@ class DataSource(metaclass=ABCMeta):
 
 
 class RestAPIDataSource(DataSource):
-    def __init__(self, *args, **kwargs) -> None:
-        pass
-
     @abstractmethod
     def accounts(self):
         '''get account information'''

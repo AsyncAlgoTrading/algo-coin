@@ -37,7 +37,7 @@ buildext: ## build the package extensions
 buildinplace: ## build the package extensions
 	python3 setup.py build
 	python3 setup.py build_ext
-	cp -r build/`ls build | grep lib`/algocoin .
+# 	cp -r build/`ls build | grep _cpp`/algocoin .
 
 build: ## build the package
 	python3 setup.py build

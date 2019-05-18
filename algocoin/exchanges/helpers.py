@@ -47,13 +47,13 @@ class ExchangeHelpersMixin(object):
         pass
 
 
-class GDAXHelpersMixin(ExchangeHelpersMixin):
+class CoinbaseHelpersMixin(ExchangeHelpersMixin):
     @staticmethod
     def tickToData(jsn: dict) -> MarketData:
         time = parse_date(jsn.get('time'))
         price = float(jsn.get('price', 'nan'))
         volume = float(jsn.get('size', 'nan'))
-        typ = GDAXHelpersMixin.strToTradeType(jsn.get('type'))
+        typ = CoinbaseHelpersMixin.strToTradeType(jsn.get('type'))
         currency_pair = str_to_currency_pair_type(jsn.get('product_id'))
 
         instrument = Instrument(underlying=currency_pair)
@@ -109,8 +109,8 @@ class GDAXHelpersMixin(ExchangeHelpersMixin):
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GDAXHelpersMixin.currencyPairToString(req.instrument.currency_pair)
-        p['type'] = GDAXHelpersMixin.orderTypeToString(req.order_type)
+        p['product_id'] = CoinbaseHelpersMixin.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = CoinbaseHelpersMixin.orderTypeToString(req.order_type)
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
             p['time_in_force'] = 'FOK'

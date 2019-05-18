@@ -14,8 +14,11 @@ class ServerMessagesMixin(PerspectiveHTTPMixin):
             type = None
 
         try:
-            pairtype = PairType.from_string(pairtype)
-            instrument = Instrument(underlying=pairtype)
+            if pairtype is not None:
+                pairtype = PairType.from_string(pairtype)
+                instrument = Instrument(underlying=pairtype)
+            else:
+                instrument = None
         except (ValueError, TypeError):
             instrument = None
 

@@ -1,26 +1,26 @@
 import json
+from functools import lru_cache
 from .config import ExchangeConfig
 from .data_source import StreamingDataSource, RestAPIDataSource
 from .logging import LOG as log
 from .enums import TickType
-from .define import EXCHANGE_MARKET_DATA_ENDPOINT, EXCHANGE_ORDER_ENDPOINT
 
 
 class Exchange(StreamingDataSource, RestAPIDataSource):
     def __init__(self, options: ExchangeConfig) -> None:
         super(Exchange, self).__init__(options)
+        self._options = options
         self._lastseqnum = -1
         self._missingseqnum = set()  # type: set
         self._seqnum_enabled = False
 
-        self._md_url = EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type)
-        self._oe_url = EXCHANGE_ORDER_ENDPOINT(options.exchange_type, options.trading_type)
-        self._manual = False
-        self._accounts = []
         self._pending_orders = {}
-
         self._messages = {}
         self._messages_all = []
+
+    @lru_cache(None)
+    def options(self) -> ExchangeConfig:
+        return self._options
 
     def close(self) -> None:
         log.critical('Closing....')
@@ -80,10 +80,6 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
             pass
         else:
             self.callback(TickType.ERROR, res)
-
-    def accounts(self) -> list:
-        '''account info'''
-        return self._accounts
 
     def messages(self, by_type=False, instrument=None) -> list:
         if by_type:

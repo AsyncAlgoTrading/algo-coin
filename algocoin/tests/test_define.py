@@ -33,10 +33,10 @@ class TestDefine:
             == ''
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.CEX, TradingType.LIVE) \
             == ''
-        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.SANDBOX) \
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.COINBASE, TradingType.SANDBOX) \
             == 'wss://ws-feed.sandbox.gdax.com'
-        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GDAX, TradingType.LIVE) \
-            == 'wss://ws-feed.gdax.com'
+        assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.COINBASE, TradingType.LIVE) \
+            == 'wss://ws-feed-public.sandbox.pro.coinbase.com'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.SANDBOX) \
             == 'wss://api.sandbox.gemini.com/v1/marketdata/%s?heartbeat=true'
         assert EXCHANGE_MARKET_DATA_ENDPOINT(ExchangeType.GEMINI, TradingType.LIVE) \

@@ -143,9 +143,10 @@ def _parse_options(argv, config: TradingEngineConfig) -> None:
         # For CCXT, get underlying exchange
         j = 0
         ccxt_exs = []
+        listed_ccxt_exc = [str_to_exchange(x) for x in argv['ccxt_exchanges'].split() if x]
         for i, exchange in enumerate(config.exchange_options.exchange_types):
             if exchange == ExchangeType.CCXT:
-                exc = str_to_exchange(argv['ccxt_exchanges'][i])
+                exc = listed_ccxt_exc[j]
                 j += 1
             else:
                 exc = ExchangeType.NONE
@@ -192,9 +193,10 @@ def _parse_backtest_options(argv, config) -> None:
         # For CCXT, get underlying exchange
         j = 0
         ccxt_exs = []
+        listed_ccxt_exc = [str_to_exchange(x) for x in argv['ccxt_exchanges'] if x]
         for i, exchange in enumerate(config.exchange_options.exchange_types):
             if exchange == ExchangeType.CCXT:
-                exc = str_to_exchange(argv['ccxt_exchanges'][i])
+                exc = listed_ccxt_exc[i]
                 j += 1
             else:
                 exc = ExchangeType.NONE

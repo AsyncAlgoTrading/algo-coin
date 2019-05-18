@@ -1,5 +1,5 @@
 from mock import patch, MagicMock
-from ...exchanges.helpers import GDAXHelpersMixin, GeminiHelpersMixin
+from ...exchanges.helpers import CoinbaseHelpersMixin, GeminiHelpersMixin
 from ...enums import TickType, CurrencyType, PairType
 
 
@@ -22,32 +22,32 @@ class TestExchangeHelpers:
         pass
         # teardown_class() after any methods in this class
 
-    def test_GDAXHelpers_strToTradeType(self):
-        assert GDAXHelpersMixin.strToTradeType('match') == TickType.TRADE
-        assert GDAXHelpersMixin.strToTradeType('received') == TickType.RECEIVED
-        assert GDAXHelpersMixin.strToTradeType('open') == TickType.OPEN
-        assert GDAXHelpersMixin.strToTradeType('done') == TickType.DONE
-        assert GDAXHelpersMixin.strToTradeType('change') == TickType.CHANGE
-        assert GDAXHelpersMixin.strToTradeType('heartbeat') == TickType.HEARTBEAT
-        assert GDAXHelpersMixin.strToTradeType('flarg') == TickType.ERROR
+    def test_CoinbaseHelpers_strToTradeType(self):
+        assert CoinbaseHelpersMixin.strToTradeType('match') == TickType.TRADE
+        assert CoinbaseHelpersMixin.strToTradeType('received') == TickType.RECEIVED
+        assert CoinbaseHelpersMixin.strToTradeType('open') == TickType.OPEN
+        assert CoinbaseHelpersMixin.strToTradeType('done') == TickType.DONE
+        assert CoinbaseHelpersMixin.strToTradeType('change') == TickType.CHANGE
+        assert CoinbaseHelpersMixin.strToTradeType('heartbeat') == TickType.HEARTBEAT
+        assert CoinbaseHelpersMixin.strToTradeType('flarg') == TickType.ERROR
 
-    def test_GDAXHelpers_currencyToString(self):
-        assert GDAXHelpersMixin.currencyToString(CurrencyType.BTC) == 'BTC'
-        assert GDAXHelpersMixin.currencyToString(CurrencyType.ETH) == 'ETH'
-        assert GDAXHelpersMixin.currencyToString(CurrencyType.LTC) == 'LTC'
-        assert GDAXHelpersMixin.currencyToString(CurrencyType.BCH) == 'BCH'
+    def test_CoinbaseHelpers_currencyToString(self):
+        assert CoinbaseHelpersMixin.currencyToString(CurrencyType.BTC) == 'BTC'
+        assert CoinbaseHelpersMixin.currencyToString(CurrencyType.ETH) == 'ETH'
+        assert CoinbaseHelpersMixin.currencyToString(CurrencyType.LTC) == 'LTC'
+        assert CoinbaseHelpersMixin.currencyToString(CurrencyType.BCH) == 'BCH'
 
-    def test_GDAXHelpers_currencyPairToString(self):
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BTCUSD) == 'BTC-USD'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BTCETH) == 'BTC-ETH'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BTCLTC) == 'BTC-LTC'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BTCBCH) == 'BTC-BCH'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.ETHUSD) == 'ETH-USD'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.LTCUSD) == 'LTC-USD'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BCHUSD) == 'BCH-USD'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.ETHBTC) == 'ETH-BTC'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.LTCBTC) == 'LTC-BTC'
-        assert GDAXHelpersMixin.currencyPairToString(PairType.BCHBTC) == 'BCH-BTC'
+    def test_CoinbaseHelpers_currencyPairToString(self):
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BTCUSD) == 'BTC-USD'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BTCETH) == 'BTC-ETH'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BTCLTC) == 'BTC-LTC'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BTCBCH) == 'BTC-BCH'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.ETHUSD) == 'ETH-USD'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.LTCUSD) == 'LTC-USD'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BCHUSD) == 'BCH-USD'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.ETHBTC) == 'ETH-BTC'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.LTCBTC) == 'LTC-BTC'
+        assert CoinbaseHelpersMixin.currencyPairToString(PairType.BCHBTC) == 'BCH-BTC'
 
     def test_GeminiHelpers_reasonToTradeType(self):
         assert GeminiHelpersMixin.reasonToTradeType('CANCEL') == TickType.DONE

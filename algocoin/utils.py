@@ -195,9 +195,9 @@ def parse_date(indate: str) -> datetime:
 
 
 def ex_type_to_ex(ex: ExchangeType):
-    if ex == ExchangeType.GDAX:
-        from .exchanges.gdax import GDAXExchange
-        return GDAXExchange
+    if ex == ExchangeType.COINBASE:
+        from .exchanges.coinbase import CoinbaseExchange
+        return CoinbaseExchange
     elif ex == ExchangeType.GEMINI:
         from .exchanges.gemini import GeminiExchange
         return GeminiExchange
