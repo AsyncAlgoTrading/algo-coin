@@ -52,7 +52,6 @@ class StreamingDataSource(DataSource):
     def run(self, engine):
         '''run the exchange'''
 
-    # internals
     @abstractmethod
     def close(self):
         '''close the websocket'''

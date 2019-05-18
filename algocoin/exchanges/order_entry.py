@@ -21,13 +21,13 @@ class CCXTOrderEntryMixin(RestAPIDataSource):
     def oe_client(self):
         options = self.options()
         if options.trading_type == TradingType.LIVE or options.trading_type == TradingType.SIMULATION:
-            key, secret, passphrase = get_keys_from_environment(options.ccxt_exchange.value)
+            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value)
         elif options.trading_type == TradingType.SANDBOX:
-            key, secret, passphrase = get_keys_from_environment(options.ccxt_exchange.value + '_SANDBOX')
+            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value + '_SANDBOX')
 
         if options.trading_type in (TradingType.LIVE, TradingType.SIMULATION, TradingType.SANDBOX):
             try:
-                client = exchange_type_to_ccxt_client(options.ccxt_exchange)({
+                client = exchange_type_to_ccxt_client(options.exchange_type)({
                     'apiKey': key,
                     'secret': secret,
                     'password': passphrase

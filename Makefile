@@ -3,13 +3,13 @@ EXCHANGE=gemini
 CURRENCY=USD
 
 
-runconfig: buildinplace ## Clean and make target, run target
+runconfig: build ## Clean and make target, run target
 	python3 -m algocoin --config=$(CONFIG)
 
-run:  clean buildinplace  ## Clean and make target, run target
+run:  clean build  ## Clean and make target, run target
 	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
 
-sandbox: buildinplace  ## Clean and make target, run target
+sandbox: build  ## Clean and make target, run target
 	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
 data:  ## Fetch data for EXCHANGE
@@ -33,11 +33,6 @@ boost:  ## Install boost python dependencies on os x with homebrew
 
 buildext: ## build the package extensions
 	python3 setup.py build_ext
-
-buildinplace: ## build the package extensions
-	python3 setup.py build
-	python3 setup.py build_ext
-# 	cp -r build/`ls build | grep _cpp`/algocoin .
 
 build: ## build the package
 	python3 setup.py build

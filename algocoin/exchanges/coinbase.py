@@ -1,79 +1,71 @@
-import gdax
 import json
+import gdax
+from functools import lru_cache
 from websocket import create_connection
 from ..config import ExchangeConfig
-from ..define import EXCHANGE_ORDER_ENDPOINT
-from ..enums import TradingType, ExchangeType
-from ..exchange import Exchange
-from ..structs import TradeRequest, TradeResponse, Account
-from ..utils import get_keys_from_environment, str_to_currency_type
-from ..enums import TradeResult
+from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
+from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason, TradingType
+from ..utils import parse_date, str_to_currency_pair_type, str_to_side, str_to_order_type, get_keys_from_environment
+from ..structs import MarketData, Instrument
 from ..logging import LOG as log
-from .helpers import CoinbaseHelpersMixin
+from ..exchange import Exchange
+from .order_entry import CCXTOrderEntryMixin
+from .websockets import WebsocketMixin
 
 
-class CoinbaseExchange(CoinbaseHelpersMixin, Exchange):
-    def __init__(self, options: ExchangeConfig) -> None:
-        super(CoinbaseExchange, self).__init__(options)
-        self._type = ExchangeType.COINBASE
-        self._last = None
-        self._orders = {}
+class CoinbaseWebsocketMixin(WebsocketMixin):
+    @lru_cache(None)
+    def subscription(self):
+        return [json.dumps({"type": "subscribe", "product_id": CoinbaseWebsocketMixin.currencyPairToString(x)}) for x in self.options().currency_pairs]
 
-        if options.trading_type == TradingType.LIVE:
-            self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX')
-            self._client = gdax.AuthenticatedClient(self._key,
-                                                    self._secret,
-                                                    self._passphrase)
+    @lru_cache(None)
+    def heartbeat(self):
+        return json.dumps({"type": "heartbeat", "on": True})
 
+    def close(self):
+        '''close the websocket'''
+
+    def seqnum(self, number: int):
+        '''manage sequence numbers'''
+
+    def ws_client(self):
+        options = self.options()
+        if options.trading_type == TradingType.LIVE or options.trading_type == TradingType.SIMULATION:
+            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value)
         elif options.trading_type == TradingType.SANDBOX:
-            self._key, self._secret, self._passphrase = get_keys_from_environment('GDAX_SANDBOX')
-            self._client = gdax.AuthenticatedClient(self._key,
-                                                    self._secret,
-                                                    self._passphrase,
-                                                    api_url=EXCHANGE_ORDER_ENDPOINT(ExchangeType.GDAX, TradingType.SANDBOX)
-                                                    )
+            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value + '_SANDBOX')
 
-        val = self._client.get_accounts() if hasattr(self, '_client') else []
-
-        if isinstance(val, dict) and val.get('message') == 'Invalid API Key':
-            raise Exception('Something went wrong with the API Key')
-
-        self._accounts = []
-        for jsn in val:
-            currency = str_to_currency_type(jsn.get('currency'))
-            balance = float(jsn.get('balance', 'inf'))
-            id = jsn.get('id', 'id')
-            account = Account(id=id, currency=currency, balance=balance)
-            self._accounts.append(account)
-
-        self._subscription = [json.dumps({"type": "subscribe",
-                                         "product_id": CoinbaseExchange.currencyPairToString(x)}) for x in options.currency_pairs]
-        self._heartbeat = json.dumps({"type": "heartbeat",
-                                      "on": True})
+        if options.trading_type in (TradingType.LIVE, TradingType.SIMULATION, TradingType.SANDBOX):
+            try:
+                if options.trading_type in (TradingType.LIVE, TradingType.SIMULATION, TradingType.SANDBOX):
+                    client = gdax.AuthenticatedClient(key,
+                                                      secret,
+                                                      passphrase)
+            except Exception:
+                raise Exception('Something went wrong with the API Key/Client instantiation')
+            return client
 
         self._seqnum_enabled = False  # FIXME?
 
     def run(self, engine) -> None:
         # DEBUG
-        # websocket.enableTrace(True)
+        options = self.options()
 
         while True:
-            if not self._running and not self._manual:
-                # startup and redundancy
-                log.info('Starting....')
-                self.ws = create_connection(self._md_url)
-                log.info('Connected!')
+            # startup and redundancy
+            log.info('Starting....')
+            self.ws = create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type))
+            log.info('Connected!')
 
-                for sub in self._subscription:
-                    self.ws.send(sub)
-                    log.info('Sending Subscription %s' % sub)
-                self.ws.send(self._heartbeat)
-                log.info('Sending Heartbeat %s' % self._heartbeat)
+            for sub in self.subscription():
+                self.ws.send(sub)
+                log.info('Sending Subscription %s' % sub)
 
-                self._running = True
+            self.ws.send(self.heartbeat())
+            log.info('Sending Heartbeat %s' % self.heartbeat())
 
-                log.info('')
-                log.info('Starting algo trading')
+            log.info('')
+            log.info('Starting algo trading')
             try:
                 while True:
                     self.receive()
@@ -82,95 +74,111 @@ class CoinbaseExchange(CoinbaseHelpersMixin, Exchange):
                 log.critical('Terminating program')
                 return
 
-    def orderBook(self, level=1):
-        '''get order book'''
-        return self._client.getProductOrderBook(level=level)
+    @staticmethod
+    def tickToData(jsn: dict) -> MarketData:
+        time = parse_date(jsn.get('time'))
+        price = float(jsn.get('price', 'nan'))
+        volume = float(jsn.get('size', 'nan'))
+        typ = CoinbaseWebsocketMixin.strToTradeType(jsn.get('type'))
+        currency_pair = str_to_currency_pair_type(jsn.get('product_id'))
 
-    def buy(self, req: TradeRequest) -> TradeResponse:
-        '''execute a buy order'''
-        params = CoinbaseExchange.tradeReqToParams(req)
-        log.warn("Buy params: %s", str(params))
-        order = self._client.buy(**params)
-        '''{
-            "id": "d0c5340b-6d6c-49d9-b567-48c4bfca13d2",
-            "price": "0.10000000",
-            "size": "0.01000000",
-            "product_id": "BTC-USD",
-            "side": "buy",
-            "stp": "dc",
-            "type": "limit",
-            "time_in_force": "GTC",
-            "post_only": false,
-            "created_at": "2016-12-08T20:02:28.53864Z",
-            "fill_fees": "0.0000000000000000",
-            "filled_size": "0.00000000",
-            "executed_value": "0.0000000000000000",
-            "status": "pending",
-            "settled": false
-        }'''
+        instrument = Instrument(underlying=currency_pair)
 
-        # FIXME check these
-        slippage = req.price-float(order['price'])
-        txn_cost = float(order.get('fill_fees'))
-        status = TradeResult.NONE
+        order_type = str_to_order_type(jsn.get('order_type', ''))
+        side = str_to_side(jsn.get('side', ''))
+        remaining_volume = float(jsn.get('remaining_size', 0.0))
+        reason = jsn.get('reason', '')
 
-        if (float(order['filled_size']) - req.volume) < 0.001 or order['status'] == 'done':
-            status = TradeResult.FILLED
-        elif False:  # FIXME
-            status = TradeResult.REJECTED
-        elif float(order.get('filled_size', 0.0)) == req.size:
-            status = TradeResult.PARTIAL
+        if reason == 'canceled':
+            reason = ChangeReason.CANCELLED
+        elif reason == '':
+            reason = ChangeReason.NONE
+        elif reason == 'filled':
+            # FIXME
+            reason = ChangeReason.NONE
+            # reason = ChangeReason.FILLED
         else:
-            status = TradeResult.PENDING
+            reason = ChangeReason.NONE
 
-        resp = TradeResponse(request=req,
-                             side=req.side,
-                             volume=float(order['filled_size']),
-                             price=float(order['price']),
-                             instrument=req.instrument,
-                             slippage=slippage,
-                             transaction_cost=txn_cost,
-                             status=status,
-                             order_id=str(order['order_id']),
-                             remaining=float(order.get('remaining_amount', 0.0)),
-                             )
-        return resp
+        sequence = int(jsn.get('sequence'))
+        ret = MarketData(time=time,
+                         volume=volume,
+                         price=price,
+                         type=typ,
+                         instrument=instrument,
+                         remaining=remaining_volume,
+                         reason=reason,
+                         side=side,
+                         order_type=order_type,
+                         sequence=sequence)
+        return ret
 
-    def sell(self, req: TradeRequest) -> TradeResponse:
-        '''execute a sell order'''
-        params = CoinbaseExchange.tradeReqToParams(req)
-        log.warn("Sell params: %s", str(params))
-        order = self._client.sell(**params)
-
-        # FIXME check these
-        slippage = req.price-float(order['price'])
-        txn_cost = float(order.get('fill_fees'))
-        status = TradeResult.NONE
-
-        if (float(order['filled_size']) - req.volume) < 0.001 or order['status'] == 'done':
-            status = TradeResult.FILLED
-        elif False:  # FIXME
-            status = TradeResult.REJECTED
-        elif float(order.get('filled_size', 0.0)) == req.size:
-            status = TradeResult.PARTIAL
+    @staticmethod
+    def strToTradeType(s: str) -> TickType:
+        if s == 'match':
+            return TickType.TRADE
+        elif s == 'received':
+            return TickType.RECEIVED
+        elif s == 'open':
+            return TickType.OPEN
+        elif s == 'done':
+            return TickType.DONE
+        elif s == 'change':
+            return TickType.CHANGE
+        elif s == 'heartbeat':
+            return TickType.HEARTBEAT
         else:
-            status = TradeResult.PENDING
+            return TickType.ERROR
 
-        resp = TradeResponse(request=req,
-                             side=req.side,
-                             volume=float(order['filled_size']),
-                             price=float(order['price']),
-                             instrument=req.instrument,
-                             slippage=slippage,
-                             transaction_cost=txn_cost,
-                             status=status,
-                             order_id=str(order['order_id']),
-                             remaining=float(order.get('remaining_amount', 0.0)),
-                             )
-        return resp
+    @staticmethod
+    def tradeReqToParams(req) -> dict:
+        p = {}
+        p['price'] = str(req.price)
+        p['size'] = str(req.volume)
+        p['product_id'] = CoinbaseWebsocketMixin.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = CoinbaseWebsocketMixin.orderTypeToString(req.order_type)
 
-    def cancel(self, resp: TradeResponse):
-        raise NotImplementedError()
+        if req.order_sub_type == OrderSubType.FILL_OR_KILL:
+            p['time_in_force'] = 'FOK'
+        elif req.order_sub_type == OrderSubType.POST_ONLY:
+            p['post_only'] = '1'
+        return p
 
-    def cancelAll(self, resp: TradeResponse):
-        raise NotImplementedError()
+    @staticmethod
+    def currencyPairToString(cur: PairType) -> str:
+        if cur == PairType.BTCUSD:
+            return 'BTC-USD'
+        if cur == PairType.BTCETH:
+            return 'BTC-ETH'
+        if cur == PairType.BTCLTC:
+            return 'BTC-LTC'
+        if cur == PairType.BTCBCH:
+            return 'BTC-BCH'
+        if cur == PairType.ETHUSD:
+            return 'ETH-USD'
+        if cur == PairType.LTCUSD:
+            return 'LTC-USD'
+        if cur == PairType.BCHUSD:
+            return 'BCH-USD'
+        if cur == PairType.ETHBTC:
+            return 'ETH-BTC'
+        if cur == PairType.LTCBTC:
+            return 'LTC-BTC'
+        if cur == PairType.BCHBTC:
+            return 'BCH-BTC'
+        else:
+            raise Exception('Pair not recognized: %s' % str(cur))
+
+    @staticmethod
+    def orderTypeToString(typ: OrderType) -> str:
+        if typ == OrderType.LIMIT:
+            return 'limit'
+        elif typ == OrderType.MARKET:
+            return 'market'
+
+
+class CoinbaseExchange(CoinbaseWebsocketMixin, CCXTOrderEntryMixin, Exchange):
+    def __init__(self, options: ExchangeConfig) -> None:
+        super(CoinbaseExchange, self).__init__(options)
+        self._last = None
+        self._orders = {}

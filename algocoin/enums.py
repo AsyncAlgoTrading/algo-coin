@@ -37,7 +37,6 @@ class ExchangeType(BaseEnum):
     BITSTAMP = 'BITSTAMP'
     BITFINEX = 'BITFINEX'
     CEX = 'CEX'
-    CCXT = 'CCXT'
     COINBASE = 'COINBASE'
     GEMINI = 'GEMINI'
     HITBTC = 'HITBTC'

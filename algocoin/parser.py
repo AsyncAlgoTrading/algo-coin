@@ -132,27 +132,8 @@ def _parse_currencies(currencies):
 def _parse_options(argv, config: TradingEngineConfig) -> None:
     if argv.get('exchange'):
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
-
-        # For CCXT, get underlying exchange
-        if config.exchange_options.exchange_type == ExchangeType.CCXT:
-            config.exchange_options.ccxt_exchange = str_to_exchange(argv['ccxt_exchange'])
-
     elif argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
-
-        # For CCXT, get underlying exchange
-        j = 0
-        ccxt_exs = []
-        listed_ccxt_exc = [str_to_exchange(x) for x in argv['ccxt_exchanges'].split() if x]
-        for i, exchange in enumerate(config.exchange_options.exchange_types):
-            if exchange == ExchangeType.CCXT:
-                exc = listed_ccxt_exc[j]
-                j += 1
-            else:
-                exc = ExchangeType.NONE
-            ccxt_exs.append(exc)
-        config.exchange_options.ccxt_exchanges = ccxt_exs
-
     else:
         raise Exception('No exchange set!')
 
@@ -183,26 +164,8 @@ def _parse_backtest_options(argv, config) -> None:
         config.backtest_options.file = exchange_to_file(str_to_exchange(argv['exchange']))
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
 
-        # For CCXT, get underlying exchange
-        if config.exchange_options.exchange_type == ExchangeType.CCXT:
-            config.exchange_options.ccxt_exchange = str_to_exchange(argv['ccxt_exchange'])
-
     elif argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
-
-        # For CCXT, get underlying exchange
-        j = 0
-        ccxt_exs = []
-        listed_ccxt_exc = [str_to_exchange(x) for x in argv['ccxt_exchanges'] if x]
-        for i, exchange in enumerate(config.exchange_options.exchange_types):
-            if exchange == ExchangeType.CCXT:
-                exc = listed_ccxt_exc[i]
-                j += 1
-            else:
-                exc = ExchangeType.NONE
-            ccxt_exs.append(exc)
-        config.exchange_options.ccxt_exchanges = ccxt_exs
-
     else:
         raise Exception('No exchange set!')
 

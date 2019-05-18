@@ -204,10 +204,6 @@ def ex_type_to_ex(ex: ExchangeType):
     elif ex == ExchangeType.KRAKEN:
         from .exchanges.kraken import KrakenExchange
         return KrakenExchange
-    elif ex == ExchangeType.CCXT:
-        from .exchanges.ccxt import CCXTExchange
-        return CCXTExchange
-
     raise Exception('Exchange type not implemented : %s ' % ex)
 
 
