@@ -1,14 +1,13 @@
 import json
-import gdax
 from functools import lru_cache
 from websocket import create_connection
 from ..config import ExchangeConfig
 from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
-from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason, TradingType
+from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason
 from ..exchange import Exchange
 from ..logging import LOG as log
 from ..structs import MarketData, Instrument
-from ..utils import parse_date, str_to_currency_pair_type, str_to_side, str_to_order_type, get_keys_from_environment
+from ..utils import parse_date, str_to_currency_pair_type, str_to_side, str_to_order_type
 from .order_entry import CCXTOrderEntryMixin
 from .websockets import WebsocketMixin
 
@@ -27,25 +26,6 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
 
     def seqnum(self, number: int):
         '''manage sequence numbers'''
-
-    def ws_client(self):
-        options = self.options()
-        if options.trading_type == TradingType.LIVE or options.trading_type == TradingType.SIMULATION:
-            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value)
-        elif options.trading_type == TradingType.SANDBOX:
-            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value + '_SANDBOX')
-
-        if options.trading_type in (TradingType.LIVE, TradingType.SIMULATION, TradingType.SANDBOX):
-            try:
-                if options.trading_type in (TradingType.LIVE, TradingType.SIMULATION, TradingType.SANDBOX):
-                    client = gdax.AuthenticatedClient(key,
-                                                      secret,
-                                                      passphrase)
-            except Exception:
-                raise Exception('Something went wrong with the API Key/Client instantiation')
-            return client
-
-        self._seqnum_enabled = False  # FIXME?
 
     def run(self, engine) -> None:
         # DEBUG
@@ -117,16 +97,8 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
     def strToTradeType(s: str) -> TickType:
         if s == 'match':
             return TickType.TRADE
-        elif s == 'received':
-            return TickType.RECEIVED
-        elif s == 'open':
-            return TickType.OPEN
-        elif s == 'done':
-            return TickType.DONE
-        elif s == 'change':
-            return TickType.CHANGE
-        elif s == 'heartbeat':
-            return TickType.HEARTBEAT
+        elif s in ('received', 'open', 'done', 'change', 'heartbeat'):
+            return TickType(s.upper())
         else:
             return TickType.ERROR
 
@@ -150,10 +122,7 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
 
     @staticmethod
     def orderTypeToString(typ: OrderType) -> str:
-        if typ == OrderType.LIMIT:
-            return 'limit'
-        elif typ == OrderType.MARKET:
-            return 'market'
+        return type.value.lower()
 
 
 class CoinbaseExchange(CoinbaseWebsocketMixin, CCXTOrderEntryMixin, Exchange):

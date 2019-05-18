@@ -29,6 +29,30 @@ class WebsocketMixin(StreamingDataSource):
     def seqnum(self, number: int):
         '''manage sequence numbers'''
 
+    def run(self, engine) -> None:
+        # DEBUG
+        options = self.options()
+
+        while True:
+            # startup and redundancy
+            log.info('Starting....')
+            self.ws = create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type))
+            log.info('Connected!')
+
+            for sub in self.subscription():
+                self.ws.send(sub)
+                log.info('Sending Subscription %s' % sub)
+
+            log.info('')
+            log.info('Starting algo trading')
+            try:
+                while True:
+                    self.receive()
+
+            except KeyboardInterrupt:
+                log.critical('Terminating program')
+                return
+
     @abstractstaticmethod
     def tickToData(jsn: dict) -> MarketData:
         pass

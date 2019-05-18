@@ -149,14 +149,7 @@ class GeminiWebsocketMixin(WebsocketMixin):
 
     @staticmethod
     def strToTradeType(s: str) -> TickType:
-        if s == 'trade':
-            return TickType.TRADE
-        elif s == 'change':
-            return TickType.CHANGE
-        elif s == 'heartbeat':
-            return TickType.HEARTBEAT
-        else:
-            return TickType.ERROR
+        return TickType(s.upper())
 
     @staticmethod
     def reasonToTradeType(s: str) -> TickType:
@@ -194,10 +187,7 @@ class GeminiWebsocketMixin(WebsocketMixin):
 
     @staticmethod
     def orderTypeToString(typ: OrderType) -> str:
-        if typ == OrderType.LIMIT:
-            return 'limit'
-        elif typ == OrderType.MARKET:
-            return 'market'
+        return type.value.lower()
 
 
 class GeminiExchange(GeminiWebsocketMixin, CCXTOrderEntryMixin, Exchange):
