@@ -12,12 +12,6 @@ run:  clean build  ## Clean and make target, run target
 sandbox: build  ## Clean and make target, run target
 	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
 
-data:  ## Fetch data for EXCHANGE
-	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
-
-fetch_data: ## Fetch data for EXCHANGE
-	. scripts/fetchdata.sh $(EXCHANGE) $(CURRENCY)
-
 backtest_config: ## Clean and make target, run backtest
 	python3 -m algocoin --config=./config/backtest_gemini.cfg
 

@@ -1,9 +1,9 @@
 from configparser import ConfigParser
 from pydoc import locate
 from .config import TradingEngineConfig, BacktestConfig, StrategyConfig
-from .enums import TradingType, ExchangeType
+from .enums import TradingType
 from .exceptions import ConfigException
-from .utils import str_to_exchange, exchange_to_file, set_verbose, str_to_currency_pair_type
+from .utils import str_to_exchange, set_verbose, str_to_currency_pair_type
 from .logging import LOG as log
 
 
@@ -167,9 +167,7 @@ def _parse_backtest_options(argv, config) -> None:
     config.backtest_options = BacktestConfig()
 
     if argv.get('exchange'):
-        config.backtest_options.file = exchange_to_file(str_to_exchange(argv['exchange']))
         config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
-
     elif argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:

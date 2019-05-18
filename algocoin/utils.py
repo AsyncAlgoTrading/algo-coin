@@ -254,30 +254,6 @@ def str_to_exchange(exchange: str) -> ExchangeType:
     return ExchangeType(exchange.upper())
 
 
-def exchange_to_file(exchange: ExchangeType) -> str:
-    if exchange == ExchangeType.BITSTAMP:
-        log.critical('Backtesting against bitstamp data')
-        return "./data/exchange/bitstampUSD.csv"
-    elif exchange == ExchangeType.BITFINEX:
-        log.critical('Backtesting against bitfinex data')
-        return "./data/exchange/bitfinexUSD.csv"
-    elif exchange == ExchangeType.ITBIT:
-        log.critical('Backtesting against itbit data')
-        return "./data/exchange/itbitUSD.csv"
-    elif exchange == ExchangeType.KRAKEN:
-        log.critical('Backtesting against kraken data')
-        return "./data/exchange/krakenUSD.csv"
-    elif exchange == ExchangeType.HITBTC:
-        log.critical('Backtesting against hitbtc data')
-        return "./data/exchange/hitbtcUSD.csv"
-    elif exchange == ExchangeType.LAKE:
-        log.critical('Backtesting against lake data')
-        return "./data/exchange/lakeUSD.csv"
-    else:
-        log.critical('Backtesting against coinbase data')
-        return "./data/exchange/coinbaseUSD.csv"
-
-
 def set_verbose(level):
     # Print/log extra info
     # olog.propagate = True

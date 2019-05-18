@@ -33,6 +33,10 @@ class RestAPIDataSource(DataSource):
     def orderBook(self):
         '''return the order book'''
 
+    @abstractmethod
+    def historical(self, timeframe='1m', since=None, limit=None):
+        '''get historical data (for backtesting)'''
+
 
 class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs) -> None:

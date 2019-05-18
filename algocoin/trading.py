@@ -40,15 +40,11 @@ class TradingEngine(object):
         # instantiate exchange instance
         if options.exchange_options.exchange_types:
             # multiple exchanges
-            # TODO
             # FIXME
-            self._ex = [ex_type_to_ex(o)(options.exchange_options) if self._live or self._simulation or self._sandbox else None for o in options.exchange_options.exchange_types]
-            # FIXME
-            # TODO
-
+            self._ex = [ex_type_to_ex(o)(options.exchange_options) for o in options.exchange_options.exchange_types]
         else:
             # single exchange
-            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options) if self._live or self._simulation or self._sandbox else None
+            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
 
         self._exchanges = []
 

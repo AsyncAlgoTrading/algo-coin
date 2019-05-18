@@ -106,7 +106,7 @@ class MarketData:
     side = Side
 
     # maybe specific
-    remaining = float
+    remaining = float, 0.0
     reason = ChangeReason, ChangeReason.NONE
     sequence = int, -1
     order_type = OrderType, OrderType.NONE
