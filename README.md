@@ -73,12 +73,12 @@ export GEMINI_API_SECRET=...
 export GEMINI_API_PASS=...
 ```
 
-Prior to running, I then source the keys I need. 
+Prior to running, I source the keys I need. 
 
 Let's make sure everything worked out by running a sample strategy on the GDAX sandbox exchange:
 
 ```bash
-python3 -m algocoin --sandbox
+python3 -m algocoin --sandbox --exchange=coinbase
 ```
 
 ### Writing a trading strategy
@@ -96,17 +96,23 @@ Trading strategies implement the `TradingStrategy` abstract class in `algocoin.l
 There are also a variety of optional methods for more granular control over risk/execution/backtesting, such as `slippage`, `transactionCost`, `onHalt`, `onContinue`, etc. 
 
 ### Backtesting
-An instance of `TradingStrategy` class is able to run live or against a set of historical trade/quote data. When instantiating a `TradingEngine` object with a `TradingEngineConfig` object, the `TradingEngineConfig` has a `type` which can be set to `live`, `sandbox`, or `backtest`. Some additional methods are then usable on the `TradingStrategy`, including the `onAnalyze` method which allows you to visualize algorithm performance.
+An instance of `TradingStrategy` class is able to run live or against a set of historical trade/quote data. When instantiating a `TradingEngine` object with a `TradingEngineConfig` object, the `TradingEngineConfig` has a `type` which can be set to:
 
+- `live` - live trading against the exchange
+- `simulation` - live trading against the exchange, but with order entry disabled
+- `sandbox` - live trading against the exchange's sandbox instance
+- `backtest` - offline trading against historical OHLCV data
 
-#### Getting Data
-Historical data is relatively sparse, but the provided `fetchdata.sh` script will help grab historical data from bitcoincharts.com.
+Some additional methods are then usable on the `TradingStrategy`, including the `onAnalyze` method which allows you to visualize algorithm performance.
 
 ### Sandboxes
 Currently only the Gemini sandbox is supported, the other exchanges have discontinued theirs. To run in sandbox, set `TradingEngineConfig.type` to Sandbox.
 
 ### Live Trading
 When you want to run live, set `TradingEngineConfig.type` to Live. You will want to become familiar with the risk and execution engines, as these control things like max drawdown, max risk accrual, execution eagerness, etc.
+
+### Simulation Trading
+When you want to run an algorithm live, but don't yet trust that it can make money, set `TradingEngineConfig.type` to simulation. This will let it run against real money, but disallow order entry. You can then set things like slippage and transaction costs as you would in a backtest.
 
 ---
 
