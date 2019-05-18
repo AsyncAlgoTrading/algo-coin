@@ -1,6 +1,7 @@
-import pytz
-import os
 import logging
+import os
+import math
+import pytz
 from datetime import datetime
 from enum import Enum
 from .enums import ExchangeType, CurrencyType, OrderType, Side, PairType
@@ -131,6 +132,10 @@ def to_dict(self, serializable=False, str_timestamp=False, **kwargs) -> dict:
                 ret[item] = ret[item].to_dict(serializable, str_timestamp, **kwargs)
             elif isinstance(ret[item], Enum):
                 ret[item] = str(ret[item])
+            elif isinstance(ret[item], float):
+                if ((ret[item] >= float('inf')) is False) and \
+                   ((ret[item] <= float('inf')) is False):
+                    ret[item] = None
     else:
         for item in self._vars:
             ret[item] = getattr(self, item)

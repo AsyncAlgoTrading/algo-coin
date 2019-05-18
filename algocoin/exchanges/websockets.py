@@ -1,5 +1,5 @@
 import json
-from abc import abstractstaticmethod
+from abc import abstractstaticmethod, abstractmethod
 from datetime import datetime
 from functools import lru_cache
 from websocket import create_connection
@@ -18,6 +18,14 @@ def exchange_type_to_websocket_client(exchange_type):
 
 
 class WebsocketMixin(StreamingDataSource):
+    @abstractmethod
+    def subscription(self):
+        '''subscription for websocket'''
+
+    @abstractmethod
+    def heartbeat(self):
+        '''heartbeat for websocket'''
+
     def seqnum(self, number: int):
         '''manage sequence numbers'''
 

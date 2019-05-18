@@ -5,10 +5,10 @@ from websocket import create_connection
 from ..config import ExchangeConfig
 from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
 from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason, TradingType
-from ..utils import parse_date, str_to_currency_pair_type, str_to_side, str_to_order_type, get_keys_from_environment
-from ..structs import MarketData, Instrument
-from ..logging import LOG as log
 from ..exchange import Exchange
+from ..logging import LOG as log
+from ..structs import MarketData, Instrument
+from ..utils import parse_date, str_to_currency_pair_type, str_to_side, str_to_order_type, get_keys_from_environment
 from .order_entry import CCXTOrderEntryMixin
 from .websockets import WebsocketMixin
 
@@ -146,28 +146,7 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
 
     @staticmethod
     def currencyPairToString(cur: PairType) -> str:
-        if cur == PairType.BTCUSD:
-            return 'BTC-USD'
-        if cur == PairType.BTCETH:
-            return 'BTC-ETH'
-        if cur == PairType.BTCLTC:
-            return 'BTC-LTC'
-        if cur == PairType.BTCBCH:
-            return 'BTC-BCH'
-        if cur == PairType.ETHUSD:
-            return 'ETH-USD'
-        if cur == PairType.LTCUSD:
-            return 'LTC-USD'
-        if cur == PairType.BCHUSD:
-            return 'BCH-USD'
-        if cur == PairType.ETHBTC:
-            return 'ETH-BTC'
-        if cur == PairType.LTCBTC:
-            return 'LTC-BTC'
-        if cur == PairType.BCHBTC:
-            return 'BCH-BTC'
-        else:
-            raise Exception('Pair not recognized: %s' % str(cur))
+        return cur.value[0].value + '-' + cur.value[1].value
 
     @staticmethod
     def orderTypeToString(typ: OrderType) -> str:

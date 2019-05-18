@@ -147,17 +147,23 @@ def _parse_live_options(argv, config: TradingEngineConfig) -> None:
 
 
 def _parse_simulation_options(argv, config) -> None:
-    log.critical("\n\nSimulation trading\n\n")
+    log.critical("")
+    log.critical("Simulation trading")
+    log.critical("")
     _parse_options(argv, config)
 
 
 def _parse_sandbox_options(argv, config) -> None:
-    log.critical("\n\nSandbox trading\n\n")
+    log.critical("")
+    log.critical("Sandbox trading")
+    log.critical("")
     _parse_options(argv, config)
 
 
 def _parse_backtest_options(argv, config) -> None:
-    log.critical("\n\nBacktesting\n\n")
+    log.critical("")
+    log.critical("Backtesting")
+    log.critical("")
     config.backtest_options = BacktestConfig()
 
     if argv.get('exchange'):

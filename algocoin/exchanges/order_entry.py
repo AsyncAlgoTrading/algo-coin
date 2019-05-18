@@ -45,9 +45,14 @@ class CCXTOrderEntryMixin(RestAPIDataSource):
         accounts = []
 
         for jsn in balances['info']:
-            currency = str_to_currency_type(jsn.get('currency'))
-            balance = float(jsn.get('balance', 'inf'))
-            id = jsn.get('id', 'id')
+            currency = str_to_currency_type(jsn['currency'])
+            if 'balance' in jsn:
+                balance = float(jsn['balance'])
+            elif 'amount' in jsn:
+                balance = float(jsn['amount'])
+
+            id = jsn.get('id', jsn['currency'])
+
             account = Account(id=id, currency=currency, balance=balance)
             accounts.append(account)
         return accounts
