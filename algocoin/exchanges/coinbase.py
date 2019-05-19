@@ -1,9 +1,10 @@
 import json
+from datetime import datetime
 from functools import lru_cache
 from websocket import create_connection
 from ..config import ExchangeConfig
 from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
-from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason
+from ..enums import ExchangeType, OrderType, OrderSubType, PairType, TickType, ChangeReason
 from ..exchange import Exchange
 from ..logging import LOG as log
 from ..structs import MarketData, Instrument
@@ -15,59 +16,25 @@ from .websockets import WebsocketMixin
 class CoinbaseWebsocketMixin(WebsocketMixin):
     @lru_cache(None)
     def subscription(self):
-        return [json.dumps({"type": "subscribe", "product_id": CoinbaseWebsocketMixin.currencyPairToString(x)}) for x in self.options().currency_pairs]
+        return [json.dumps({"type": "subscribe", "product_id": self.currencyPairToString(x)}) for x in self.options().currency_pairs]
 
     @lru_cache(None)
     def heartbeat(self):
         return json.dumps({"type": "heartbeat", "on": True})
 
-    def close(self):
-        '''close the websocket'''
-
-    def seqnum(self, number: int):
-        '''manage sequence numbers'''
-
-    def run(self, engine) -> None:
-        # DEBUG
-        options = self.options()
-
-        while True:
-            # startup and redundancy
-            log.info('Starting....')
-            self.ws = create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type))
-            log.info('Connected!')
-
-            for sub in self.subscription():
-                self.ws.send(sub)
-                log.info('Sending Subscription %s' % sub)
-
-            self.ws.send(self.heartbeat())
-            log.info('Sending Heartbeat %s' % self.heartbeat())
-
-            log.info('')
-            log.info('Starting algo trading')
-            try:
-                while True:
-                    self.receive()
-
-            except KeyboardInterrupt:
-                log.critical('Terminating program')
-                return
-
-    @staticmethod
-    def tickToData(jsn: dict) -> MarketData:
-        time = parse_date(jsn.get('time'))
+    def tickToData(self, jsn: dict) -> MarketData:
+        typ = self.strToTradeType(jsn.get('type'))
+        reason = jsn.get('reason', '')
+        time = parse_date(jsn.get('time')) if jsn.get('time') else datetime.now()
         price = float(jsn.get('price', 'nan'))
         volume = float(jsn.get('size', 'nan'))
-        typ = CoinbaseWebsocketMixin.strToTradeType(jsn.get('type'))
-        currency_pair = str_to_currency_pair_type(jsn.get('product_id'))
+        currency_pair = str_to_currency_pair_type(jsn.get('product_id')) if typ != TickType.ERROR else PairType.NONE
 
         instrument = Instrument(underlying=currency_pair)
 
         order_type = str_to_order_type(jsn.get('order_type', ''))
         side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining_size', 0.0))
-        reason = jsn.get('reason', '')
 
         if reason == 'canceled':
             reason = ChangeReason.CANCELLED
@@ -80,7 +47,7 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
         else:
             reason = ChangeReason.NONE
 
-        sequence = int(jsn.get('sequence'))
+        sequence = int(jsn.get('sequence', -1))
         ret = MarketData(time=time,
                          volume=volume,
                          price=price,
@@ -89,12 +56,12 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
                          remaining=remaining_volume,
                          reason=reason,
                          side=side,
+                         exchange=self._exchange_type,
                          order_type=order_type,
                          sequence=sequence)
         return ret
 
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
+    def strToTradeType(self, s: str) -> TickType:
         if s == 'match':
             return TickType.TRADE
         elif s in ('received', 'open', 'done', 'change', 'heartbeat'):
@@ -102,13 +69,12 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
         else:
             return TickType.ERROR
 
-    @staticmethod
-    def tradeReqToParams(req) -> dict:
+    def tradeReqToParams(self, req) -> dict:
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = CoinbaseWebsocketMixin.currencyPairToString(req.instrument.currency_pair)
-        p['type'] = CoinbaseWebsocketMixin.orderTypeToString(req.order_type)
+        p['product_id'] = self.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = self.orderTypeToString(req.order_type)
 
         if req.order_sub_type == OrderSubType.FILL_OR_KILL:
             p['time_in_force'] = 'FOK'
@@ -116,17 +82,15 @@ class CoinbaseWebsocketMixin(WebsocketMixin):
             p['post_only'] = '1'
         return p
 
-    @staticmethod
-    def currencyPairToString(cur: PairType) -> str:
+    def currencyPairToString(self, cur: PairType) -> str:
         return cur.value[0].value + '-' + cur.value[1].value
 
-    @staticmethod
-    def orderTypeToString(typ: OrderType) -> str:
+    def orderTypeToString(self, typ: OrderType) -> str:
         return type.value.lower()
 
 
 class CoinbaseExchange(CoinbaseWebsocketMixin, CCXTOrderEntryMixin, Exchange):
-    def __init__(self, options: ExchangeConfig) -> None:
-        super(CoinbaseExchange, self).__init__(options)
+    def __init__(self, exchange_type: ExchangeType, options: ExchangeConfig) -> None:
+        super(CoinbaseExchange, self).__init__(exchange_type, options)
         self._last = None
         self._orders = {}

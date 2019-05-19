@@ -130,9 +130,7 @@ def _parse_currencies(currencies):
 
 
 def _parse_options(argv, config: TradingEngineConfig) -> None:
-    if argv.get('exchange'):
-        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
-    elif argv.get('exchanges'):
+    if argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:
         raise Exception('No exchange set!')
@@ -166,9 +164,7 @@ def _parse_backtest_options(argv, config) -> None:
     log.critical("")
     config.backtest_options = BacktestConfig()
 
-    if argv.get('exchange'):
-        config.exchange_options.exchange_type = str_to_exchange(argv['exchange'])
-    elif argv.get('exchanges'):
+    if argv.get('exchanges'):
         config.exchange_options.exchange_types = [str_to_exchange(x) for x in argv['exchanges'].split() if x]
     else:
         raise Exception('No exchange set!')

@@ -7,7 +7,7 @@ from ...structs import Instrument
 
 
 class ServerMessagesMixin(PerspectiveHTTPMixin):
-    def get_data(self, type=None, page=0, pairtype=None, **psp_kwargs):
+    def get_data(self, type=None, exchange=None, page=0, pairtype=None, **psp_kwargs):
         try:
             type = TickType(type)
         except ValueError:
@@ -24,14 +24,22 @@ class ServerMessagesMixin(PerspectiveHTTPMixin):
 
         if type is None:
             if instrument:
-                msgs = self.te._ex.messages(False, instrument)[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages(False, instrument)
+                msgs = [m for ex in self.te.exchanges().values() for m in ex.messages(False, instrument)[-(page+1)*20: -1 + (page)*20]] \
+                    if page > 0 else \
+                    [m for ex in self.te.exchanges().values() for m in ex.messages(False, instrument)]
             else:
-                msgs = self.te._ex.messages()[-(page+1)*20: -1 + (page)*20] if page > 0 else self.te._ex.messages()
+                msgs = [m for ex in self.te.exchanges().values() for m in ex.messages()[-(page+1)*20: -1 + (page)*20]] \
+                 if page > 0 else \
+                 [m for ex in self.te.exchanges().values() for m in ex.messages()]
         else:
             if instrument:
-                msgs = self.te._ex.messages(True, instrument).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True, instrument).get(type, [])
+                msgs = [m for ex in self.te.exchanges().values for m in ex.messages(True, instrument).get(type, [])[page*20: (page+1)*20]] \
+                 if page > 0 else \
+                 [m for ex in self.te.exchanges().values() for m in ex.messages(True, instrument).get(type, [])]
             else:
-                msgs = self.te._ex.messages(True).get(type, [])[page*20: (page+1)*20] if page > 0 else self.te._ex.messages(True).get(type, [])
+                msgs = [m for ex in self.te.exchanges().values() for m in ex.messages(True).get(type, [])[page*20: (page+1)*20]] \
+                 if page > 0 else \
+                 [m for ex in self.te.exchanges().values() for m in ex.messages(True).get(type, [])]
         msgs = [x.to_dict(True, True) for x in msgs]
 
         if len(msgs) > 0:
@@ -57,7 +65,7 @@ class ServerMessagesHandler(ServerMessagesMixin, tornado.web.RequestHandler):
         type = self.get_argument('type', None)
         page = int(self.get_argument('page', 0))
         pairtype = self.get_argument('pair', '')
-        self.write(self.get_data(type, page, pairtype, **self.psp_kwargs))
+        self.write(self.get_data(type=type, page=page, pairtype=pairtype, **self.psp_kwargs))
 
 
 class ServerMessagesWSHandler(ServerMessagesMixin, tornado.web.RequestHandler):
@@ -78,7 +86,7 @@ class ServerMessagesWSHandler(ServerMessagesMixin, tornado.web.RequestHandler):
         pairtype = self.get_argument('pair', '')
 
         # TODO if page <0, stream
-        msgs = self.get_data(type, page, pairtype)
+        msgs = self.get_data(type=type, page=page, pairtype=pairtype)
         self.write_message(ujson.dumps(msgs))
 
     def on_close(self):

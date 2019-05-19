@@ -41,7 +41,6 @@ class RestAPIDataSource(DataSource):
 class StreamingDataSource(DataSource):
     def __init__(self, *args, **kwargs) -> None:
         self._running = False
-
         self._callbacks = {TickType.TRADE: [],
                            TickType.RECEIVED: [],
                            TickType.ERROR: [],

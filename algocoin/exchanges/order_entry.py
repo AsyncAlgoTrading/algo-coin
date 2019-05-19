@@ -22,11 +22,11 @@ class CCXTOrderEntryMixin(RestAPIDataSource):
     def oe_client(self):
         options = self.options()
         if options.trading_type == TradingType.SANDBOX:
-            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value + '_SANDBOX')
+            key, secret, passphrase = get_keys_from_environment(self._exchange_type.value + '_SANDBOX')
         else:
-            key, secret, passphrase = get_keys_from_environment(options.exchange_type.value)
+            key, secret, passphrase = get_keys_from_environment(self._exchange_type.value)
 
-        return exchange_type_to_ccxt_client(options.exchange_type)({
+        return exchange_type_to_ccxt_client(self._exchange_type)({
             'apiKey': key,
             'secret': secret,
             'password': passphrase
@@ -49,7 +49,7 @@ class CCXTOrderEntryMixin(RestAPIDataSource):
 
             id = jsn.get('id', jsn['currency'])
 
-            account = Account(id=id, currency=currency, balance=balance)
+            account = Account(id=id, currency=currency, balance=balance, exchange=self._exchange_type)
             accounts.append(account)
         return accounts
 
@@ -59,10 +59,10 @@ class CCXTOrderEntryMixin(RestAPIDataSource):
     def historical(self, timeframe='1m', since=None, limit=None):
         '''get historical data (for backtesting)'''
         client = self.oe_client()
-        dfs = [{'pair': str(symbol), 'data': client.fetch_ohlcv(symbol=self.currencyPairToStringCCXT(symbol), timeframe=timeframe, since=since, limit=limit)}
+        dfs = [{'pair': str(symbol), 'exchange': self._exchange_type.value, 'data': client.fetch_ohlcv(symbol=self.currencyPairToStringCCXT(symbol), timeframe=timeframe, since=since, limit=limit)}
                for symbol in self.options().currency_pairs]
-        df = pd.io.json.json_normalize(dfs, 'data', ['pair'])
-        df.columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'pair']
+        df = pd.io.json.json_normalize(dfs, 'data', ['pair', 'exchange'])
+        df.columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'pair', 'exchange']
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         df.set_index(['timestamp', 'pair'], inplace=True)
         df.sort_index(inplace=True)

@@ -1,15 +1,17 @@
+import aiohttp
 import json
 from functools import lru_cache
 from .config import ExchangeConfig
 from .data_source import StreamingDataSource, RestAPIDataSource
 from .logging import LOG as log
-from .enums import TickType
+from .enums import TickType, ExchangeType
 
 
 class Exchange(StreamingDataSource, RestAPIDataSource):
-    def __init__(self, options: ExchangeConfig) -> None:
-        super(Exchange, self).__init__(options)
+    def __init__(self, exchange_type: ExchangeType, options: ExchangeConfig) -> None:
+        super(Exchange, self).__init__()
         self._options = options
+        self._exchange_type = exchange_type
         self._lastseqnum = -1
         self._missingseqnum = set()  # type: set
         self._seqnum_enabled = False
@@ -21,10 +23,6 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
     @lru_cache(None)
     def options(self) -> ExchangeConfig:
         return self._options
-
-    def close(self) -> None:
-        log.critical('Closing....')
-        self.ws.close()
 
     def seqnum(self, number: int) -> None:
         if self._lastseqnum == -1:
@@ -46,10 +44,14 @@ class Exchange(StreamingDataSource, RestAPIDataSource):
         else:
             self._lastseqnum = number
 
-    def receive(self) -> None:
-        self.receive_async(json.loads(self.ws.recv()))
+    async def receive(self) -> None:
+        async for msg in self.ws:
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                self.callback_data(json.loads(msg.data))
+            elif msg.type == aiohttp.WSMsgType.ERROR:
+                self.callback(TickType.ERROR, msg.data)
 
-    def receive_async(self, data) -> None:
+    def callback_data(self, data) -> None:
         res = self.tickToData(data)
 
         if self._seqnum_enabled and res.type != TickType.HEARTBEAT:

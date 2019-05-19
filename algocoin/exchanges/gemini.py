@@ -1,3 +1,5 @@
+import aiohttp
+import asyncio
 import json
 from datetime import datetime
 from functools import lru_cache
@@ -16,20 +18,20 @@ from .websockets import WebsocketMixin
 class GeminiWebsocketMixin(WebsocketMixin):
     @lru_cache(None)
     def subscription(self):
-        return [json.dumps({"type": "subscribe", "product_id": GeminiWebsocketMixin.currencyPairToString(x)}) for x in self.options().currency_pairs]
+        return [json.dumps({"type": "subscribe", "product_id": self.currencyPairToString(x)}) for x in self.options().currency_pairs]
 
     @lru_cache(None)
     def heartbeat(self):
         return ''
 
-    def run(self, engine) -> None:
-        # DEBUG
+    async def run(self, engine) -> None:
         options = self.options()
+        session = aiohttp.ClientSession()
 
         while True:
             # startup and redundancy
             log.info('Starting....')
-            self.ws = [create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type) % x) for x in self.subscription()]
+            self.ws = asyncio.gather(session.ws_connect(EXCHANGE_MARKET_DATA_ENDPOINT(self._exchange_type, options.trading_type) % x) for x in self.subscription())
             for x in self.subscription():
                 log.info('Sending Subscription %s' % x)
 
@@ -38,10 +40,10 @@ class GeminiWebsocketMixin(WebsocketMixin):
 
             log.info('Connected!')
             log.info('')
-            log.critical('Starting algo trading')
+            log.critical(f'Starting algo trading: {self._exchange_type}')
             try:
                 while True:
-                    self.receive()
+                    await self.receive()
 
             except KeyboardInterrupt:
                 log.critical('Terminating program')
@@ -104,19 +106,18 @@ class GeminiWebsocketMixin(WebsocketMixin):
         log.critical('Cancelling all active orders')
         self._client.cancel_all_active_orders()
 
-    @staticmethod
-    def tickToData(jsn: dict) -> MarketData:
+    def tickToData(self, jsn: dict) -> MarketData:
         # print(jsn)
         time = datetime.now()
         price = float(jsn.get('price', 'nan'))
         reason = jsn.get('reason', '')
         volume = float(jsn.get('amount', 'nan'))
-        typ = GeminiWebsocketMixin.strToTradeType(jsn.get('type'))
+        typ = self.strToTradeType(jsn.get('type'))
 
         if typ == TickType.CHANGE and not volume:
             delta = float(jsn.get('delta', 'nan'))
             volume = delta
-            typ = GeminiWebsocketMixin.reasonToTradeType(reason)
+            typ = self.reasonToTradeType(reason)
 
         side = str_to_side(jsn.get('side', ''))
         remaining_volume = float(jsn.get('remaining', 'nan'))
@@ -144,15 +145,14 @@ class GeminiWebsocketMixin(WebsocketMixin):
                          remaining=remaining_volume,
                          reason=reason,
                          side=side,
+                         exchange=self._exchange_type,
                          sequence=sequence)
         return ret
 
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
+    def strToTradeType(self, s: str) -> TickType:
         return TickType(s.upper())
 
-    @staticmethod
-    def reasonToTradeType(s: str) -> TickType:
+    def reasonToTradeType(self, s: str) -> TickType:
         s = s.upper()
         if 'CANCEL' in s:
             return TickType.DONE
@@ -161,13 +161,12 @@ class GeminiWebsocketMixin(WebsocketMixin):
         if 'INITIAL' in s:
             return TickType.OPEN
 
-    @staticmethod
-    def tradeReqToParams(req) -> dict:
+    def tradeReqToParams(self, req) -> dict:
         p = {}
         p['price'] = str(req.price)
         p['size'] = str(req.volume)
-        p['product_id'] = GeminiWebsocketMixin.currencyPairToString(req.instrument.currency_pair)
-        p['type'] = GeminiWebsocketMixin.orderTypeToString(req.order_type)
+        p['product_id'] = self.currencyPairToString(req.instrument.currency_pair)
+        p['type'] = self.orderTypeToString(req.order_type)
 
         if p['type'] == OrderType.MARKET:
             if req.side == Side.BUY:
@@ -181,17 +180,15 @@ class GeminiWebsocketMixin(WebsocketMixin):
             p['post_only'] = '1'
         return p
 
-    @staticmethod
-    def currencyPairToString(cur: PairType) -> str:
+    def currencyPairToString(self, cur: PairType) -> str:
         return cur.value[0].value + cur.value[1].value
 
-    @staticmethod
-    def orderTypeToString(typ: OrderType) -> str:
+    def orderTypeToString(self, typ: OrderType) -> str:
         return type.value.lower()
 
 
 class GeminiExchange(GeminiWebsocketMixin, CCXTOrderEntryMixin, Exchange):
-    def __init__(self, options: ExchangeConfig) -> None:
-        super(GeminiExchange, self).__init__(options)
+    def __init__(self, exchange_type: ExchangeType, options: ExchangeConfig) -> None:
+        super(GeminiExchange, self).__init__(exchange_type, options)
         self._type = ExchangeType.GEMINI
         self._last = None

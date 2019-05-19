@@ -4,7 +4,7 @@ from functools import lru_cache
 from websocket import create_connection
 from ..config import ExchangeConfig
 from ..define import EXCHANGE_MARKET_DATA_ENDPOINT
-from ..enums import OrderType, OrderSubType, PairType, TickType, ChangeReason, TradingType
+from ..enums import ExchangeType, OrderType, OrderSubType, PairType, TickType, ChangeReason, TradingType
 from ..exchange import Exchange
 from ..logging import LOG as log
 from ..structs import MarketData, Instrument
@@ -19,7 +19,7 @@ class KrakenWebsocketMixin(WebsocketMixin):
         return [json.dumps({
             "event": "subscribe",
             "pair": [
-                [KrakenWebsocketMixin.currencyPairToString(x) for x in self.options().currency_pairs]
+                [self.currencyPairToString(x) for x in self.options().currency_pairs]
             ],
             "subscription": {
                 "name": "ticker"
@@ -30,62 +30,24 @@ class KrakenWebsocketMixin(WebsocketMixin):
     def heartbeat(self):
         return ''
 
-    def close(self):
-        '''close the websocket'''
-
-    def seqnum(self, number: int):
-        '''manage sequence numbers'''
-
-    def run(self, engine) -> None:
-        # DEBUG
-        options = self.options()
-
-        while True:
-            # startup and redundancy
-            log.info('Starting....')
-            self.ws = create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type))
-            log.info('Connected!')
-
-            for sub in self.subscription():
-                self.ws.send(sub)
-                log.info('Sending Subscription %s' % sub)
-
-            self.ws.send(self.heartbeat())
-            log.info('Sending Heartbeat %s' % self.heartbeat())
-
-            log.info('')
-            log.info('Starting algo trading')
-            try:
-                while True:
-                    self.receive()
-
-            except KeyboardInterrupt:
-                log.critical('Terminating program')
-                return
-
-    @staticmethod
-    def tickToData(jsn: dict) -> MarketData:
+    def tickToData(self, jsn: dict) -> MarketData:
         raise NotImplementedError()
 
-    @staticmethod
-    def strToTradeType(s: str) -> TickType:
+    def strToTradeType(self, s: str) -> TickType:
         raise NotImplementedError()
 
-    @staticmethod
-    def tradeReqToParams(req) -> dict:
+    def tradeReqToParams(self, req) -> dict:
         raise NotImplementedError()
 
-    @staticmethod
-    def currencyPairToString(cur: PairType) -> str:
+    def currencyPairToString(self, cur: PairType) -> str:
         return cur.value[0].value + '/' + cur.value[1].value
 
-    @staticmethod
-    def orderTypeToString(typ: OrderType) -> str:
+    def orderTypeToString(self, typ: OrderType) -> str:
         raise NotImplementedError()
 
 
 class KrakenExchange(KrakenWebsocketMixin, CCXTOrderEntryMixin, Exchange):
-    def __init__(self, options: ExchangeConfig) -> None:
-        super(KrakenExchange, self).__init__(options)
+    def __init__(self, exchange_type: ExchangeType, options: ExchangeConfig) -> None:
+        super(KrakenExchange, self).__init__(exchange_type, options)
         self._last = None
         self._orders = {}

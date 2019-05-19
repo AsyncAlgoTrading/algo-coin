@@ -1,3 +1,4 @@
+import aiohttp
 import json
 from abc import abstractstaticmethod, abstractmethod
 from datetime import datetime
@@ -26,28 +27,36 @@ class WebsocketMixin(StreamingDataSource):
     def heartbeat(self):
         '''heartbeat for websocket'''
 
-    def seqnum(self, number: int):
+    def seqnum(self, number: int) -> int:
         '''manage sequence numbers'''
 
-    def run(self, engine) -> None:
-        # DEBUG
+    async def close(self) -> None:
+        '''close the websocket'''
+        await self.ws.close()
+
+    async def run(self, engine) -> None:
         options = self.options()
+        session = aiohttp.ClientSession()
 
         while True:
             # startup and redundancy
             log.info('Starting....')
-            self.ws = create_connection(EXCHANGE_MARKET_DATA_ENDPOINT(options.exchange_type, options.trading_type))
+            self.ws = await session.ws_connect(EXCHANGE_MARKET_DATA_ENDPOINT(self._exchange_type, options.trading_type))
             log.info('Connected!')
 
             for sub in self.subscription():
-                self.ws.send(sub)
+                await self.ws.send_str(sub)
                 log.info('Sending Subscription %s' % sub)
 
+            if self.heartbeat():
+                await self.ws.send_str(self.heartbeat())
+                log.info('Sending Heartbeat %s' % self.heartbeat())
+
             log.info('')
-            log.info('Starting algo trading')
+            log.critical(f'Starting algo trading: {self._exchange_type}')
             try:
                 while True:
-                    self.receive()
+                    await self.receive()
 
             except KeyboardInterrupt:
                 log.critical('Terminating program')

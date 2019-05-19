@@ -1,5 +1,8 @@
+import asyncio
 import threading
 import tornado
+import operator
+from functools import reduce
 from typing import Callable
 from .backtest import Backtest
 from .callback import Print
@@ -38,19 +41,11 @@ class TradingEngine(object):
         self._rk = Risk(options.risk_options)
 
         # instantiate exchange instance
-        if options.exchange_options.exchange_types:
-            # multiple exchanges
-            # FIXME
-            self._ex = [ex_type_to_ex(o)(options.exchange_options) for o in options.exchange_options.exchange_types]
-        else:
-            # single exchange
-            self._ex = ex_type_to_ex(options.exchange_options.exchange_type)(options.exchange_options)
-
-        self._exchanges = []
+        self._exchanges = {o: ex_type_to_ex(o)(o, options.exchange_options) for o in options.exchange_options.exchange_types}
 
         # if live or sandbox, get account information and balances
         if self._live or self._simulation or self._sandbox:
-            accounts = self._ex.accounts()
+            accounts = reduce(operator.concat, [ex.accounts() for ex in self._exchanges.values()])
             # extract max funds info
             for account in accounts:
                 if account.currency == CurrencyType.USD:
@@ -61,7 +56,7 @@ class TradingEngine(object):
             log.info("Running with %.2f USD" % options.risk_options.total_funds)
 
         # instantiate execution engine
-        self._ec = Execution(options.execution_options, self._ex)
+        self._ec = Execution(options.execution_options, self._exchanges)
 
         # sanity check
         assert not (self._live and self._simulation and self._sandbox and self._backtest)
@@ -72,8 +67,9 @@ class TradingEngine(object):
 
             # register a printer callback that prints every message
             if self._live or self._simulation or self._sandbox:
-                self._ex.registerCallback(
-                    Print(onTrade=True, onReceived=True, onOpen=True, onDone=True, onChange=True, onError=False))
+                for ex in self._exchanges:
+                    ex.registerCallback(
+                        Print(onTrade=True, onReceived=True, onOpen=True, onDone=True, onChange=True, onError=False))
             if self._backtest:
                 self._bt.registerCallback(Print())
 
@@ -88,8 +84,8 @@ class TradingEngine(object):
         # pending orders to process (partial fills)
         self._pending = {OrderType.MARKET: [], OrderType.LIMIT: []}  # TODO in progress
 
-    def exchange(self):
-        return self._ex
+    def exchanges(self):
+        return self._exchanges
 
     def backtest(self):
         return self._bt
@@ -109,7 +105,8 @@ class TradingEngine(object):
     def registerStrategy(self, strat: TradingStrategy):
         if self._live or self._simulation or self._sandbox:
             # register for exchange data
-            self._ex.registerCallback(strat.callback())
+            for ex in self._exchanges.values():
+                ex.registerCallback(strat.callback())
 
         elif self._backtest:
             # register for backtest data
@@ -134,7 +131,11 @@ class TradingEngine(object):
             self._t.start()
 
             # run on exchange
-            self._ex.run(self)
+            async def _run():
+                await asyncio.wait([ex.run(self) for ex in self._exchanges.values()])
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(_run())
 
         elif self._backtest:
             # let backtester run

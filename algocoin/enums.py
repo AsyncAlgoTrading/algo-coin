@@ -49,6 +49,8 @@ class ExchangeType(BaseEnum):
 
 
 class CurrencyType(BaseEnum):
+    NONE = 'NONE'  # special, dont use
+
     USD = 'USD'
     USDC = 'USDC'
     BAT = 'BAT'
@@ -74,8 +76,9 @@ class CurrencyType(BaseEnum):
 def _joiner(l):
     for i, a in enumerate(l):
         for j, b in enumerate(l):
-            if i != j:
+            if i != j and i != CurrencyType.NONE and j != CurrencyType.NONE:
                 yield (a, b)
+    yield (CurrencyType.NONE, CurrencyType.NONE)
 
 
 class _PairType(BaseEnum):
@@ -105,7 +108,7 @@ class _PairType(BaseEnum):
         return PairType((c1, c2))
 
 
-PairType = _PairType('PairType', {x[0].value + x[1].value: (x[0], x[1]) for x in _joiner(CurrencyType.__members__.values())})
+PairType = _PairType('PairType', {(x[0].value + x[1].value if x[0] != CurrencyType.NONE else x[0].value): (x[0], x[1]) for x in _joiner(CurrencyType.__members__.values())})
 
 
 class Side(BaseEnum):

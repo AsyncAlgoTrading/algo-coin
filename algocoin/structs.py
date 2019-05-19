@@ -1,5 +1,6 @@
 import datetime
 from .enums import Side, \
+                   ExchangeType, \
                    OptionSide, \
                    CurrencyType, \
                    PairType, \
@@ -109,6 +110,7 @@ class MarketData:
     remaining = float, 0.0
     reason = ChangeReason, ChangeReason.NONE
     sequence = int, -1
+    exchange = ExchangeType
     order_type = OrderType, OrderType.NONE
 
     def __eq__(self, other):
@@ -157,9 +159,10 @@ class TradeResponse:
 
 @struct
 class Account:
+    id = str
     currency = CurrencyType
     balance = float
-    id = str
+    exchange = ExchangeType
 
     def __repr__(self) -> str:
         return "<" + self.id + " - " + str(self.currency) + " - " + str(self.balance) + ">"
