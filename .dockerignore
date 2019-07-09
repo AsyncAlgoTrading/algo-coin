@@ -1,0 +1,10 @@
+.git
+.ipynb_checkpoints
+notebooks
+Dockerfile
+.DS_Store
+.gitignore
+keys/
+*.csv
+*.sh
+logs

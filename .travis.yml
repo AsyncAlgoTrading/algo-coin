@@ -1,0 +1,20 @@
+dist: xenial
+language: python
+python:
+  - "3.7"
+
+services:
+  - docker
+
+os:
+  - linux
+  # - osx
+
+script: docker build .
+
+branches:
+  only:
+  - master
+
+notifications:
+  email: false

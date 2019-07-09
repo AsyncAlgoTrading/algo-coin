@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Algo-Coin</title>
+  <link rel="stylesheet" type="text/css" href="{{baseurl}}static/fonts/fonts.css">
+  <link rel="stylesheet" type="text/css" href="{{baseurl}}static/css/login.css">
+  <link href="{{baseurl}}static/css/font-awesome.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+</head>
+<body>
+  <div class="background"></div>
+    <div class="log-form">
+        <h2>Are you sure you want to logout?</h2>
+        <form action='/api/v1/logout' method='post' enctype="multipart/form-data">
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </div>
+</body>
+</html>
