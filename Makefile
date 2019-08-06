@@ -34,8 +34,11 @@ build: ## build the package
 install: ## install the package
 	python3 setup.py install
 
-dist:  ## dist to pypi
-	python3 setup.py sdist upload -r pypi
+dist: js  ## dist to pypi
+	rm -rf dist build
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
+	twine check dist/* && twine upload dist/*
 
 js:  ## build the js
 	yarn
