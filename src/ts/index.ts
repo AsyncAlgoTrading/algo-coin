@@ -3,3 +3,4 @@ window.onload = main;
 
 /* css */
 import "!!style-loader!css-loader!less-loader!../src/style/index.less";
+import "!!style-loader!css-loader!less-loader!../src/style/theme.less";

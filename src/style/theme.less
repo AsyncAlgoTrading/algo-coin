@@ -1,0 +1,282 @@
+@import "./material/material-phosphor.less";
+
+.p-DockPanel {
+    background-color: var(--darkest);
+    border-color: var(--dark2);
+}
+
+.p-TabBar-content > .p-TabBar-tab.p-mod-current {
+    border: none;
+    color: white !important;
+    background: var(--dark2);
+}
+
+.p-SplitPanel-handle:after {
+    background-color: var(--dark2);
+}
+
+
+div.PSPContainer perspective-viewer[settings] {
+    --settings-button--content: "" !important;
+}
+
+div.PSPContainer {
+    perspective-viewer {
+        padding: 0px;
+        --hypergrid-header--background: var(--darkest);
+        --hypergrid--background: var(--darkest);
+        --plugin--background: var(--darkest);
+        --plugin--border: 0px solid var(--dark2);
+        --plugin--box-shadow: none;
+        --hypergrid--padding: 0px;
+        --settings-button--content: "";
+    }
+}
+
+div.PSPContainer-dark {
+    perspective-viewer {
+        padding: 0px;
+        --plugin--border: 0px solid var(--light);
+        --hypergrid-header--background: var(--darkest2);
+        --hypergrid--background: var(--darkest2);
+        --plugin--background: var(--darkest2);
+        --plugin--border: 1px solid var(--dark2);
+        --plugin--box-shadow: none;
+        --settings-button--content: "";
+        --integer--hypergrid--background: var(--darkest2);
+        --hypergrid-tree-header--background: var(--darkest2);
+        background-color: var(--darkest2);
+    }
+}
+
+perspective-viewer[settings] {
+    --settings-button--content: "check_box_outline_blank";
+}
+
+perspective-viewer {
+    padding: 24px;
+    background-color: var(--dark2);
+    color: var(--light);
+    font-family: "Orbitron";
+
+    --active--color: var(--color10);
+    --active--border: 1px solid var(--color11);
+    --active--background: var(--darkest);
+    --inactive--color: var(--color13);
+
+    --settings-button--content: "check_box_outline_blank";
+    
+    ////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Type-specific
+    ////
+
+    --float--column-type--content: "DBL";
+    --float--column-type--color: var(--color14);
+
+    --float--hypergrid--font-family: "Roboto Mono";
+    --float--hypergrid--font-size: 12px;
+    --float--hypergrid--background: var(--darkest);
+    --float--hypergrid--color: var(--color14);
+    --float--hypergrid-positive--color: white;
+    --float--hypergrid-positive--background: var(--darkest);
+    --float--hypergrid-negative--color: white;
+    --float--hypergrid-negative--background: var(--darkest);
+    --float--hypergrid-positive--border-bottom-color: var(--color11);
+    --float--hypergrid-positive--border-right-color: var(--color11);
+    --float--hypergrid-negative--border-bottom-color: var(--color10);
+    --float--hypergrid-negative--border-right-color: var(--color10);
+    
+    --integer--column-type--content: "INT";
+    --integer--column-type--color: var(--color1);
+
+    --integer--hypergrid--font-family: "Roboto Mono";
+    --integer--hypergrid--font-size: 12px;
+    --integer--hypergrid--background: var(--darkest);
+    --integer--hypergrid--color: var(--color14);
+    --integer--hypergrid-positive--color: var(--color2);
+    --integer--hypergrid-negative--color: var(--color3);
+
+    --string--column-type--content: "STR";
+    --string--column-type--color: var(-light2);
+
+    --date--column-type--content: "MDY";
+    --datetime--column-type--content: "MDY";
+
+    --plugin--background: #1C0658;
+    --plugin--border: 1px solid hsla(256, 87%, 28%, 1);
+    --plugin--box-shadow: 0px 10px 10px rgba(0,0,0,0.4);
+   
+    --hypergrid-row-hover--background: rgba(0,0,0,0.1);
+    --hypergrid-cell-hover--background: rgba(0,0,0,0.2);
+    --hypergrid--color: #eee;
+    --hypergrid--font-family: "Open Sans";
+
+    --d3fc-full--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color2) 10%,
+        var(--color3) 20%,
+        var(--color4) 30%,
+        var(--color5) 40%,
+        var(--color6) 50%,
+        var(--color7) 60%,
+        var(--color8) 70%,
+        var(--color9) 80%,
+        var(--color10) 90%,
+        var(--color11) 100%
+    );
+
+    --d3fc-positive--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --d3fc-negative--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --highcharts-full--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color2) 10%,
+        var(--color3) 20%,
+        var(--color4) 30%,
+        var(--color5) 40%,
+        var(--color6) 50%,
+        var(--color7) 60%,
+        var(--color8) 70%,
+        var(--color9) 80%,
+        var(--color10) 90%,
+        var(--color11) 100%
+    );
+
+    --highcharts-positive--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --highcharts-negative--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Not Stable
+    ////
+
+    --hypergrid-gridline--color: #cfd8dc;
+
+    --active-column-selector--content: "\25CF";
+    --hypergrid-header--font-family: "Open Sans";
+    --hypergrid--padding: 24px;
+
+    --hypergrid--background: var(--darkest);
+    --hypergrid-tree-header--background: #1C0658;
+    --hypergrid-tree-header--color: #eee;
+    --hypergrid-header--background: var(--darkest);
+    --hypergrid-separator--color: #8BC4EE;
+    --hypergrid-header--color: #eee;
+
+    --hypergrid--font-size: 12px;
+    --hypergrid-header--font-size: 12px;
+
+    --highcharts-label--fill: grey;
+    --highcharts-rect--opacity: 0.85;
+    
+    --highcharts-tooltip--background: grey;
+
+    --d3fc-gridline--color: #5C2686;
+    --d3fc-legend--text: rgb(187, 187, 187);
+    --d3fc-treedata--labels: rgb(187, 187, 187);
+    --d3fc-treedata--hover-highlight: rgb(255, 255, 255);
+    --d3fc-axis--ticks: rgb(187, 187, 187);
+    --d3fc-axis--lines: #5C2686;
+    --d3fc-tooltip--background: #333333;
+    --d3fc-tooltip--color: rgb(207, 216, 220);
+
+    --d3fc-series: var(--color1);
+    --d3fc-series-1: var(--color2);
+    --d3fc-series-2: var(--color3);
+    --d3fc-series-3: var(--color4);
+    --d3fc-series-4: var(--color5);
+    --d3fc-series-5: var(--color6);
+    --d3fc-series-6: var(--color7);
+    --d3fc-series-7: var(--color8);
+    --d3fc-series-8: var(--color9);
+    --d3fc-series-9: var(--color10);
+    --d3fc-series-10: var(--color11);
+
+    --d3fc-full--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color2) 10%,
+        var(--color3) 20%,
+        var(--color4) 30%,
+        var(--color5) 40%,
+        var(--color6) 50%,
+        var(--color7) 60%,
+        var(--color8) 70%,
+        var(--color9) 80%,
+        var(--color10) 90%,
+        var(--color11) 100%
+    );
+
+    --d3fc-positive--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --d3fc-negative--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --highcharts-full--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color2) 10%,
+        var(--color3) 20%,
+        var(--color4) 30%,
+        var(--color5) 40%,
+        var(--color6) 50%,
+        var(--color7) 60%,
+        var(--color8) 70%,
+        var(--color9) 80%,
+        var(--color10) 90%,
+        var(--color11) 100%
+    );
+
+    --highcharts-positive--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+
+    --highcharts-negative--gradient: linear-gradient(
+        var(--color1) 0%,
+        var(--color3) 25%,
+        var(--color5) 50%,
+        var(--color7) 75%,
+        var(--color9) 100%
+    );
+    --warning--color: var(--mag);
+}

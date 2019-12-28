@@ -1,4 +1,4 @@
-CONFIG=./config/sandbox_gemini.cfg
+CONFIG=./config/simulation_gemini.cfg
 EXCHANGE=gemini
 CURRENCY=USD
 
@@ -8,25 +8,6 @@ runconfig: build ## Clean and make target, run target
 
 run:  clean build  ## Clean and make target, run target
 	python3 -m algocoin --live --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
-
-sandbox: build  ## Clean and make target, run target
-	python3 -m algocoin --sandbox --verbose=$(VERBOSE) -exchange=$(EXCHANGE)
-
-backtest_config: ## Clean and make target, run backtest
-	python3 -m algocoin --config=./config/backtest_gemini.cfg
-
-backtest: ## Clean and make target, run backtest
-	python3 -m algocoin --backtest --verbose=$(VERBOSE) --exchange=$(EXCHANGE)
-
-backtest_inline:  ## Clean and make target, run backtest, plot in terminal
-	bash -c "export MPLBACKEND=\"module://itermplot\";	export ITERMPLOT=\"rv\"; python3 -m algocoin backtest $(VERBOSE) $(EXCHANGE)"
-
-boost:  ## Install boost python dependencies on os x with homebrew
-	brew install boost boost-python3
-	sudo ln -s /usr/local/lib/libboost_python37.dylib /usr/local/lib/libboost_python.dylib
-
-buildext: ## build the package extensions
-	python3 setup.py build_ext
 
 build: ## build the package
 	python3 setup.py build
@@ -44,21 +25,20 @@ js:  ## build the js
 	yarn
 	yarn build
 
+fixtures:  ## make db fixtures
+	python3 -m aat.persistence sqlite:///aat.db
+
 tests: ## Clean and Make unit tests
 	python3 -m pytest -v ./algocoin/tests --cov=algocoin
 	yarn test
 
-test: clean build lint ## run the tests for travis CI
-	@ python3 -m pytest -v ./algocoin/tests --cov=algocoin
-	yarn test
-
-test_verbose: ## run the tests with full output
-	@ python3 -m pytest -vv ./algocoin/tests --cov=algocoin
-	yarn test
-
 lint: ## run linter
-	flake8 algocoin 
+	python3 -m flake8 algocoin 
 	yarn lint
+
+fix:  ## run autopep8/tslint fix
+	python3 -m autopep8 --in-place -r -a -a algocoin/
+	yarn fix
 
 annotate: ## MyPy type annotation check
 	mypy -s algocoin 

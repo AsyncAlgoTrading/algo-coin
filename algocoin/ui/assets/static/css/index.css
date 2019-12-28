@@ -1,0 +1,128 @@
+html {
+    background-color: black;
+    font-family: "Open Sans";
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(var(--dark), #000);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--light);
+}
+
+
+
+input[type=submit] {
+  background-color: var(--dark);
+  color: var(--fontlight);
+  height: 40px;
+  font-size: 18px;
+}
+
+input[type=submit]:hover {
+  background-color: var(--darkest);
+}
+
+
+div.main{
+    height:100%;
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+img.main {
+    width:100%;
+    max-width:1000px;
+    max-height:10vh;
+    min-height:75px;
+    padding-bottom: 10vh;
+    animation-name: fader;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes fader {
+    0%   {
+        filter: brightness(1);
+        -webkit-filter: brightness(1);
+    }
+    50%  {
+        filter: brightness(0);
+        -webkit-filter: brightness(0);
+    }
+    100% {
+        filter: brightness(1);
+        -webkit-filter: brightness(1);
+    }
+}
+
+div.subs {
+    display:flex;
+    flex-direction: row;
+    width:100%;
+}
+
+div.subs a {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Roboto Mono";
+    color: var(--light2);
+
+    display:flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-self:center;
+
+    filter: brightness(.4);
+    -webkit-filter: brightness(.4);
+}
+
+div.subs a:hover, 
+dib.subs a:hover{
+    -webkit-transition: filter .8s linear;
+    transition: filter .8s linear;
+    filter: brightness(1)
+    filter: contrast(1);
+    -webkit-filter: brightness(1);
+    -webkit-filter: contrast(1);
+}
+
+h2 {
+    color: var(--clight);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px !important;
+    margin-bottom: 2px !important;
+}
+
+h4 {
+    color: var(--mag);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    margin-bottom: 2px;
+}

@@ -1,0 +1,36 @@
+:root {
+    --light: rgb(34, 137, 228);
+    --light2: rgb(34, 137, 228);
+
+    --lightfont: #c0c0c0;
+    --darkfont: #737373;
+
+    --dark:#0F4C81;
+    --dark2:#0F4C81;
+    --darkest:rgba(17, 17, 17, .8);
+    --darkest2:#000;
+
+    --color1: #94D0FF;
+    --color2: #8795E8;
+    --color3: #966bff;
+    --color4: #AD8CFF;
+    --color5: #C774E8;
+    --color6: #c774a9;
+    --color7: #FF6AD5;
+    --color8: #ff6a8b;
+    --color9: #ff8b8b;
+    --color10: #ffa58b;
+    --color11: #ffde8b;
+    --color12: #cdde8b;
+    --color13: #8bde8b;
+    --color14: #20de8b;
+
+    --select--background-color: var(--dark2);
+    --column-drop-container--background: var(--dark2);
+    --column--background: black;
+
+    --red:#f00;
+    --green:#0f0;
+
+    --clight:white;
+}

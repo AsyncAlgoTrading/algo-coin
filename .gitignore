@@ -81,3 +81,7 @@ logo.ai
 logo.png
 coverage
 experiments
+keys.sh
+*.db
+aat
+tkp_utils

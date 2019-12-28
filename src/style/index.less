@@ -1,10 +1,137 @@
-@import (less) '~phosphor-perspective-utils/index.less';
-
-:root {
-    --highlight-color: var(--highlight-green);
+div.header {
+  height: 50px;
 }
 
-div.marketdata-container, 
-div.marketdata-container > div.p-DockPanel   {
-    height: 100%;
+div.header > * {
+  height:50px;
+}
+
+div.header > a > img {
+  height:50px;
+}
+
+div.topmenu {
+  position: absolute;
+  right:50px;
+  height:50px;
+  padding: 0px;
+}
+
+
+div.topmenu.p-mod-active {
+  background-color: var(--darkest2);
+}
+
+div.topmenu div.p-MenuBar-itemLabel {
+  color: var(--lightfont);
+}
+
+div.topmenu ul.p-MenuBar-content {
+  height: 100%;
+}
+
+div.topmenu ul.p-MenuBar.p-mod-active {
+  background-color: var(--darkest) !important;
+}
+
+div.topmenu li.p-MenuBar-item.p-mod-active {
+  background-color: var(--dark2) !important;
+}
+
+div.settings {
+  background-color: var(--darkest2) !important;
+}
+
+div.settings {
+  border: 1px solid var(--lightfont);
+}
+
+div.settings > ul > li > div.p-Menu-itemIcon::before {
+  font-family: "fontawesome" !important;
+}
+
+div.settings li.p-Menu-item {
+  color: var(--lightfont);
+}
+
+div.settings li.p-Menu-item.p-mod-active {
+  background-color: var(--dark2);
+}
+
+div.settings li.p-Menu-item.p-mod-disabled {
+  color: var(--darkfont);
+}
+
+div.sidebar {
+  margin: 0px;
+  color: var(--lightfont);
+}
+
+div.sidebar > div.sidebar > * {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+div.sidebar > div.sidebar > * > input[type=submit] {
+  margin-top: 10px;
+}
+
+div.sidebar > div.apikeys > h2 {
+  margin-bottom: 0px;
+}
+
+div.sidebar > div.apikeys > div.table {
+  display: flex;
+  flex-direction: column;
+  max-height: 50%;
+  table-layout: fixed;
+  margin: 5px;
+  border: 1px solid var(--lightfont);
+  overflow: scroll;
+}
+
+// api key
+div.sidebar > div.apikeys > div.table > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+// api key column
+div.sidebar > div.apikeys > div.table > div > div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+div.sidebar > div.apikeys > div.table > div > div > label, 
+div.sidebar > div.apikeys > div.table > div > div > input {
+  flex: 1;
+}
+
+div.sidebar > div.apikeys > div.table > div > div > input[type=submit] {
+  padding: 2px;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+}
+
+div.workspace div.p-DockPanel-tabBar {
+  border-bottom: 2px solid var(--dark2);
+}
+
+div.admin {
+  color: var(--lightfont);
+  display: flex;
+  flex-direction: column;
+}
+
+div.admin > div {
+  display: flex;
+  flex-direction: column;
+}
+
+div.admin div.p-SplitPanel-child {
+  padding: 10px;
 }

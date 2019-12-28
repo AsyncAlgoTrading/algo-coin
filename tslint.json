@@ -4,6 +4,14 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "max-line-length": [
+            true,
+            {
+                "limit": 200,
+                "ignore-pattern": "^import [^,]+ from |^export | implements"
+            }
+        ]
+    },
     "rulesDirectory": []
 }
